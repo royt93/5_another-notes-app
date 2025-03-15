@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.mckimquyen.notes",
+  "variantName": "productionRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 20250315,
+      "versionName": "2025.03.15",
+      "outputFile": "com.mckimquyen.notesrelease_2025.03.15_20250315.apk"
+    }
+  ],
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/com.mckimquyen.notesrelease_2025.03.15_20250315.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/com.mckimquyen.notesrelease_2025.03.15_20250315.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 24
+}
