@@ -169,9 +169,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.7"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7"
-    implementation "androidx.navigation:navigation-ui-ktx:2.8.6"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.8.6"
-    implementation 'com.applovin:applovin-sdk:13.0.1'
+    implementation "androidx.navigation:navigation-ui-ktx:2.8.9"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.8.9"
+    implementation 'com.applovin:applovin-sdk:13.1.0'
     implementation("com.google.android.play:review:2.0.2")
     implementation("com.google.android.play:review-ktx:2.0.2")
 
