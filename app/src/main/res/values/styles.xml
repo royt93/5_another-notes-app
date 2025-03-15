@@ -149,4 +149,9 @@
         <item name="animationMode">slide</item>
     </style>
 
+    <style name="RoundFAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="android:radius">45dp</item>
+    </style>
+
 </resources>

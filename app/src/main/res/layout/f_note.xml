@@ -91,6 +91,7 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/edit_add_title"
         android:src="@drawable/ic_plus"
-        app:layout_behavior="com.mckimquyen.notes.ui.common.SnackBarFloatingActionButtonBehaviour" />
+        app:layout_behavior="com.mckimquyen.notes.ui.common.SnackBarFloatingActionButtonBehaviour"
+        app:shapeAppearance="@style/RoundFAB" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
