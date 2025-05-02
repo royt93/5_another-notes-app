@@ -15,9 +15,12 @@ import androidx.preference.DropDownPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
+import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.databinding.FSettingsBinding
@@ -28,6 +31,7 @@ import com.mckimquyen.notes.ext.openBrowserPolicy
 import com.mckimquyen.notes.ext.rateApp
 import com.mckimquyen.notes.ext.shareApp
 import com.mckimquyen.notes.model.PrefsManager
+import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.AppTheme
 import com.mckimquyen.notes.ui.common.ConfirmDlg
 import com.mckimquyen.notes.ui.main.MainAct
@@ -57,8 +61,9 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     private var importDataLauncher: ActivityResultLauncher<Intent>? = null
 
     private var binding: FSettingsBinding? = null
-    //TODO roy93~ admob banner
-//    private var adView: MaxAdView? = null
+
+    //    private var adView: MaxAdView? = null
+    private var adView: AdView? = null
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -131,6 +136,16 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        adView?.resume()
+    }
+
+    override fun onPause() {
+        adView?.pause()
+        super.onPause()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -149,7 +164,14 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
 //        }
 
         setupViewModelObservers()
-        //TODO roy93~ admob banner
+        adView = binding?.flAd?.let {
+            AdMobManager.loadBanner(
+                context = requireContext(),
+                adUnitId = BuildConfig.ADMOB_BANNER_ID,
+                container = it,
+                adSize = AdSize.BANNER,
+            )
+        }
 //        adView = requireActivity().createAdBanner(
 //            logTag = SettingsFrm::class.simpleName,
 //            viewGroup = binding?.flAd,
@@ -301,7 +323,7 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     }
 
     override fun onDestroy() {
-        //TODO roy93~ admob banner
+        adView?.destroy()
 //        binding?.flAd?.destroyAdBanner(adView)
         super.onDestroy()
         exportDataLauncher = null
