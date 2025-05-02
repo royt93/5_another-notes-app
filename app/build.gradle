@@ -71,12 +71,21 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField "String", "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/6300978111\""
+            buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3940256099942544/9257395921\""
+
 //            applicationIdSuffix ".debug"
             def takingScreenshots = System.getenv("taking_screenshots")
             buildConfigField "boolean", "ENABLE_DEBUG_FEATURES",
                     takingScreenshots == null ? "true" : (!takingScreenshots.toBoolean()).toString()
         }
         release {
+            // nhớ check APPLICATION_ID trong manifest
+            buildConfigField "String", "ADMOB_BANNER_ID", "\"ca-app-pub-3612191981543807/1231237872\""
+            buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3612191981543807/4741213833\""
+            buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3612191981543807/3703705586\""
+
 //            applicationIdSuffix ".sync"
             minifyEnabled true
             shrinkResources true
@@ -117,28 +126,26 @@ android {
 //            applicationId = "com.mckimquyen.notes.dev"
             dimension "type"
             buildConfigField("String", "FLAVOR_buildEnv", '"dev"')
-            resValue ("string", "app_name", "Cat Note DEV")
+            resValue("string", "app_name", "Cat Note DEV")
 
-            resValue("string", "SDK_KEY", "e75FnQfS9XTTqM1Kne69U7PW_MBgAnGQTFvtwVVui6kRPKs5L7ws9twr5IQWwVfzPKZ5pF2IfDa7lguMgGlCyt")
-            resValue("string", "BANNER", "9f19f76fe682443f")
-            resValue("string", "INTER", "34eaf20efa37ac75")
-
-            resValue("string", "EnableAdInter", "true")
-            resValue("string", "EnableAdBanner", "true")
+//            resValue("string", "SDK_KEY", "e75FnQfS9XTTqM1Kne69U7PW_MBgAnGQTFvtwVVui6kRPKs5L7ws9twr5IQWwVfzPKZ5pF2IfDa7lguMgGlCyt")
+//            resValue("string", "BANNER", "9f19f76fe682443f")
+//            resValue("string", "INTER", "34eaf20efa37ac75")
+//            resValue("string", "EnableAdInter", "true")
+//            resValue("string", "EnableAdBanner", "true")
         }
 
         production {
 //            applicationId = "com.mckimquyen.notes"
             dimension "type"
             buildConfigField("String", "FLAVOR_buildEnv", '"prod"')
-            resValue ("string", "app_name", "Cat Note")
+            resValue("string", "app_name", "Cat Note")
 
-            resValue("string", "SDK_KEY", "e75FnQfS9XTTqM1Kne69U7PW_MBgAnGQTFvtwVVui6kRPKs5L7ws9twr5IQWwVfzPKZ5pF2IfDa7lguMgGlCyt")
-            resValue("string", "BANNER", "9f19f76fe682443f")
-            resValue("string", "INTER", "34eaf20efa37ac75")
-
-            resValue("string", "EnableAdInter", "true")
-            resValue("string", "EnableAdBanner", "true")
+//            resValue("string", "SDK_KEY", "e75FnQfS9XTTqM1Kne69U7PW_MBgAnGQTFvtwVVui6kRPKs5L7ws9twr5IQWwVfzPKZ5pF2IfDa7lguMgGlCyt")
+//            resValue("string", "BANNER", "9f19f76fe682443f")
+//            resValue("string", "INTER", "34eaf20efa37ac75")
+//            resValue("string", "EnableAdInter", "true")
+//            resValue("string", "EnableAdBanner", "true")
         }
 
     }
@@ -172,6 +179,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.8.9"
     implementation "androidx.navigation:navigation-fragment-ktx:2.8.9"
 //    implementation 'com.applovin:applovin-sdk:13.1.0'
+    implementation("com.google.android.gms:play-services-ads:24.2.0")
     implementation("com.google.android.play:review:2.0.2")
     implementation("com.google.android.play:review-ktx:2.0.2")
 

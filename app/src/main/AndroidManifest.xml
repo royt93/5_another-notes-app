@@ -23,6 +23,11 @@
         android:theme="@style/AppTheme.DayNight"
         tools:ignore="DiscouragedApi,LockedOrientationActivity,AllowBackup">
 
+        <!-- Khai báo AdMob App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3612191981543807~9896195955" /> <!-- Sample AdMob App ID -->
+
         <activity
             android:name=".ui.splash.SplashAct"
             android:exported="true"
