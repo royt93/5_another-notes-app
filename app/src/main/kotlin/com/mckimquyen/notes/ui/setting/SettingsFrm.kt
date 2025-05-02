@@ -15,7 +15,6 @@ import androidx.preference.DropDownPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.applovin.mediation.ads.MaxAdView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
@@ -23,8 +22,6 @@ import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.databinding.FSettingsBinding
 import com.mckimquyen.notes.ext.TAG
-import com.mckimquyen.notes.ext.createAdBanner
-import com.mckimquyen.notes.ext.destroyAdBanner
 import com.mckimquyen.notes.ext.moreApp
 import com.mckimquyen.notes.ext.navigateSafe
 import com.mckimquyen.notes.ext.openBrowserPolicy
@@ -60,7 +57,8 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     private var importDataLauncher: ActivityResultLauncher<Intent>? = null
 
     private var binding: FSettingsBinding? = null
-    private var adView: MaxAdView? = null
+    //TODO roy93~ admob banner
+//    private var adView: MaxAdView? = null
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -151,11 +149,12 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
 //        }
 
         setupViewModelObservers()
-        adView = requireActivity().createAdBanner(
-            logTag = SettingsFrm::class.simpleName,
-            viewGroup = binding?.flAd,
-            isAdaptiveBanner = true,
-        )
+        //TODO roy93~ admob banner
+//        adView = requireActivity().createAdBanner(
+//            logTag = SettingsFrm::class.simpleName,
+//            viewGroup = binding?.flAd,
+//            isAdaptiveBanner = true,
+//        )
     }
 
     private fun setupViewModelObservers() {
@@ -302,7 +301,8 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     }
 
     override fun onDestroy() {
-        binding?.flAd?.destroyAdBanner(adView)
+        //TODO roy93~ admob banner
+//        binding?.flAd?.destroyAdBanner(adView)
         super.onDestroy()
         exportDataLauncher = null
         autoExportLauncher = null
