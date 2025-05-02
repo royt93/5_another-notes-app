@@ -16,6 +16,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
 import com.mckimquyen.notes.BuildConfig
@@ -24,6 +26,7 @@ import com.mckimquyen.notes.NavGraphMainDirections
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.ext.navigateSafe
 import com.mckimquyen.notes.model.entity.NoteStatus
+import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.common.ConfirmDlg
 import com.mckimquyen.notes.ui.navigation.HomeDestination
 import com.mckimquyen.notes.ui.note.NoteFrm
@@ -37,7 +40,7 @@ import com.google.android.material.R as RMaterial
  * Start screen fragment displaying a list of notes for different note status,
  * by label, or with a reminder.
  */
-class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.InterstitialAdListener {
 
     @Inject
     lateinit var viewModelFactory: HomeVM.Factory
@@ -45,7 +48,10 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO roy93~ admob inter
+
+        AdMobManager.setCurrentActivity(requireActivity())
+        AdMobManager.interstitialListener = this
+        AdMobManager.loadInterstitial(requireContext(), BuildConfig.ADMOB_INTERSTITIAL_ID)
 //        createAdInter()
         val context = requireContext()
         (context.applicationContext as RApp?)?.appComponent?.inject(this)
@@ -99,10 +105,8 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
         // Floating action button
         binding.fab.transitionName = "createNoteTransition"
         binding.fab.setOnClickListener {
-//            showAd {
-//                viewModel.createNote()
-//            }
-            //TODO roy93~ admob inter
+            viewModel.createNote()
+            AdMobManager.showInterstitial(requireActivity())
         }
 
         setupViewModelObservers()
@@ -227,7 +231,27 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    //TODO roy93~ admob inter
+    override fun onAdLoaded() {
+    }
+
+    override fun onAdFailedToLoad(error: LoadAdError) {
+    }
+
+    override fun onAdShowed() {
+    }
+
+    override fun onAdDismissed() {
+    }
+
+    override fun onAdClicked() {
+    }
+
+    override fun onAdFailedToShow(error: AdError) {
+    }
+
+    override fun onAdNotAvailable() {
+    }
+
 //    private var interstitialAd: MaxInterstitialAd? = null
 //
 //    private fun createAdInter() {
