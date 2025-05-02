@@ -4,27 +4,36 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.gms.ads.MobileAds
 import com.mckimquyen.notes.di.DaggerAppComponent
 import com.mckimquyen.notes.model.NotesDb
 import com.mckimquyen.notes.model.PrefsManager
+import com.mckimquyen.notes.sdkadbmob.AdMobManager
+import com.mckimquyen.notes.sdkadbmob.AppLifecycleListener
 import com.mckimquyen.notes.ui.AppTheme
+import com.mckimquyen.notes.ui.splash.SplashAct
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 //done
 //applovin
+//admob
 //review in app
 //120hz
 //font scale
 //keystore
 //switch ios, SwitchPreferenceCompat
-//roy93~ change icon launcher
+//change icon launcher
 //double to exit app
 //leakcanary
 //permission ad_id
 //proguard
-//roy93~ rate app, share app, more app
-//roy93~ policy
+//rate app, share app, more app
+//policy
 
 class RApp : Application() {
 
@@ -43,7 +52,7 @@ class RApp : Application() {
     override fun onCreate() {
         super.onCreate()
 //        this.setupApplovinAd()
-        //TODO roy93~ admob
+        setupAdmob()
         appComponent.inject(this)
 
         // Initialize shared preferences
@@ -77,6 +86,47 @@ class RApp : Application() {
             channel.description = getString(R.string.reminder_notif_channel_descr)
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun setupAdmob() {
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@RApp) {}
+            AdMobManager.init(this@RApp) { success, gaidCurrent ->
+                Log.d("roy93~", "AdMobManager init success $success, gaidCurrent $gaidCurrent")
+            }
+        }
+        registerActivityLifecycleCallbacks(
+            AppLifecycleListener(
+                { isForeground, activity ->
+                    if (isForeground) {
+                        Log.d("roy93~", "App moved to Foreground")
+                        Log.d("roy93~", "activity.localClassName ${activity.localClassName}")
+                        Log.d(
+                            "roy93~",
+                            "SplashAct::class.java.simpleName ${SplashAct::class.java.simpleName}"
+                        )
+                        if (activity.localClassName == SplashAct::class.java.simpleName) {
+                            //do nothing
+                        } else {
+                            AdMobManager.showAppOpenAd(activity)
+                        }
+                    } else {
+                        Log.d("roy93~", "App moved to Background")
+                    }
+                }, { activity ->
+                    Log.d("roy93~", "callbackActivityCreated ${activity.localClassName}")
+                    if (activity.localClassName == SplashAct::class.java.simpleName) {
+                        //do nothing
+                    } else {
+                        AdMobManager.loadAppOpenAd(
+                            context = this,
+                            adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
+                            onAdLoaded = {},
+                        )
+                    }
+                }
+            )
+        )
     }
 
     companion object {
