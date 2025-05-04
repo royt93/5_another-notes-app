@@ -2,10 +2,7 @@ package com.mckimquyen.notes.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.DynamicColors
 import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.R
@@ -14,8 +11,6 @@ import com.mckimquyen.notes.model.PrefsManager
 import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.main.BaseAct
 import com.mckimquyen.notes.ui.main.MainAct
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashAct : BaseAct() {
@@ -32,30 +27,15 @@ class SplashAct : BaseAct() {
         }
         setContentView(R.layout.a_splash)
 
-        lifecycleScope.launch {
-            var hasCalledGoToMain = false
-            val job = launch {
-                delay(3_000)
-                if (!hasCalledGoToMain) {
-                    hasCalledGoToMain = true
-                    Log.d("roy93~", "goToMain #1")
-                    goToMain()
-                }
-            }
-            AdMobManager.loadAppOpenAd(
-                context = this@SplashAct,
-                adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
-                onAdLoaded = {
-                    if (!hasCalledGoToMain) {
-                        hasCalledGoToMain = true
-                        job.cancel()
-                        Log.d("roy93~", "goToMain #2")
-                        goToMain()
-                        AdMobManager.showAppOpenAd(this@SplashAct)
-                    }
-                },
-            )
-        }
+        AdMobManager.loadAppOpenAd(
+            context = this@SplashAct,
+            adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
+            onAdLoaded = { result ->
+                Log.d("roy93~", "onAdLoaded result $result")
+                goToMain()
+                AdMobManager.showAppOpenAd(this@SplashAct)
+            },
+        )
     }
 
     private fun goToMain() {
