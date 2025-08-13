@@ -164,19 +164,17 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
 //        }
 
         setupViewModelObservers()
-        adView = binding?.flAd?.let {
-            AdMobManager.loadBanner(
-                context = requireContext(),
-                adUnitId = BuildConfig.ADMOB_BANNER_ID,
-                container = it,
-                adSize = AdSize.BANNER,
-            )
+        binding?.layoutAdBanner?.bannerContainer?.let { bannerContainer ->
+            binding?.layoutAdBanner?.tvLabelAd?.let { tvLabelAd ->
+                adView = AdMobManager.loadBanner(
+                    context = requireContext(),
+                    adUnitId = BuildConfig.ADMOB_BANNER_ID,
+                    container = bannerContainer,
+                    tvLabelAd = tvLabelAd,
+                    adSize = AdSize.LARGE_BANNER,
+                )
+            }
         }
-//        adView = requireActivity().createAdBanner(
-//            logTag = SettingsFrm::class.simpleName,
-//            viewGroup = binding?.flAd,
-//            isAdaptiveBanner = true,
-//        )
     }
 
     private fun setupViewModelObservers() {

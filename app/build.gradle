@@ -200,6 +200,11 @@ allOpen {
 play {
     serviceAccountCredentials = file("fake-key.json")
 }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 if (file("publishing.gradle").exists()) {
     apply from: "publishing.gradle"
 }

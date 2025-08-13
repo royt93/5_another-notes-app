@@ -6,10 +6,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -21,9 +21,9 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
 import com.mckimquyen.notes.BuildConfig
-import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.NavGraphMainDirections
 import com.mckimquyen.notes.R
+import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.ext.navigateSafe
 import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.sdkadbmob.AdMobManager
@@ -105,8 +105,14 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
         // Floating action button
         binding.fab.transitionName = "createNoteTransition"
         binding.fab.setOnClickListener {
-            viewModel.createNote()
-            AdMobManager.showInterstitial(requireActivity())
+            AdMobManager.showInterstitial(requireActivity()) { success ->
+                if (success) {
+                    Log.d("roy93~", "Ad đã hiển thị và đóng thành công")
+                } else {
+                    Log.d("roy93~", "Ad không hiển thị được hoặc có lỗi")
+                }
+                viewModel.createNote()
+            }
         }
 
         setupViewModelObservers()
