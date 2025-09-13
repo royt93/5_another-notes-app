@@ -18,7 +18,7 @@ buildscript {
 
 plugins {
     id "base"
-    id "io.gitlab.arturbosch.detekt" version "1.18.1"
+    id "io.gitlab.arturbosch.detekt" version "1.23.8"
 }
 
 allprojects {
@@ -45,7 +45,7 @@ clean {
 }
 
 detekt {
-    failFast = true
+//    failFast = true
     buildUponDefaultConfig = true
     parallel = true
     autoCorrect = true
