@@ -119,6 +119,17 @@ class EditAdt(val context: Context, val callback: Callback) :
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        when (holder) {
+            is EditContentViewHolder -> holder.onRecycled()
+            is EditItemViewHolder -> holder.onRecycled()
+            is EditTitleViewHolder -> holder.onRecycled()
+            is EditItemAddViewHolder -> holder.onRecycled()
+            is EditItemLabelsViewHolder -> holder.onRecycled()
+        }
+    }
+
     override fun getItemViewType(position: Int) = getItem(position).type.ordinal
 
     fun setItemFocus(focus: EditVM.FocusChange) {

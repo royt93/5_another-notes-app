@@ -69,6 +69,9 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     private lateinit var navController: NavController
     private lateinit var binding: AMainBinding
 
+    private val exitHandler = Handler(Looper.getMainLooper())
+    private val resetExitRunnable = Runnable { doubleBackToExitPressedOnce = false }
+
     //set to false to make it work, but i do not like
     private var doubleBackToExitPressedOnce = true
 
@@ -142,7 +145,7 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
                     } else {
                         doubleBackToExitPressedOnce = true
                         Toast.makeText(this@MainAct, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-                        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+                        exitHandler.postDelayed(resetExitRunnable, 2000)
                     }
                 } else {
                     isEnabled = false
@@ -276,6 +279,7 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     override fun onDestroy() {
         super.onDestroy()
         navController.removeOnDestinationChangedListener(this)
+        exitHandler.removeCallbacks(resetExitRunnable)
     }
 
     private fun handleIntent() {

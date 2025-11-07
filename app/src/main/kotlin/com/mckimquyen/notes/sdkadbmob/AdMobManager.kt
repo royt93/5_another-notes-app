@@ -37,6 +37,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.mckimquyen.notes.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -58,6 +60,13 @@ object AdMobManager {
 
     private var application: Application? = null
     private var interstitialAd: InterstitialAd? = null
+
+    // Single Handler instance to prevent multiple Handler creation
+    private val handler = Handler(Looper.getMainLooper())
+
+    // Managed CoroutineScope for AdMobManager to prevent memory leaks
+    private val adManagerScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     private var appOpenAd: AppOpenAd? = null
     private var isAppOpenLoading = false
     private var isAppOpenShowing = false
@@ -119,7 +128,7 @@ object AdMobManager {
                 }
             }
             onComplete(true, gaidCurrent)
-            CoroutineScope(Dispatchers.Default).launch {
+            adManagerScope.launch(Dispatchers.Default) {
                 EventBus.sendEvent(true)
             }
         }
@@ -166,6 +175,36 @@ object AdMobManager {
 
     fun setCurrentActivity(activity: Activity) {
         this.currentActivity = WeakReference(activity)
+    }
+
+    /**
+     * Clear all pending callbacks to prevent memory leaks.
+     * Should be called when Activity is destroyed or when ads are no longer needed.
+     */
+    fun clearPendingCallbacks() {
+        handler.removeCallbacksAndMessages(null)
+        Log.d(TAG, "Cleared all pending Handler callbacks")
+    }
+
+    /**
+     * Cancel all coroutine jobs to prevent memory leaks.
+     * Call this when shutting down the app or cleaning up AdMobManager.
+     */
+    fun cancelAllJobs() {
+        adManagerScope.coroutineContext.cancelChildren()
+        Log.d(TAG, "Cancelled all AdMobManager coroutine jobs")
+    }
+
+    /**
+     * Clean up ad resources to prevent memory leaks.
+     * Call this when the Activity is destroyed.
+     */
+    fun onActivityDestroyed(activity: Activity) {
+        if (currentActivity?.get() == activity) {
+            currentActivity = null
+            clearPendingCallbacks()
+            Log.d(TAG, "Activity destroyed, cleaned up references")
+        }
     }
 
     //search logcat: "to get test ads on this device"
@@ -366,14 +405,14 @@ object AdMobManager {
         Log.d(TAG, "~~~~~ loadAppOpenAd isVIPMember $isVIPMember")
         if (isVIPMember) {
             Log.d(TAG, "App Open Ad skipped due to whitelist device")
-            Handler(Looper.getMainLooper()).postDelayed({
+            handler.postDelayed({
                 onAdLoaded.invoke(false)
             }, 1_000)
             return
         }
         if (!NetworkUtils.isDeviceConnected(context)) {
             Log.d(TAG, "loadAppOpenAd no internet")
-            Handler(Looper.getMainLooper()).postDelayed({
+            handler.postDelayed({
                 onAdLoaded.invoke(false)
             }, 1_000)
             return
@@ -381,7 +420,7 @@ object AdMobManager {
         // Kiểm tra thời gian cooldown cho App Open
         if (System.currentTimeMillis() - lastAppOpenErrorTime < ERROR_COOLDOWN) {
             Log.d(TAG, "App Open Ad skipped due to recent error")
-            Handler(Looper.getMainLooper()).postDelayed({
+            handler.postDelayed({
                 onAdLoaded(false)
             }, 1_000)
             return
@@ -392,7 +431,7 @@ object AdMobManager {
             } else {
                 if ((System.currentTimeMillis() - lastAppOpenLoadTime) < APP_OPEN_AD_TIME_OUT) {
                     Log.d(TAG, "App Open Ad is still valid or loading")
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    handler.postDelayed({
                         onAdLoaded.invoke(false)
                     }, 1_000)
                     return
@@ -409,7 +448,7 @@ object AdMobManager {
                     appOpenAd = ad
                     lastAppOpenLoadTime = System.currentTimeMillis()
                     isAppOpenLoading = false
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    handler.postDelayed({
                         onAdLoaded.invoke(true)
                     }, 500)
                 }
@@ -418,7 +457,7 @@ object AdMobManager {
                     lastAppOpenErrorTime = System.currentTimeMillis() // Cập nhật thời điểm lỗi
                     Log.d(TAG, "App Open Ad Failed to load: ${error.message}. Cooldown started.")
                     isAppOpenLoading = false
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    handler.postDelayed({
                         onAdLoaded.invoke(false)
                     }, 1_000)
                 }
@@ -502,11 +541,11 @@ object AdMobManager {
         if (countInitSplashScreen > 1) {
             onAdLoaded.invoke()
         } else {
-            CoroutineScope(Dispatchers.Default).launch {
+            adManagerScope.launch(Dispatchers.Default) {
                 Log.d(TAG, "~~~initSplashScreen launch")
                 EventBus.eventFlow.collectLatest { value ->
                     Log.d(TAG, "initSplashScreen collectLatest: $value")
-                    CoroutineScope(Dispatchers.Main).launch {
+                    adManagerScope.launch(Dispatchers.Main) {
                         loadAppOpenAd(
                             context = activity,
                             adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,

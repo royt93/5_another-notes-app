@@ -19,13 +19,12 @@ import com.mckimquyen.notes.ui.main.MainAct
 import com.mckimquyen.notes.ui.noti.NotificationAct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AlarmReceiver : BroadcastReceiver() {
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     @Inject
     lateinit var reminderAlarmManager: ReminderAlarmManager
@@ -38,12 +37,21 @@ class AlarmReceiver : BroadcastReceiver() {
 
         (context.applicationContext as RApp).appComponent.inject(this)
 
-        coroutineScope.launch {
-            val noteId = intent.getLongExtra(EXTRA_NOTE_ID, Note.NO_ID)
-            when (intent.action) {
-                Intent.ACTION_BOOT_COMPLETED -> reminderAlarmManager.updateAllAlarms()
-                ACTION_ALARM -> showNotificationForReminder(context, noteId)
-                ACTION_MARK_DONE -> markReminderAsDone(context, noteId)
+        // Use goAsync() to allow asynchronous work in BroadcastReceiver
+        val pendingResult = goAsync()
+
+        // Create a scoped coroutine that completes with the receiver
+        CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
+            try {
+                val noteId = intent.getLongExtra(EXTRA_NOTE_ID, Note.NO_ID)
+                when (intent.action) {
+                    Intent.ACTION_BOOT_COMPLETED -> reminderAlarmManager.updateAllAlarms()
+                    ACTION_ALARM -> showNotificationForReminder(context, noteId)
+                    ACTION_MARK_DONE -> markReminderAsDone(context, noteId)
+                }
+            } finally {
+                // Always finish the broadcast
+                pendingResult.finish()
             }
         }
     }

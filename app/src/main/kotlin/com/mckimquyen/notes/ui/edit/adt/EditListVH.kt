@@ -1,13 +1,14 @@
 package com.mckimquyen.notes.ui.edit.adt
 
 import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateUtils
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CompoundButton
 import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.mckimquyen.notes.R
@@ -61,15 +62,22 @@ class EditTitleViewHolder(binding: VItemEditTitleBinding, callback: EditAdt.Call
     private val titleEdt = binding.titleEdt
     private var item: EditTitleItem? = null
 
+    private val titleTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun afterTextChanged(editable: Editable?) {
+            if (editable != item?.title?.text) {
+                item?.title = AndroidEditableText(editable ?: return)
+            }
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
     init {
         titleEdt.setOnClickListener {
             callback.onNoteClickedToEdit()
         }
-        titleEdt.doAfterTextChanged { editable ->
-            if (editable != item?.title?.text) {
-                item?.title = AndroidEditableText(editable ?: return@doAfterTextChanged)
-            }
-        }
+        titleEdt.addTextChangedListener(titleTextWatcher)
         titleEdt.setHorizontallyScrolling(false)
         titleEdt.maxLines = Integer.MAX_VALUE
     }
@@ -86,6 +94,11 @@ class EditTitleViewHolder(binding: VItemEditTitleBinding, callback: EditAdt.Call
         titleEdt.setSelection(pos)
         titleEdt.showKeyboard()
     }
+
+    fun onRecycled() {
+        titleEdt.setOnClickListener(null)
+        titleEdt.removeTextChangedListener(titleTextWatcher)
+    }
 }
 
 class EditContentViewHolder(
@@ -96,9 +109,10 @@ class EditContentViewHolder(
 
     private val contentEdt = binding.contentEdt
     private var item: EditContentItem? = null
+    private val bulletTextWatcher = BulletTextWatcher()
 
     init {
-        contentEdt.addTextChangedListener(BulletTextWatcher())
+        contentEdt.addTextChangedListener(bulletTextWatcher)
         contentEdt.doAfterTextChanged { editable ->
             if (editable != null && editable != item?.content?.text) {
                 item?.content = AndroidEditableText(editable)
@@ -109,6 +123,12 @@ class EditContentViewHolder(
             callback.onNoteClickedToEdit()
         }
         contentEdt.onLinkClickListener = callback::onLinkClickedInNote
+    }
+
+    fun onRecycled() {
+        contentEdt.removeTextChangedListener(bulletTextWatcher)
+        contentEdt.setOnClickListener(null)
+        contentEdt.onLinkClickListener = null
     }
 
     fun bind(item: EditContentItem) {
@@ -138,21 +158,24 @@ class EditItemViewHolder(binding: VItemEditItemBinding, callback: EditAdt.Callba
     val isChecked: Boolean
         get() = itemCheck.isChecked
 
-    init {
-        itemCheck.setOnCheckedChangeListener { _, isChecked ->
-            itemEdt.clearFocus()
-            itemEdt.hideKeyboard()
-            itemEdt.strikethroughText = isChecked && callback.strikethroughCheckedItems
-            itemEdt.isActivated = !isChecked // Controls text color selector.
-            dragImv.isInvisible = isChecked && callback.moveCheckedToBottom
+    // Store listener references for cleanup
+    private val checkChangeListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+        itemEdt.clearFocus()
+        itemEdt.hideKeyboard()
+        itemEdt.strikethroughText = isChecked && callback.strikethroughCheckedItems
+        itemEdt.isActivated = !isChecked // Controls text color selector.
+        dragImv.isInvisible = isChecked && callback.moveCheckedToBottom
 
-            val pos = bindingAdapterPosition
-            if (pos != RecyclerView.NO_POSITION) {
-                callback.onNoteItemCheckChanged(pos, isChecked)
-            }
+        val pos = bindingAdapterPosition
+        if (pos != RecyclerView.NO_POSITION) {
+            callback.onNoteItemCheckChanged(pos, isChecked)
         }
+    }
 
-        itemEdt.doOnTextChanged { _, _, _, count ->
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun afterTextChanged(s: Editable?) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (itemEdt.text != item?.content?.text) {
                 item?.content = AndroidEditableText(itemEdt.text!!)
             }
@@ -166,34 +189,46 @@ class EditItemViewHolder(binding: VItemEditItemBinding, callback: EditAdt.Callba
                 callback.onNoteItemChanged(pos, count > 1)
             }
         }
-        itemEdt.setOnFocusChangeListener { _, hasFocus ->
-            // Only show delete icon for currently focused item.
-            deleteImv.isInvisible = !hasFocus
-        }
-        itemEdt.setOnKeyListener { _, _, event ->
-            val isCursorAtStart =
-                itemEdt.selectionStart == 0 && itemEdt.selectionStart == itemEdt.selectionEnd
-            if (isCursorAtStart && event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_DEL) {
-                // If user presses backspace at the start of an item, current item
-                // will be merged with previous.
-                val pos = bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) {
-                    callback.onNoteItemBackspacePressed(pos)
-                }
-            }
-            false
-        }
-        itemEdt.setOnClickListener {
-            callback.onNoteClickedToEdit()
-        }
-        itemEdt.onLinkClickListener = callback::onLinkClickedInNote
+    }
 
-        deleteImv.setOnClickListener {
+    private val focusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+        // Only show delete icon for currently focused item.
+        deleteImv.isInvisible = !hasFocus
+    }
+
+    private val keyListener = View.OnKeyListener { _, _, event ->
+        val isCursorAtStart =
+            itemEdt.selectionStart == 0 && itemEdt.selectionStart == itemEdt.selectionEnd
+        if (isCursorAtStart && event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_DEL) {
+            // If user presses backspace at the start of an item, current item
+            // will be merged with previous.
             val pos = bindingAdapterPosition
             if (pos != RecyclerView.NO_POSITION) {
-                callback.onNoteItemDeleteClicked(pos)
+                callback.onNoteItemBackspacePressed(pos)
             }
         }
+        false
+    }
+
+    private val itemClickListener = View.OnClickListener {
+        callback.onNoteClickedToEdit()
+    }
+
+    private val deleteClickListener = View.OnClickListener {
+        val pos = bindingAdapterPosition
+        if (pos != RecyclerView.NO_POSITION) {
+            callback.onNoteItemDeleteClicked(pos)
+        }
+    }
+
+    init {
+        itemCheck.setOnCheckedChangeListener(checkChangeListener)
+        itemEdt.addTextChangedListener(textWatcher)
+        itemEdt.onFocusChangeListener = focusChangeListener
+        itemEdt.setOnKeyListener(keyListener)
+        itemEdt.setOnClickListener(itemClickListener)
+        itemEdt.onLinkClickListener = callback::onLinkClickedInNote
+        deleteImv.setOnClickListener(deleteClickListener)
     }
 
     fun bind(item: EditItemItem) {
@@ -217,6 +252,17 @@ class EditItemViewHolder(binding: VItemEditItemBinding, callback: EditAdt.Callba
     fun clearFocus() {
         itemEdt.clearFocus()
     }
+
+    fun onRecycled() {
+        // Clean up all listeners to prevent memory leaks
+        itemCheck.setOnCheckedChangeListener(null)
+        itemEdt.removeTextChangedListener(textWatcher)
+        itemEdt.onFocusChangeListener = null
+        itemEdt.setOnKeyListener(null)
+        itemEdt.setOnClickListener(null)
+        itemEdt.onLinkClickListener = null
+        deleteImv.setOnClickListener(null)
+    }
 }
 
 class EditItemAddViewHolder(binding: VItemEditItemAddBinding, callback: EditAdt.Callback) :
@@ -226,6 +272,10 @@ class EditItemAddViewHolder(binding: VItemEditItemAddBinding, callback: EditAdt.
         itemView.setOnClickListener {
             callback.onNoteItemAddClicked(bindingAdapterPosition)
         }
+    }
+
+    fun onRecycled() {
+        itemView.setOnClickListener(null)
     }
 }
 
@@ -258,6 +308,10 @@ class EditItemLabelsViewHolder(binding: VItemEditLabelsBinding, callback: EditAd
 
     fun bind(item: EditChipsItem) {
         val layoutInflater = LayoutInflater.from(chipGroup.context)
+        // Clear listeners before removing views to prevent memory leaks
+        for (i in 0 until chipGroup.childCount) {
+            chipGroup.getChildAt(i)?.setOnClickListener(null)
+        }
         chipGroup.removeAllViews()
         for (chip in item.chips) {
             when (chip) {
@@ -292,6 +346,14 @@ class EditItemLabelsViewHolder(binding: VItemEditLabelsBinding, callback: EditAd
                 else -> error("Unknown chip type")
             }
         }
+    }
+
+    fun onRecycled() {
+        // Clear all child view listeners
+        for (i in 0 until chipGroup.childCount) {
+            chipGroup.getChildAt(i)?.setOnClickListener(null)
+        }
+        chipGroup.removeAllViews()
     }
 }
 

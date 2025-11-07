@@ -30,6 +30,9 @@ class EditEditText @JvmOverloads constructor(
 
     var onLinkClickListener: ((text: String, url: String) -> Unit)? = null
 
+    // Store listener references for cleanup
+    private val attachStateChangeListener = PrepareCursorControllersListener()
+
     init {
 
         doAfterTextChanged { editable ->
@@ -41,7 +44,7 @@ class EditEditText @JvmOverloads constructor(
             }
         }
 
-        addOnAttachStateChangeListener(PrepareCursorControllersListener())
+        addOnAttachStateChangeListener(attachStateChangeListener)
 
         if (autoLink) {
             doAfterTextChanged { editable ->
@@ -60,6 +63,13 @@ class EditEditText @JvmOverloads constructor(
 
     fun onLinkClicked(text: String, url: String) {
         onLinkClickListener?.invoke(text, url)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        // Clean up listener reference to prevent memory leaks
+        removeOnAttachStateChangeListener(attachStateChangeListener)
+        onLinkClickListener = null
     }
 
     companion object {

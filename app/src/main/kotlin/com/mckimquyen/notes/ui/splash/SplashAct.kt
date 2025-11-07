@@ -2,6 +2,8 @@ package com.mckimquyen.notes.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.google.android.material.color.DynamicColors
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
@@ -15,6 +17,9 @@ class SplashAct : BaseAct() {
 
     @Inject
     lateinit var prefs: PrefsManager
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val finishRunnable = Runnable { finish() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_DayNight)
@@ -36,8 +41,11 @@ class SplashAct : BaseAct() {
 //        finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         // Trì hoãn finish để đợi animation hoàn tất
-        window.decorView.postDelayed({
-            finish() // Finish sau animation
-        }, 300) // delay khoảng 300ms (hoặc đúng thời gian của animation)
+        handler.postDelayed(finishRunnable, 300) // delay khoảng 300ms (hoặc đúng thời gian của animation)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(finishRunnable)
     }
 }

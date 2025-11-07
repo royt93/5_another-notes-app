@@ -178,6 +178,11 @@ sealed class NoteViewHolder<T : NoteItem>(itemView: View) :
             adapter.freeLabelViewHolder(viewHolder)
         }
         labelViewHolders.clear()
+
+        // Clear click listeners to prevent memory leaks
+        cardView.setOnClickListener(null)
+        cardView.setOnLongClickListener(null)
+        actionBtn.setOnClickListener(null)
     }
 }
 
@@ -270,6 +275,10 @@ class MessageViewHolder(private val binding: VItemMessageBinding) :
         }
 
         (itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
+    }
+
+    fun unbind() {
+        binding.closeImv.setOnClickListener(null)
     }
 }
 

@@ -258,6 +258,13 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
     override fun onAdNotAvailable() {
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Clean up AdMobManager references to prevent memory leaks
+        AdMobManager.interstitialListener = null
+        AdMobManager.clearPendingCallbacks()
+    }
+
 //    private var interstitialAd: MaxInterstitialAd? = null
 //
 //    private fun createAdInter() {

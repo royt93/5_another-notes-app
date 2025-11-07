@@ -68,6 +68,7 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
     private val binding get() = _binding!!
 
     private var actionMode: ActionMode? = null
+    private var statusBarAnimator: ValueAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,6 +129,9 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Cancel any running animations to prevent memory leaks
+        statusBarAnimator?.cancel()
+        statusBarAnimator = null
         _binding = null
     }
 
@@ -223,7 +227,11 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
         duration: Long,
         endAsTransparent: Boolean = false,
     ) {
+        // Cancel any existing animation
+        statusBarAnimator?.cancel()
+
         val anim = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+        statusBarAnimator = anim
 
         anim.duration = duration
         anim.addUpdateListener { animator ->
@@ -234,9 +242,10 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
             anim.addListener(onEnd = {
                 // Wait 50ms before resetting the status bar color to prevent flickering, when the
                 // regular toolbar isn't yet visible again.
-                Executors.newSingleThreadScheduledExecutor().schedule({
+                // Use view.postDelayed instead of Executors to avoid thread leaks
+                view?.postDelayed({
                     requireActivity().window.statusBarColor = Color.TRANSPARENT
-                }, 50, TimeUnit.MILLISECONDS)
+                }, 50)
             })
         }
 

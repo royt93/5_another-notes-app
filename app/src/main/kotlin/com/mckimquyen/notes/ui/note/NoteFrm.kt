@@ -6,6 +6,8 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.Menu
@@ -50,8 +52,6 @@ import com.mckimquyen.notes.ui.observeEvent
 import com.mckimquyen.notes.ui.startSharingData
 import com.mckimquyen.notes.utils.startSafeActionMode
 import java.text.NumberFormat
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 import com.google.android.material.R as RMaterial
@@ -79,6 +79,9 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
     private var actionMode: ActionMode? = null
 
     protected lateinit var drawerLayout: DrawerLayout
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var statusBarAnimator: ValueAnimator? = null
 
     private var spanCount = 1
     private var hideActionMode = false
@@ -441,7 +444,29 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         createdNote = null
         createdNoteId = null
 
-        findNavController().removeOnDestinationChangedListener(this)
+        // Clean up handler callbacks
+        handler.removeCallbacksAndMessages(null)
+
+        // Cancel any running animations to prevent memory leaks
+        statusBarAnimator?.cancel()
+        statusBarAnimator = null
+
+        // Safe removal of listener to prevent memory leaks
+        try {
+            findNavController().removeOnDestinationChangedListener(this)
+        } catch (e: IllegalStateException) {
+            // Fragment may not be attached to a NavController anymore
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Additional safety check to ensure listener is removed
+        try {
+            findNavController().removeOnDestinationChangedListener(this)
+        } catch (e: IllegalStateException) {
+            // Fragment may not be attached to a NavController anymore
+        }
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
@@ -468,7 +493,11 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         duration: Long,
         endAsTransparent: Boolean = false,
     ) {
+        // Cancel any existing animation
+        statusBarAnimator?.cancel()
+
         val anim = ValueAnimator.ofObject(/* evaluator = */ ArgbEvaluator(), /* ...values = */ colorFrom, colorTo)
+        statusBarAnimator = anim
 
         anim.duration = duration
         anim.addUpdateListener { animator ->
@@ -479,9 +508,12 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
             anim.addListener(onEnd = {
                 // Wait 50ms before resetting the status bar color to prevent flickering, when the
                 // regular toolbar isn't yet visible again.
-                Executors.newSingleThreadScheduledExecutor().schedule({
-                    requireActivity().window.statusBarColor = Color.TRANSPARENT
-                }, 50, TimeUnit.MILLISECONDS)
+                // Use Handler instead of Executors to avoid thread leaks
+                handler.postDelayed({
+                    if (isAdded && !isDetached) {
+                        requireActivity().window.statusBarColor = Color.TRANSPARENT
+                    }
+                }, 50)
             })
         }
 

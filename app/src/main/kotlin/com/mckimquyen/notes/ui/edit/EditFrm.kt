@@ -68,6 +68,12 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     private var _binding: FEditBinding? = null
     private val binding get() = _binding!!
 
+    private val transitionListener = object : TransitionListenerAdapter() {
+        override fun onTransitionEnd(transition: Transition) {
+            sharedViewModel.sharedElementTransitionFinished()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedElementEnterTransition = MaterialContainerTransform(requireContext(), true).apply {
             fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
@@ -81,11 +87,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         }
 
         // Send an event via the sharedViewModel when the transition has finished playing
-        (sharedElementReturnTransition as MaterialContainerTransform).addListener(object : TransitionListenerAdapter() {
-            override fun onTransitionEnd(transition: Transition) {
-                sharedViewModel.sharedElementTransitionFinished()
-            }
-        })
+        (sharedElementReturnTransition as MaterialContainerTransform).addListener(transitionListener)
 
         super.onCreate(savedInstanceState)
         (requireContext().applicationContext as RApp).appComponent.inject(this)
@@ -396,6 +398,8 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Remove transition listener to prevent memory leaks
+        (sharedElementReturnTransition as? MaterialContainerTransform)?.removeListener(transitionListener)
         _binding = null
     }
 

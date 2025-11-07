@@ -41,4 +41,10 @@ class LabelListVH(val binding: VItemLabelBinding) : RecyclerView.ViewHolder(bind
             true
         }
     }
+
+    fun unbind() {
+        binding.labelImv.setOnClickListener(null)
+        binding.root.setOnClickListener(null)
+        binding.root.setOnLongClickListener(null)
+    }
 }

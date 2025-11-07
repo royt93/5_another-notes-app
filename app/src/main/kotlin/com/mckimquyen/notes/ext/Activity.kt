@@ -331,6 +331,12 @@ fun Activity.toggleFullscreen(
     }
 }
 
+/**
+ * Hides the navigation bar.
+ * IMPORTANT: The listener set here should be removed in Activity.onDestroy()
+ * by calling window.decorView.setOnSystemUiVisibilityChangeListener(null)
+ * to prevent memory leaks.
+ */
 fun Activity.hideNavigationBar(
 ) {
     // set navigation bar status, remember to disable "setNavigationBarTintEnabled"
@@ -343,6 +349,8 @@ fun Activity.hideNavigationBar(
     // Without this, after pressing volume buttons, the navigation bar will
     // show up and won't hide
     val decorView = this.window.decorView
+    // Clear any existing listener first to prevent multiple listeners
+    decorView.setOnSystemUiVisibilityChangeListener(null)
     decorView.setOnSystemUiVisibilityChangeListener { visibility ->
         if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
             decorView.systemUiVisibility = flags
@@ -350,6 +358,12 @@ fun Activity.hideNavigationBar(
     }
 }
 
+/**
+ * Shows the navigation bar.
+ * IMPORTANT: The listener set here should be removed in Activity.onDestroy()
+ * by calling window.decorView.setOnSystemUiVisibilityChangeListener(null)
+ * to prevent memory leaks.
+ */
 fun Activity.showNavigationBar(
 ) {
     // set navigation bar status, remember to disable "setNavigationBarTintEnabled"
@@ -362,11 +376,21 @@ fun Activity.showNavigationBar(
     // Without this, after pressing volume buttons, the navigation bar will
     // show up and won't hide
     val decorView = this.window.decorView
+    // Clear any existing listener first to prevent multiple listeners
+    decorView.setOnSystemUiVisibilityChangeListener(null)
     decorView.setOnSystemUiVisibilityChangeListener { visibility ->
         if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
             decorView.systemUiVisibility = flags
         }
     }
+}
+
+/**
+ * Helper function to clear SystemUiVisibilityChangeListener.
+ * Call this in Activity.onDestroy() to prevent memory leaks.
+ */
+fun Activity.clearSystemUiVisibilityListener() {
+    this.window.decorView.setOnSystemUiVisibilityChangeListener(null)
 }
 
 @SuppressLint("ObsoleteSdkInt")
@@ -409,10 +433,24 @@ fun Activity.showDefaultControls(
     decorView.systemUiVisibility = uiOptions
 }
 
+/**
+ * WARNING: This function creates a Handler without cleanup mechanism.
+ * Use with caution as it may cause memory leaks if the context is destroyed
+ * before the runnable executes.
+ *
+ * RECOMMENDED: Use Handler with proper lifecycle management or coroutines instead.
+ * @deprecated Use Handler with explicit cleanup or lifecycle-aware alternatives
+ */
+@Deprecated(
+    message = "This function may cause memory leaks. Use Handler with proper cleanup instead.",
+    replaceWith = ReplaceWith("Handler(Looper.getMainLooper()).also { handler -> handler.postDelayed(runnable, mls.toLong()) }"),
+    level = DeprecationLevel.WARNING
+)
 fun setDelay(
     mls: Int,
     runnable: Runnable,
-) {
+): Handler {
     val handler = Handler(Looper.getMainLooper())
     handler.postDelayed({ runnable.run() }, mls.toLong())
+    return handler // Return handler so caller can remove callbacks if needed
 }

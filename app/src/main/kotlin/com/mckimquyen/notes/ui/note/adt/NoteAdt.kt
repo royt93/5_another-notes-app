@@ -80,7 +80,11 @@ class NoteAdt(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is MessageViewHolder -> holder.bind(item as MessageItem, this)
+            is MessageViewHolder -> {
+                // [onViewRecycled] is not always called so unbinding is also done here.
+                holder.unbind()
+                holder.bind(item as MessageItem, this)
+            }
             is HeaderViewHolder -> holder.bind(item as HeaderItem)
             is TextNoteViewHolder -> {
                 // [onViewRecycled] is not always called so unbinding is also done here.
@@ -102,8 +106,9 @@ class NoteAdt(
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         // Used to recycle secondary view holders
-        if (holder is NoteViewHolder<*>) {
-            holder.unbind(this)
+        when (holder) {
+            is NoteViewHolder<*> -> holder.unbind(this)
+            is MessageViewHolder -> holder.unbind()
         }
     }
 

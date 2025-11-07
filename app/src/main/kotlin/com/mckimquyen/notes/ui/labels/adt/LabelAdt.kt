@@ -26,6 +26,11 @@ class LabelAdt(
 
     override fun getItemId(position: Int) = getItem(position).id
 
+    override fun onViewRecycled(holder: LabelListVH) {
+        super.onViewRecycled(holder)
+        holder.unbind()
+    }
+
     interface Callback {
         val shouldHighlightCheckedItems: Boolean
 
