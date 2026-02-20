@@ -25,6 +25,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.widget.doAfterTextChanged
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -150,6 +151,16 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         val layoutManager = LinearLayoutManager(context)
         rcv.adapter = adapter
         rcv.layoutManager = layoutManager
+        // Feature 1+3: Live word/char count — attach text watcher to EditTexts as they appear
+        rcv.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewAttachedToWindow(view: View) {
+                val contentEdt = view.findViewById<android.widget.EditText>(R.id.contentEdt)
+                val titleEdt = view.findViewById<android.widget.EditText>(R.id.titleEdt)
+                contentEdt?.doAfterTextChanged { viewModel.updateLiveStats() }
+                titleEdt?.doAfterTextChanged { viewModel.updateLiveStats() }
+            }
+            override fun onChildViewDetachedFromWindow(view: View) {}
+        })
         rcv.itemAnimator = object : DefaultItemAnimator() {
             override fun animateAppearance(
                 viewHolder: RecyclerView.ViewHolder,
@@ -216,7 +227,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         viewModel.noteType.asFlow().combine(viewModel.noteStatus.asFlow()) { type, status -> status to type }
             .asLiveData().observe(viewLifecycleOwner, ::updateItemsForStatusAndType)
 
-        viewModel.editItems.observe(viewLifecycleOwner, adapter::submitList)
+        viewModel.editItems.observe(viewLifecycleOwner) { items ->
+            adapter.submitList(items)
+            // Feature 1: Trigger initial word/char count after note data is loaded
+            viewModel.updateLiveStats()
+        }
 
         viewModel.focusEvent.observeEvent(viewLifecycleOwner, adapter::setItemFocus)
 
@@ -304,6 +319,32 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
         viewModel.exitEvent.observeEvent(viewLifecycleOwner) {
             navController.popBackStack()
+        }
+
+        // Feature 1: Update word/char count footer
+        viewModel.wordCharCount.observe(viewLifecycleOwner) { (words, chars) ->
+            binding.wordCharCountTxv.text = "$words words · $chars chars"
+        }
+
+        // Feature 3: Character limit warnings
+        viewModel.charLimitWarningEvent.observeEvent(viewLifecycleOwner) { charCount ->
+            val limit = EditVM.CHAR_LIMIT
+            val isAtLimit = charCount >= limit
+            val message = if (isAtLimit) {
+                "Đã đạt giới hạn $limit ký tự"
+            } else {
+                "Gần đạt giới hạn ($charCount/$limit ký tự)"
+            }
+            Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+                .setTextColor(
+                    if (isAtLimit) {
+                        requireContext().getColor(android.R.color.holo_red_light)
+                    } else {
+                        requireContext().getColor(android.R.color.holo_orange_light)
+                    }
+                )
+                .setGestureInsetBottomIgnored(true)
+                .show()
         }
     }
 

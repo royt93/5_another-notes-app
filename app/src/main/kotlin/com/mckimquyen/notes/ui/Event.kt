@@ -23,6 +23,13 @@ class Event<out T>(private val content: T) {
         hasBeenHandled = true
         return content
     }
+
+    /**
+     * Returns the content regardless of whether it has been handled.
+     * Use this when you need to "peek" at the value without consuming the event,
+     * so other observers can still receive it via [EventObserver].
+     */
+    fun peekContent(): T = content
 }
 
 /**

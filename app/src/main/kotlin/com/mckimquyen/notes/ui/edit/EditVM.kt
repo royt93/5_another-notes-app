@@ -181,6 +181,17 @@ class EditVM @AssistedInject constructor(
     val exitEvent: LiveData<Event<Unit>>
         get() = _exitEvent
 
+    // Feature 1: Word count & char count for footer display
+    private val _wordCharCount = MutableLiveData<Pair<Int, Int>>(Pair(0, 0))
+    val wordCharCount: LiveData<Pair<Int, Int>>
+        get() = _wordCharCount
+
+    // Feature 3: Character limit warning (9000 = 90%, 10000 = 100%)
+    private val _charLimitWarningEvent = MutableLiveData<Event<Int>>()
+    val charLimitWarningEvent: LiveData<Event<Int>>
+        get() = _charLimitWarningEvent
+    private var lastCharWarnThreshold = 0
+
     /**
      * Whether to show date item.
      */
@@ -615,6 +626,44 @@ class EditVM @AssistedInject constructor(
             title = title, content = content,
             metadata = metadata, status = status, pinned = pinned, reminder = reminder
         )
+
+        // Feature 1+3: Update word/char count and char-limit warning
+        updateLiveStats(title, content)
+    }
+
+    /**
+     * Feature 1+3: Compute word/char count and emit char-limit warnings.
+     * Reads text directly from [listItems] so it can be called live on each
+     * keystroke without mutating [note] or touching the database.
+     */
+    fun updateLiveStats() {
+        if (listItems.isEmpty()) return
+        val title = runCatching { findItem<EditTitleItem>().title.text.toString() }.getOrDefault("")
+        val content = when (note.type) {
+            NoteType.TEXT -> runCatching { findItem<EditContentItem>().content.text.toString() }.getOrDefault("")
+            NoteType.LIST -> listItems.filterIsInstance<EditItemItem>().joinToString("\n") { it.content.text }
+        }
+        updateLiveStats(title, content)
+    }
+
+    private fun updateLiveStats(title: String, content: String) {
+        val fullText = "$title $content".trim()
+        val chars = fullText.length
+        val words = if (fullText.isEmpty()) 0 else fullText.split(Regex("\\s+")).count { it.isNotEmpty() }
+        _wordCharCount.value = Pair(words, chars)
+
+        val contentChars = content.length
+        when {
+            contentChars >= CHAR_LIMIT && lastCharWarnThreshold < CHAR_LIMIT -> {
+                lastCharWarnThreshold = CHAR_LIMIT
+                _charLimitWarningEvent.send(contentChars)
+            }
+            contentChars >= CHAR_LIMIT_WARN && lastCharWarnThreshold < CHAR_LIMIT_WARN -> {
+                lastCharWarnThreshold = CHAR_LIMIT_WARN
+                _charLimitWarningEvent.send(contentChars)
+            }
+            contentChars < CHAR_LIMIT_WARN -> lastCharWarnThreshold = 0
+        }
     }
 
     private suspend fun deleteNoteInternal() {
@@ -743,6 +792,8 @@ class EditVM @AssistedInject constructor(
             // If a single linebreak was inserted, focus on the new item.
             focusItemAt(pos + lines.size - 1, if (isPaste) lines.last().length else 0, false)
         }
+        // Feature 1+3: Update live word/char count for list-type notes
+        updateLiveStats()
     }
 
     override fun onNoteItemCheckChanged(pos: Int, checked: Boolean) {
@@ -940,6 +991,10 @@ class EditVM @AssistedInject constructor(
     }
 
     companion object {
+        // Feature 3: Char limit constants
+        const val CHAR_LIMIT = 100_000
+        const val CHAR_LIMIT_WARN = 90_000
+
         private val BLANK_NOTE = Note(
             id = Note.NO_ID,
             type = NoteType.TEXT,

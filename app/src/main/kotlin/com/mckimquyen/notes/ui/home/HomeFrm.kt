@@ -169,6 +169,23 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
             updateToolbarForDestination(destination)
         }
 
+        // Feature 4: Use plain observe + peekContent() so we can read the event
+        // even after NoteFrm's EventObserver has already consumed it (hasBeenHandled=true).
+        // Guard with a local reference to prevent re-firing on lifecycle resume.
+        var lastAdEvent: Any? = null
+        viewModel.statusChangeEvent.observe(viewLifecycleOwner) { event ->
+            if (event === lastAdEvent) return@observe  // already handled this exact event
+            lastAdEvent = event
+            val statusChange = event.peekContent()
+            Log.d("roy93~", "[Ad-Delete] statusChangeEvent: newStatus=${statusChange.newStatus}, count=${statusChange.oldNotes.size}")
+            if (statusChange.newStatus == NoteStatus.DELETED) {
+                Log.d("roy93~", "[Ad-Delete] Note DELETED — calling showInterstitial")
+                AdMobManager.showInterstitial(requireActivity()) { success ->
+                    Log.d("roy93~", "[Ad-Delete] showInterstitial result: success=$success")
+                }
+            }
+        }
+
         sharedViewModel.sortChangeEvent.observeEvent(viewLifecycleOwner, viewModel::changeSort)
     }
 

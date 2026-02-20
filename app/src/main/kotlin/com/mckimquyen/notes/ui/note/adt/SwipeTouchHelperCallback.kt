@@ -2,6 +2,9 @@ package com.mckimquyen.notes.ui.note.adt
 
 import android.annotation.SuppressLint
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.view.Gravity
 import android.widget.FrameLayout
@@ -60,6 +63,25 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
             dist = 0f
         }
 
+        // Feature 2: Draw colored background behind the swiping card
+        if (dist > 0f && swipeAction != SwipeAction.NONE) {
+            val bgColor = when (swipeAction) {
+                SwipeAction.ARCHIVE -> SWIPE_COLOR_ARCHIVE
+                SwipeAction.DELETE  -> SWIPE_COLOR_DELETE
+                else                -> Color.TRANSPARENT
+            }
+            swipeBgPaint.color = bgColor
+            val itemView = viewHolder.itemView
+            val rect = if (dX > 0) {
+                // Swiping right: paint left portion
+                RectF(itemView.left.toFloat(), itemView.top.toFloat(), itemView.left + dist, itemView.bottom.toFloat())
+            } else {
+                // Swiping left: paint right portion
+                RectF(itemView.right - dist, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+            }
+            c.drawRoundRect(rect, SWIPE_BG_CORNER_RADIUS, SWIPE_BG_CORNER_RADIUS, swipeBgPaint)
+        }
+
         // Make the card progressively more transparent the farther it is dragged.
         cardView.alpha = (1 - dist / cardView.width * ITEM_SWIPE_OPACITY_FACTOR).coerceAtLeast(ITEM_SWIPE_OPACITY_MIN)
         cardView.translationX = dist * dX.sign
@@ -90,6 +112,9 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
                     else -> return // never happens
                 }
             )
+
+            // Feature 2 fix: White tint on icon for contrast against colored background
+            viewHolder.swipeImv.setColorFilter(Color.WHITE)
 
             // Start action drawable animation (type depends on API)
             when (val drawable = viewHolder.swipeImv.drawable) {
@@ -142,5 +167,16 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
 
         /** Minimum item opacity when swiping. */
         private const val ITEM_SWIPE_OPACITY_MIN = 0.1f
+
+        // Feature 2: Swipe background colors
+        private val SWIPE_COLOR_ARCHIVE = Color.parseColor("#4CAF50") // Green
+        private val SWIPE_COLOR_DELETE  = Color.parseColor("#F44336") // Red
+        private const val SWIPE_BG_CORNER_RADIUS = 16f
+    }
+
+    // Feature 2: Reusable Paint object (avoid allocation in onChildDraw)
+    private val swipeBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        alpha = 200 // slightly transparent
     }
 }

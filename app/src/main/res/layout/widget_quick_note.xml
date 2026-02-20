@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Widget layout: RemoteViews does NOT support:
+      - Theme attributes (?colorPrimary, ?colorSurface, etc.)
+      - android:tint on ImageView
+      - android:textAppearance with theme refs
+    Use hardcoded colors and sp sizes only.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widgetRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_background" android:gravity="center" android:orientation="horizontal" android:padding="8dp">
+
+    <ImageView android:layout_width="28dp" android:layout_height="28dp" android:contentDescription="@string/app_name_short" android:src="@drawable/ic_plus" />
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/app_name_short" android:textColor="#FF212121" android:textSize="14sp" android:textStyle="bold" />
+
+</LinearLayout>
