@@ -14,6 +14,7 @@ import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.AppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +39,9 @@ class RApp : Application() {
     val appComponent by lazy {
         DaggerAppComponent.factory().create(applicationContext)
     }
+
+    // Fix MEDIUM-1: Named scope so it is trackable and cancellable (instead of anonymous CoroutineScope)
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @Inject
     lateinit var prefs: PrefsManager
@@ -87,7 +91,7 @@ class RApp : Application() {
     }
 
     private fun setupAdmob() {
-        CoroutineScope(Dispatchers.IO).launch {
+        appScope.launch {
             MobileAds.initialize(this@RApp) {}
             AdMobManager.init(this@RApp) { success, gaidCurrent ->
                 Log.d("roy93~", "AdMobManager init success $success, gaidCurrent $gaidCurrent")

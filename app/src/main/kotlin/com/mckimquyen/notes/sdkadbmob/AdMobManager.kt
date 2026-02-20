@@ -41,8 +41,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.lang.ref.WeakReference
 
 //version 20250803
@@ -85,7 +87,13 @@ object AdMobManager {
     private var appPreferences: AppPreferences? = null
     private var currentActivity: WeakReference<Activity>? = null
 
-    var interstitialListener: InterstitialAdListener? = null
+    // Fix HIGH-2: Use WeakReference so interstitialListener cannot prevent Activity from being GC'd
+    private var _interstitialListenerRef: WeakReference<InterstitialAdListener>? = null
+    var interstitialListener: InterstitialAdListener?
+        get() = _interstitialListenerRef?.get()
+        set(value) {
+            _interstitialListenerRef = value?.let { WeakReference(it) }
+        }
 
     private var lastInterstitialErrorTime: Long = 0
     private var lastAppOpenErrorTime: Long = 0
@@ -160,17 +168,19 @@ object AdMobManager {
         return list
     }
 
+    // Fix MEDIUM-3: Replace raw Thread with coroutine + 5s timeout to allow cancellation and prevent callback leaks
     fun getGAID(context: Context, callback: (String) -> Unit) {
-        Thread {
-            try {
-                val info = AdvertisingIdClient.getAdvertisingIdInfo(context)
-                val id = info.id ?: ""
-                callback(id)
+        adManagerScope.launch(Dispatchers.IO) {
+            val id = try {
+                withTimeout(5_000L) {
+                    AdvertisingIdClient.getAdvertisingIdInfo(context).id ?: ""
+                }
             } catch (e: Exception) {
-                callback("")
                 Log.d("AdMobManager", "getGAID error $e")
+                ""
             }
-        }.start()
+            withContext(Dispatchers.Main) { callback(id) }
+        }
     }
 
     fun setCurrentActivity(activity: Activity) {
@@ -535,33 +545,48 @@ object AdMobManager {
 
     var countInitSplashScreen = 0
 
+    // Fix CRITICAL-1: Use WeakReference for activity + collect only ONE event (first{}) instead of
+    // collectLatest which loops forever and keeps a strong Activity reference alive indefinitely.
     fun initSplashScreen(activity: Activity, onAdLoaded: () -> Unit) {
         countInitSplashScreen++
         Log.d(TAG, "~~~initSplashScreen countInitSplashScreen $countInitSplashScreen")
         if (countInitSplashScreen > 1) {
             onAdLoaded.invoke()
-        } else {
-            adManagerScope.launch(Dispatchers.Default) {
-                Log.d(TAG, "~~~initSplashScreen launch")
-                EventBus.eventFlow.collectLatest { value ->
-                    Log.d(TAG, "initSplashScreen collectLatest: $value")
-                    adManagerScope.launch(Dispatchers.Main) {
-                        loadAppOpenAd(
-                            context = activity,
-                            adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
-                            onAdLoaded = { result ->
-                                Log.d(TAG, "onAdLoaded result $result")
-                                if (result) {
-                                    showAppOpenAd(activity) {
-                                        onAdLoaded.invoke()
-                                    }
-                                } else {
-                                    onAdLoaded.invoke()
-                                }
-                            },
-                        )
-                    }
+            return
+        }
+        // Capture only WeakReferences so that SplashAct can be GC'd after it's destroyed
+        val weakActivity = WeakReference(activity)
+        val weakCallback = WeakReference(onAdLoaded)
+        adManagerScope.launch(Dispatchers.Default) {
+            Log.d(TAG, "~~~initSplashScreen launch")
+            // first{} suspends until one true event arrives then completes — no infinite loop
+            val value = EventBus.eventFlow.first { it }
+            Log.d(TAG, "initSplashScreen got event: $value")
+            withContext(Dispatchers.Main) {
+                val act = weakActivity.get()
+                val callback = weakCallback.get()
+                if (act == null || act.isDestroyed || callback == null) {
+                    Log.d(TAG, "initSplashScreen: activity already destroyed, skipping ad")
+                    return@withContext
                 }
+                loadAppOpenAd(
+                    context = act,
+                    adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
+                    onAdLoaded = { result ->
+                        Log.d(TAG, "onAdLoaded result $result")
+                        val currentAct = weakActivity.get()
+                        val cb = weakCallback.get()
+                        if (currentAct == null || currentAct.isDestroyed || cb == null) {
+                            Log.d(TAG, "initSplashScreen: activity destroyed before ad shown")
+                            return@loadAppOpenAd
+                        }
+                        if (result) {
+                            showAppOpenAd(currentAct) { cb.invoke() }
+                        } else {
+                            cb.invoke()
+                        }
+                    },
+                )
             }
         }
     }

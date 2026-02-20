@@ -20,6 +20,7 @@ import com.mckimquyen.notes.ui.noti.NotificationAct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -41,7 +42,9 @@ class AlarmReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
 
         // Create a scoped coroutine that completes with the receiver
-        CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
+        // Fix HIGH-1: Save scope reference and cancel it after work is done to prevent scope accumulation
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        scope.launch {
             try {
                 val noteId = intent.getLongExtra(EXTRA_NOTE_ID, Note.NO_ID)
                 when (intent.action) {
@@ -50,8 +53,9 @@ class AlarmReceiver : BroadcastReceiver() {
                     ACTION_MARK_DONE -> markReminderAsDone(context, noteId)
                 }
             } finally {
-                // Always finish the broadcast
+                // Always finish the broadcast and cancel scope to prevent memory leak
                 pendingResult.finish()
+                scope.cancel()
             }
         }
     }

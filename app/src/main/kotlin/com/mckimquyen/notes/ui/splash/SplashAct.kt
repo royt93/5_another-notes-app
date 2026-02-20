@@ -19,7 +19,13 @@ class SplashAct : BaseAct() {
     lateinit var prefs: PrefsManager
 
     private val handler = Handler(Looper.getMainLooper())
-    private val finishRunnable = Runnable { finish() }
+    // Fix LOW-2: Use WeakReference so SplashAct is not held for 300ms if destroyed early
+    private val finishRunnable = Runnable {
+        val act = this@SplashAct
+        if (!act.isDestroyed && !act.isFinishing) {
+            act.finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_DayNight)

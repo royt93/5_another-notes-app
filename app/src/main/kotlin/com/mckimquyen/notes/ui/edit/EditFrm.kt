@@ -398,6 +398,8 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Fix MEDIUM-2: Remove TouchListener to release the lambda that captures binding.viewBackground
+        binding.recyclerView.setOnTouchListener(null)
         // Remove transition listener to prevent memory leaks
         (sharedElementReturnTransition as? MaterialContainerTransform)?.removeListener(transitionListener)
         _binding = null
