@@ -1,73 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?colorSurface"
-    android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingTop="2dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="2dp">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:orientation="horizontal" android:paddingStart="8dp" android:paddingTop="2dp" android:paddingEnd="16dp" android:paddingBottom="2dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/dragImv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="top"
-        android:layout_marginTop="4dp"
-        android:layout_weight="0"
-        android:alpha="0.5"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_drag"
-        tools:ignore="ContentDescription" />
+    <androidx.appcompat.widget.AppCompatImageView android:id="@+id/dragImv" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="top" android:layout_marginTop="4dp" android:layout_weight="0" android:alpha="0.5" android:contentDescription="@string/app_name" android:src="@drawable/ic_drag" tools:ignore="ContentDescription" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/itemChk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:contentDescription="@string/app_name"
-        android:gravity="top"
-        android:minWidth="0dp"
-        android:minHeight="0dp" />
+    <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/itemChk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="0" android:contentDescription="@string/app_name" android:gravity="top" android:minWidth="0dp" android:minHeight="0dp" />
 
-    <com.mckimquyen.notes.ui.edit.adt.EditEditText
-        android:id="@+id/contentEdt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:background="@null"
-        android:contentDescription="@string/app_name"
-        android:imeOptions="flagNoExtractUi"
-        android:importantForAutofill="no"
-        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-        android:linksClickable="true"
-        android:padding="5dp"
-        android:textAppearance="?textAppearanceBody1"
-        android:textColor="@color/selector_item_edit_item_text_color"
-        android:textDirection="anyRtl"
-        android:textSize="15sp"
-        app:autoLink="true"
-        app:emojiCompatEnabled="false"
-        tools:ignore="LabelFor"
-        tools:text="Mauris rutrum massa placerat felis pharetra tristique. Nulla sed urna a dui vehicula euismod." />
+    <com.mckimquyen.notes.ui.edit.adt.EditEditText android:id="@+id/contentEdt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_weight="1" android:background="@null" android:contentDescription="@string/app_name" android:imeOptions="flagNoExtractUi" android:importantForAutofill="no" android:inputType="textMultiLine|textCapSentences|textAutoCorrect" android:linksClickable="true" android:padding="5dp" android:textAppearance="?textAppearanceBody1" android:textColor="@color/selector_item_edit_item_text_color" android:textDirection="anyRtl" android:textSize="15sp" app:autoLink="true" app:emojiCompatEnabled="false" tools:ignore="LabelFor" tools:text="Mauris rutrum massa placerat felis pharetra tristique. Nulla sed urna a dui vehicula euismod." />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/deleteImv"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="top"
-        android:layout_marginStart="4dp"
-        android:layout_weight="0"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/app_name"
-        android:padding="4dp"
-        android:src="@drawable/ic_close"
-        android:visibility="invisible"
-        tools:ignore="ContentDescription"
-        tools:visibility="visible" />
+    <androidx.appcompat.widget.AppCompatImageView android:id="@+id/deleteImv" android:layout_width="32dp" android:layout_height="32dp" android:layout_gravity="top" android:layout_marginStart="4dp" android:layout_weight="0" android:background="?selectableItemBackgroundBorderless" android:contentDescription="@string/app_name" android:padding="4dp" android:src="@drawable/ic_close" android:visibility="invisible" tools:ignore="ContentDescription" tools:visibility="visible" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
