@@ -1,0 +1,51 @@
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:prepareLibraryDefinitionsProductionDebug UP-TO-DATE
+> Task :app:preProductionDebugBuild UP-TO-DATE
+> Task :app:dataBindingMergeDependencyArtifactsProductionDebug UP-TO-DATE
+> Task :app:generateProductionDebugResValues UP-TO-DATE
+> Task :app:generateProductionDebugResources UP-TO-DATE
+> Task :app:mergeProductionDebugResources UP-TO-DATE
+> Task :app:packageProductionDebugResources UP-TO-DATE
+> Task :app:parseProductionDebugLocalResources UP-TO-DATE
+> Task :app:dataBindingGenBaseClassesProductionDebug UP-TO-DATE
+> Task :app:generateProductionDebugBuildConfig UP-TO-DATE
+> Task :app:generateSafeArgsProductionDebug UP-TO-DATE
+> Task :app:checkProductionDebugAarMetadata UP-TO-DATE
+> Task :app:mapProductionDebugSourceSetPaths UP-TO-DATE
+> Task :app:createProductionDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksProductionDebug UP-TO-DATE
+> Task :app:processProductionDebugMainManifest UP-TO-DATE
+> Task :app:processProductionDebugManifest UP-TO-DATE
+> Task :app:processProductionDebugManifestForPackage UP-TO-DATE
+> Task :app:processProductionDebugResources UP-TO-DATE
+> Task :app:kaptGenerateStubsProductionDebugKotlin UP-TO-DATE
+> Task :app:kaptProductionDebugKotlin UP-TO-DATE
+
+> Task :app:compileProductionDebugKotlin FAILED
+e: file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/1107another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt:98:5 'onCreateView' overrides nothing.
+e: file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/1107another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt:100:20 Unresolved reference 'ViewGroup'.
+
+[Incubating] Problems report is available at: file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/1107another-notes-app/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileProductionDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 3s
+21 actionable tasks: 1 executed, 20 up-to-date

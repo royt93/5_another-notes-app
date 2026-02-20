@@ -91,6 +91,11 @@ class EditVM @AssistedInject constructor(
     private var reminder: Reminder? = null
 
     /**
+     * The color of the note, 0 if default.
+     */
+    private var color: Int = note.color
+
+    /**
      * URL of last clicked span, if any.
      */
     private var linkUrl: String? = null
@@ -128,6 +133,10 @@ class EditVM @AssistedInject constructor(
     private val _noteReminder = MutableLiveData<Reminder?>()
     val noteReminder: LiveData<Reminder?>
         get() = _noteReminder
+
+    private val _noteColor = MutableLiveData<Int>()
+    val noteColor: LiveData<Int>
+        get() = _noteColor
 
     private val _editItems = MutableLiveData<MutableList<EditListItem>>()
     val editItems: LiveData<out List<EditListItem>>
@@ -293,11 +302,13 @@ class EditVM @AssistedInject constructor(
             status = note.status
             pinned = note.pinned
             reminder = note.reminder
+            color = note.color
 
             _noteType.value = note.type
             _noteStatus.value = status
             _notePinned.value = pinned
             _noteReminder.value = reminder
+            _noteColor.value = color
 
             savedStateHandle[KEY_NOTE_ID] = note.id
 
@@ -428,6 +439,17 @@ class EditVM @AssistedInject constructor(
         // Update reminder chip
         updateNote()
         recreateListItems()
+    }
+
+    fun setNoteColor(color: Int) {
+        if (this.color != color) {
+            this.color = color
+            _noteColor.value = color
+
+            // Will be saved dynamically
+            updateNote()
+            saveNote()
+        }
     }
 
     fun convertToText(keepCheckedItems: Boolean) {
@@ -624,7 +646,7 @@ class EditVM @AssistedInject constructor(
         }
         note = note.copy(
             title = title, content = content,
-            metadata = metadata, status = status, pinned = pinned, reminder = reminder
+            metadata = metadata, status = status, pinned = pinned, reminder = reminder, color = color
         )
 
         // Feature 1+3: Update word/char count and char-limit warning

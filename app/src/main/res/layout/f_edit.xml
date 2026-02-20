@@ -1,88 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmentEditLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?colorSurface"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:transitionGroup="true">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragmentEditLayout" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?colorSurface" android:fitsSystemWindows="true" android:orientation="vertical" android:transitionGroup="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:transitionName="toolbar"
-        app:layout_behavior="com.mckimquyen.notes.ui.common.AppBarLayoutWithPaddingBehavior"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/recyclerView">
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/toolbarLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:fitsSystemWindows="true" android:transitionName="toolbar" app:layout_behavior="com.mckimquyen.notes.ui.common.AppBarLayoutWithPaddingBehavior" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:liftOnScroll="true" app:liftOnScrollTargetViewId="@id/recyclerView">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            style="?toolbarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:menu="@menu/menu_toolbar_edit"
-            app:navigationIcon="@drawable/ic_arrow_start"
-            app:titleTextColor="?colorControlNormal"
-            tools:title="@string/edit_add_title" />
+        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" style="?toolbarStyle" android:layout_width="match_parent" android:layout_height="?actionBarSize" app:menu="@menu/menu_toolbar_edit" app:navigationIcon="@drawable/ic_arrow_start" app:titleTextColor="?colorControlNormal" tools:title="@string/edit_add_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/contentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?colorSurface"
-        android:fitsSystemWindows="false"
-        android:padding="0dp"
-        android:transitionGroup="true"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/contentContainer" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?colorSurface" android:fitsSystemWindows="false" android:padding="0dp" android:transitionGroup="true" app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <View
-            android:id="@+id/viewBackground"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <View android:id="@+id/viewBackground" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:fitsSystemWindows="true"
-            android:paddingTop="8dp"
-            android:paddingBottom="28dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:itemCount="4"
-            tools:listitem="@layout/v_item_edit_item" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerView" android:layout_width="0dp" android:layout_height="0dp" android:clipToPadding="false" android:fitsSystemWindows="true" android:paddingTop="8dp" android:paddingBottom="28dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" tools:itemCount="4" tools:listitem="@layout/v_item_edit_item" />
 
         <!-- Feature 1: Word count & char count footer -->
-        <TextView
-            android:id="@+id/wordCharCountTxv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
-            android:alpha="0.55"
-            android:textAppearance="?textAppearanceLabelSmall"
-            android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="0 words · 0 chars" />
+        <TextView android:id="@+id/wordCharCountTxv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_marginBottom="8dp" android:alpha="0.55" android:textAppearance="?textAppearanceLabelSmall" android:textSize="11sp" app:layout_constraintBottom_toTopOf="@id/colorPickerScroll" app:layout_constraintEnd_toEndOf="parent" tools:text="0 words · 0 chars" />
+
+        <!-- Feature 10: Color Picker Tray -->
+        <HorizontalScrollView android:id="@+id/colorPickerScroll" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="60dp" android:background="?colorSurface" android:clipToPadding="false" android:elevation="8dp" android:paddingStart="16dp" android:paddingEnd="16dp" android:scrollbars="none" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout android:id="@+id/colorPickerContainer" android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" />
+
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

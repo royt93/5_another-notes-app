@@ -79,6 +79,21 @@ sealed class NoteViewHolder<T : NoteItem>(itemView: View) :
             adapter.callback.onNoteItemLongClicked(item, bindingAdapterPosition)
             true
         }
+
+        // Feature 10: Apply color to the note card
+        if (item.note.color != 0) {
+            val isDarkTheme = adapter.context.resources.configuration.uiMode and 
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            if (isDarkTheme) {
+                // In dark mode reduce opacity to 30% to blend with dark surface
+                cardView.setCardBackgroundColor(androidx.core.graphics.ColorUtils.setAlphaComponent(item.note.color, 76))
+            } else {
+                cardView.setCardBackgroundColor(item.note.color)
+            }
+        } else {
+            // Restore default surface color if not set
+            cardView.setCardBackgroundColor(com.google.android.material.color.MaterialColors.getColor(cardView, com.google.android.material.R.attr.colorSurface, android.graphics.Color.WHITE))
+        }
     }
 
     private fun bindTitle(adapter: NoteAdt, item: NoteItem) {

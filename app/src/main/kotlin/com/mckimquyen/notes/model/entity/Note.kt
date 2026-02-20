@@ -83,6 +83,12 @@ data class Note(
      */
     @Embedded(prefix = "reminder_")
     val reminder: Reminder?,
+
+    /**
+     * Color of the note in ARGB format, or 0 if default.
+     */
+    @ColumnInfo(name = "color", defaultValue = "0")
+    val color: Int = 0,
 ) {
 
     init {

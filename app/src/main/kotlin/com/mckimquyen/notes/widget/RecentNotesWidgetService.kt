@@ -58,6 +58,13 @@ class RecentNotesRemoteViewsFactory(
         views.setTextViewText(R.id.widgetItemTitle, titleText)
         views.setTextViewText(R.id.widgetItemContent, contentText)
 
+        // Set color manually (overwriting ripple if colored)
+        if (note.color != 0) {
+            views.setInt(R.id.widgetItemContainer, "setBackgroundColor", note.color)
+        } else {
+            views.setInt(R.id.widgetItemContainer, "setBackgroundColor", android.graphics.Color.TRANSPARENT)
+        }
+
         // Set fill-in intent to trigger the list item click
         val fillInIntent = Intent().apply {
             putExtra(AlarmReceiver.EXTRA_NOTE_ID, note.id)

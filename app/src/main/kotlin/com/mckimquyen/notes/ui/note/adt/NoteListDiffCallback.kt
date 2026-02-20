@@ -39,6 +39,7 @@ class NoteListDiffCallback : DiffUtil.ItemCallback<NoteListItem>() {
                         newNote.content == oldNote.content &&
                         newNote.metadata == oldNote.metadata &&
                         newNote.reminder == oldNote.reminder &&
+                        newNote.color == oldNote.color &&
                         new.labels == old.labels &&
                         new.showMarkAsDone == old.showMarkAsDone &&
                         // At this point only content highlights can differ

@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.OneShotPreDrawListener
@@ -194,13 +196,20 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             viewModel.focusNoteContent()
         }
 
-        // Dynamically adjust the padding on the bottom of the RecyclerView.
+        // Dynamically adjust the padding on the bottom of the RecyclerView and Color Picker.
         // This enables edge-to-edge functionality and also handles resizing
         // when the keyboard is opened / closed.
-        val initialPadding = resources.getDimensionPixelSize(R.dimen.edit_recyclerview_bottom_padding)
+        val initialRcvPadding = resources.getDimensionPixelSize(R.dimen.edit_recyclerview_bottom_padding)
         ViewCompat.setOnApplyWindowInsetsListener(rcv) { _, insets ->
             val sysWindow = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            rcv.updatePadding(bottom = sysWindow.bottom + initialPadding)
+            
+            // Recycler view should scroll above the color picker + keyboard
+            val colorPickerHeight = resources.displayMetrics.density * 60
+            rcv.updatePadding(bottom = sysWindow.bottom + initialRcvPadding + colorPickerHeight.toInt())
+            
+            // Color picker should rest above the keyboard / nav bar
+            binding.colorPickerScroll.updatePadding(bottom = sysWindow.bottom)
+            
             insets
         }
 
@@ -212,6 +221,8 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             startPostponedEnterTransition()
         }
         postponeEnterTransition()
+        
+        setupColorPicker()
     }
 
     @SuppressLint("WrongConstant")
@@ -345,6 +356,24 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 )
                 .setGestureInsetBottomIgnored(true)
                 .show()
+        }
+
+        // Feature 10: Color Notes Observer
+        viewModel.noteColor.observe(viewLifecycleOwner) { color ->
+            val isDarkTheme = resources.configuration.uiMode and 
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            
+            val finalColor = if (color != 0 && isDarkTheme) {
+                 androidx.core.graphics.ColorUtils.setAlphaComponent(color, 76)
+            } else if (color != 0) {
+                 color
+            } else {
+                 com.google.android.material.color.MaterialColors.getColor(requireView(), com.google.android.material.R.attr.colorSurface, Color.WHITE)
+            }
+            
+            binding.viewBackground.setBackgroundColor(finalColor)
+            binding.colorPickerScroll.setBackgroundColor(finalColor)
+            binding.toolbarLayout.setBackgroundColor(finalColor)
         }
     }
 
@@ -486,6 +515,44 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     override fun onDialogNegativeButtonClicked(tag: String?) {
         if (tag == REMOVE_CHECKED_CONFIRM_DIALOG_TAG) {
             viewModel.convertToText(true)
+        }
+    }
+
+    private fun setupColorPicker() {
+        val colors = listOf(
+            0, // Default transparent
+            Color.parseColor("#F28B82"), // Red
+            Color.parseColor("#FBBC04"), // Orange
+            Color.parseColor("#FFF475"), // Yellow
+            Color.parseColor("#CCFF90"), // Green
+            Color.parseColor("#A7FFEB"), // Teal
+            Color.parseColor("#CBF0F8"), // Blue
+            Color.parseColor("#AECBFA"), // Dark Blue
+            Color.parseColor("#D7AEFB"), // Purple
+            Color.parseColor("#FDCFE8"), // Pink
+            Color.parseColor("#E6C9A8"), // Brown
+            Color.parseColor("#E8EAED")  // Gray
+        )
+
+        binding.colorPickerContainer.removeAllViews()
+        for (color in colors) {
+            val btn = ImageButton(requireContext())
+            val size = resources.displayMetrics.density * 40
+            val margin = resources.displayMetrics.density * 6
+            val params = LinearLayout.LayoutParams(size.toInt(), size.toInt())
+            params.setMargins(margin.toInt(), margin.toInt(), margin.toInt(), margin.toInt())
+            btn.layoutParams = params
+            btn.setBackgroundResource(R.drawable.shape_color_circle)
+            
+            // Apply color to the circle background programmatically since shape_color_circle is an oval
+            val bg = btn.background.mutate() as android.graphics.drawable.GradientDrawable
+            bg.setColor(if (color == 0) Color.WHITE else color)
+            
+            btn.elevation = 4f
+            btn.setOnClickListener {
+                viewModel.setNoteColor(color)
+            }
+            binding.colorPickerContainer.addView(btn)
         }
     }
 
