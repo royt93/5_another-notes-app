@@ -13,38 +13,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
-    <application
-        android:name=".RApp"
-        android:allowBackup="@bool/allow_backup"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.DayNight"
-        tools:ignore="DiscouragedApi,LockedOrientationActivity,AllowBackup">
+    <application android:name=".RApp" android:allowBackup="@bool/allow_backup" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme.DayNight" tools:ignore="DiscouragedApi,LockedOrientationActivity,AllowBackup">
 
         <!-- Khai báo AdMob App ID -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3612191981543807~9896195955" />
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3612191981543807~9896195955" />
         <!-- Sample AdMob App ID -->
 
-        <activity
-            android:name=".ui.splash.SplashAct"
-            android:exported="true"
-            android:screenOrientation="portrait">
+        <activity android:name=".ui.splash.SplashAct" android:exported="true" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.main.MainAct"
-            android:exported="true"
-            android:label="@string/app_name_short"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.DayNight.Launcher">
+        <activity android:name=".ui.main.MainAct" android:exported="true" android:label="@string/app_name_short" android:launchMode="singleTask" android:screenOrientation="portrait" android:theme="@style/AppTheme.DayNight.Launcher">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -56,19 +37,10 @@
                 <action android:name=".SHOW_REMINDERS" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
 
-        <activity
-            android:name=".ui.noti.NotificationAct"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:label="@string/app_name_short"
-            android:screenOrientation="portrait"
-            android:taskAffinity=""
-            android:theme="@style/TransparentActivity">
+        <activity android:name=".ui.noti.NotificationAct" android:excludeFromRecents="true" android:exported="false" android:label="@string/app_name_short" android:screenOrientation="portrait" android:taskAffinity="" android:theme="@style/TransparentActivity">
             <intent-filter>
                 <action android:name=".reminder.POSTPONE" />
             </intent-filter>
@@ -76,10 +48,7 @@
 
         <!-- Receiver is always enabled, even when there is no reminders set.
              This is for simplicity, shouldn't be a concern for battery life. -->
-        <receiver
-            android:name=".receiver.AlarmReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <receiver android:name=".receiver.AlarmReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name=".reminder.ALARM" />
                 <action android:name=".reminder.MARK_DONE" />
@@ -89,19 +58,40 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <!-- Feature 5: Quick Note Widget -->
-        <receiver
-            android:name=".widget.QuickNoteWidget"
-            android:exported="true"
-            android:label="@string/app_name_short">
+        <!-- FEATURE 5 (Quick Note Widget) -->
+        <receiver android:name=".widget.QuickNoteWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_provider" />
         </receiver>
+
+        <!-- FEATURE 6 (Note Count Widget) -->
+        <receiver android:name=".widget.NoteCountWidget" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_note_count_info" />
+        </receiver>
+
+        <!-- FEATURE 7 (Quick List Widget) -->
+        <receiver android:name=".widget.QuickListWidget" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_quick_list_info" />
+        </receiver>
+
+        <!-- FEATURE 9 (Recent Notes Widget) -->
+        <receiver android:name=".widget.RecentNotesWidget" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_recent_notes_info" />
+        </receiver>
+
+        <service android:name=".widget.RecentNotesWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>
-

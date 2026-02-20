@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/widgetRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_background" android:orientation="vertical" android:padding="8dp">
+
+    <!-- Header -->
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="4dp" android:paddingEnd="4dp" android:paddingBottom="8dp" android:text="Recent notes" android:textColor="@color/widget_text_primary" android:textSize="14sp" android:textStyle="bold" />
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+
+        <ListView android:id="@+id/widgetListView" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="@null" android:dividerHeight="0dp" tools:listitem="@layout/widget_recent_notes_item" />
+
+        <TextView android:id="@+id/widgetEmptyText" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:text="No active notes" android:textColor="@color/widget_text_secondary" android:textSize="14sp" android:visibility="gone" />
+
+    </FrameLayout>
+</LinearLayout>

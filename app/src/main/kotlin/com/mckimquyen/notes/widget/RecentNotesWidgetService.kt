@@ -1,0 +1,77 @@
+package com.mckimquyen.notes.widget
+
+import android.content.Context
+import android.content.Intent
+import android.widget.RemoteViews
+import android.widget.RemoteViewsService
+import com.mckimquyen.notes.R
+import com.mckimquyen.notes.RApp
+import com.mckimquyen.notes.model.NotesRepository
+import com.mckimquyen.notes.model.entity.NoteWithLabels
+import com.mckimquyen.notes.receiver.AlarmReceiver
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
+
+class RecentNotesWidgetService : RemoteViewsService() {
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
+        return RecentNotesRemoteViewsFactory(applicationContext)
+    }
+}
+
+class RecentNotesRemoteViewsFactory(
+    private val context: Context
+) : RemoteViewsService.RemoteViewsFactory {
+
+    @Inject
+    lateinit var repository: NotesRepository
+
+    private var recentNotes = emptyList<NoteWithLabels>()
+
+    override fun onCreate() {
+        (context.applicationContext as RApp).appComponent.inject(this)
+    }
+
+    override fun onDataSetChanged() {
+        // This is called synchronously to fetch data.
+        runBlocking {
+            recentNotes = repository.getRecentNotes(10)
+        }
+    }
+
+    override fun onDestroy() {
+        recentNotes = emptyList()
+    }
+
+    override fun getCount(): Int = recentNotes.size
+
+    override fun getViewAt(position: Int): RemoteViews {
+        if (position >= count) return RemoteViews(context.packageName, R.layout.widget_recent_notes_item)
+
+        val noteItem = recentNotes[position]
+        val note = noteItem.note
+
+        val views = RemoteViews(context.packageName, R.layout.widget_recent_notes_item)
+
+        // Set text
+        val titleText = note.title.ifEmpty { "Untitled Note" }
+        val contentText = note.content.ifEmpty { "..." }
+        views.setTextViewText(R.id.widgetItemTitle, titleText)
+        views.setTextViewText(R.id.widgetItemContent, contentText)
+
+        // Set fill-in intent to trigger the list item click
+        val fillInIntent = Intent().apply {
+            putExtra(AlarmReceiver.EXTRA_NOTE_ID, note.id)
+        }
+        views.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent)
+
+        return views
+    }
+
+    override fun getLoadingView(): RemoteViews? = null
+
+    override fun getViewTypeCount(): Int = 1
+
+    override fun getItemId(position: Int): Long = recentNotes.getOrNull(position)?.note?.id ?: position.toLong()
+
+    override fun hasStableIds(): Boolean = true
+}

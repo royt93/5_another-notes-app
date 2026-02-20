@@ -160,4 +160,19 @@ interface NotesDao {
         status: NoteStatus,
         minDate: Long,
     )
+
+    /**
+     * Get the count of active notes (not archived, not deleted)
+     * Used for the Note Count widget.
+     */
+    @Query("SELECT COUNT(*) FROM notes WHERE status == 0") // 0 is NoteStatus.ACTIVE
+    suspend fun getActiveNotesCount(): Int
+
+    /**
+     * Get the most recent active notes, up to [limit].
+     * Used for the Recent Notes list widget.
+     */
+    @Transaction
+    @Query("SELECT * FROM notes WHERE status == 0 ORDER BY modified_date DESC LIMIT :limit")
+    suspend fun getRecentNotes(limit: Int = 10): List<NoteWithLabels>
 }

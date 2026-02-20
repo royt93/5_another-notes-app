@@ -15,6 +15,8 @@ interface NotesRepository {
     suspend fun getNoteById(id: Long): Note?
     suspend fun getNoteByIdWithLabels(id: Long): NoteWithLabels?
     suspend fun getLastCreatedNote(): Note?
+    suspend fun getActiveNotesCount(): Int
+    suspend fun getRecentNotes(limit: Int = 10): List<NoteWithLabels>
 
     fun getNotesByStatus(status: NoteStatus): Flow<List<NoteWithLabels>>
     fun getNotesByLabel(labelId: Long): Flow<List<NoteWithLabels>>
