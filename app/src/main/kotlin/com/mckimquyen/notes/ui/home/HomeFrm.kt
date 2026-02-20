@@ -136,6 +136,8 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
             }
         }
 
+
+
         viewModel.fabShown.observe(viewLifecycleOwner) { shown ->
             if (shown) {
                 binding.fab.show()

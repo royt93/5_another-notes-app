@@ -162,6 +162,8 @@
     <string name="pref_strikethrough_checked">Strikethrough checked list items</string>
     <string name="pref_preview_labels">Maximum number of labels in preview</string>
 
+    <string name="widget_guide_title">Widgets</string>
+
     <string name="pref_shown_date">Date shown for notes</string>
     <string name="pref_shown_date_added">Creation date</string>
     <string name="pref_shown_date_modified">Last modified date</string>

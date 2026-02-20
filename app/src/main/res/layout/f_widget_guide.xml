@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?colorSurface" android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/toolbarLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:fitsSystemWindows="true" app:layout_behavior="com.mckimquyen.notes.ui.common.AppBarLayoutWithPaddingBehavior" app:liftOnScroll="true" app:liftOnScrollTargetViewId="@id/scrollView">
+
+        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" style="?toolbarStyle" android:layout_width="match_parent" android:layout_height="?actionBarSize" app:navigationIcon="@drawable/ic_arrow_start" app:title="@string/widget_guide_title" app:titleTextColor="?colorControlNormal" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView android:id="@+id/scrollView" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingBottom="48dp" app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+
+            <ImageView android:layout_width="64dp" android:layout_height="64dp" android:layout_gravity="center_horizontal" android:layout_marginBottom="16dp" android:src="@drawable/ic_widgets" app:tint="?colorOnSurface" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="How to add widgets" android:textColor="?colorOnSurface" android:textSize="22sp" android:textStyle="bold" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:lineSpacingExtra="4dp" android:text="1. Long press on an empty space on your home screen.\n2. Tap the 'Widgets' button.\n3. Scroll down to find Another Notes.\n4. Touch and hold the widget you want, then drag it to your home screen." android:textColor="?colorOnSurfaceVariant" android:textSize="16sp" />
+
+            <com.google.android.material.divider.MaterialDivider android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:layout_marginBottom="24dp" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="Available Widgets" android:textColor="?colorOnSurface" android:textSize="18sp" android:textStyle="bold" />
+
+            <!-- W1: Note Count -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:orientation="horizontal">
+
+                <ImageView android:layout_width="80dp" android:layout_height="80dp" android:layout_marginEnd="16dp" android:background="@drawable/widget_background" android:elevation="2dp" android:scaleType="centerInside" android:src="@drawable/preview_widget_note_count" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active Note Count" android:textColor="?colorOnSurface" android:textSize="16sp" android:textStyle="bold" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="See a badge tracker of all your non-archived, non-deleted notes directly on your launcher." android:textColor="?colorOnSurfaceVariant" android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- W2: Quick Note -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:orientation="horizontal">
+
+                <ImageView android:layout_width="80dp" android:layout_height="80dp" android:layout_marginEnd="16dp" android:background="@drawable/widget_background" android:elevation="2dp" android:scaleType="centerInside" android:src="@drawable/preview_widget_quick_note" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quick Note" android:textColor="?colorOnSurface" android:textSize="16sp" android:textStyle="bold" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="One-tap shortcut to instantly bypass the home screen and jump into writing a new text note." android:textColor="?colorOnSurfaceVariant" android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- W3: Quick List -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:orientation="horizontal">
+
+                <ImageView android:layout_width="80dp" android:layout_height="80dp" android:layout_marginEnd="16dp" android:background="@drawable/widget_background" android:elevation="2dp" android:scaleType="centerInside" android:src="@drawable/preview_widget_quick_list" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quick Checklist" android:textColor="?colorOnSurface" android:textSize="16sp" android:textStyle="bold" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="One-tap shortcut to instantly jump into creating a new checklist item series." android:textColor="?colorOnSurfaceVariant" android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- W4: Recent Notes -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:orientation="vertical">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Recent Notes Scroll View" android:textColor="?colorOnSurface" android:textSize="16sp" android:textStyle="bold" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Scroll through a list of your 10 most recently edited active notes, complete with color tint mapping. Tapping an item instantly opens the note detail editor." android:textColor="?colorOnSurfaceVariant" android:textSize="14sp" />
+
+                <ImageView android:layout_width="match_parent" android:layout_height="180dp" android:background="@drawable/widget_background" android:elevation="2dp" android:scaleType="centerInside" android:src="@drawable/preview_widget_recent_notes" />
+            </LinearLayout>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:text="Widgets automatically adapt to Light and Dark modes." android:textColor="?colorOnSurfaceVariant" android:textSize="12sp" android:textStyle="italic" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
