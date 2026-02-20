@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="150dp" android:height="150dp" android:viewportWidth="150" android:viewportHeight="150">
+    <!-- Rounded rect background -->
+    <path android:fillColor="#F0F0F0" android:pathData="M24,0 L126,0 A24,24 0 0,1 150,24 L150,126 A24,24 0 0,1 126,150 L24,150 A24,24 0 0,1 0,126 L0,24 A24,24 0 0,1 24,0 Z" />
+    <!-- Center Square (Icon placeholder) -->
+    <path android:fillColor="#B0B0B0" android:pathData="M55,35 L95,35 L95,75 L55,75 Z" />
+    <!-- Bottom line (Text placeholder) -->
+    <path android:fillColor="#D0D0D0" android:pathData="M40,95 L110,95 L110,110 L40,110 Z" />
+</vector>

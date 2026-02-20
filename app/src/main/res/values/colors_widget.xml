@@ -4,4 +4,5 @@
     <color name="widget_background_color">#FCFCFF</color>
     <color name="widget_text_primary">#191C1E</color>
     <color name="widget_text_secondary">#41484D</color>
+    <color name="widget_outline">#1F000000</color>
 </resources>

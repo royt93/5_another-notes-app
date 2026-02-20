@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" android:initialLayout="@layout/widget_note_count" android:minWidth="40dp" android:minHeight="40dp" android:updatePeriodMillis="1800000" android:widgetCategory="home_screen" />
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" android:initialLayout="@layout/widget_note_count" android:minWidth="110dp" android:minHeight="40dp" android:previewImage="@drawable/preview_widget_note_count" android:previewLayout="@layout/widget_note_count" android:updatePeriodMillis="1800000" android:widgetCategory="home_screen" />
