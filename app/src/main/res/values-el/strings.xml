@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Σημειώσεις</string>
+    <string name="action_archive">Αρχειοθέτηση</string>
+    <string name="action_cancel">Άκυρο</string>
+    <string name="action_clear">Εκκαθάριση</string>
+    <string name="action_convert_to_list">Μετατροπή σε λίστα</string>
+    <string name="action_convert_to_text">Μετατροπή σε κείμενο</string>
+    <string name="action_copy">Δημιουργία αντιγράφου</string>
+    <string name="action_delete">Διαγραφή</string>
+    <string name="action_delete_checked">Διαγραφή επιλεγμένων</string>
+    <string name="action_delete_forever">Οριστική διαγραφή</string>
+    <string name="action_delete_selection">Διαγραφή επιλογής</string>
+    <string name="action_delete_selection_forever">Οριστική διαγραφή επιλογής</string>
+    <string name="action_empty_trash">Άδειασμα κάδου</string>
+    <string name="action_empty_trash_short">Άδειασμα</string>
+    <string name="action_keep">Διατήρηση</string>
+    <string name="action_labels">Αλλαγή ετικετών</string>
+    <string name="action_layout_grid">Προβολή πλέγματος</string>
+    <string name="action_layout_list">Προβολή λίστας</string>
+    <string name="action_manage">Διαχείριση</string>
+    <string name="action_mark_as_done">Σήμανση ολοκλήρωσης</string>
+    <string name="action_none">Καμία</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Άνοιγμα</string>
+    <string name="action_pin">Καρφίτσωμα</string>
+    <string name="action_postpone">Αναβολή</string>
+    <string name="action_reminder_add">Προσθήκη υπενθύμισης</string>
+    <string name="action_reminder_edit">Επεξεργασία υπενθύμισης</string>
+    <string name="action_rename">Μετονομασία</string>
+    <string name="action_restore">Επαναφορά</string>
+    <string name="action_search">Αναζήτηση</string>
+    <string name="action_select_all">Επιλογή όλων</string>
+    <string name="action_settings">Ρυθμίσεις</string>
+    <string name="action_share">Κοινή χρήση</string>
+    <string name="action_unarchive">Αναίρεση αρχειοθέτησης</string>
+    <string name="action_uncheck_all">Αποεπιλογή όλων</string>
+    <string name="action_undo">Αναίρεση</string>
+    <string name="action_unpin">Ξεκαρφίτσωμα</string>
+
+    <string name="shortcut_text_note">Νέα σημείωση κειμένου</string>
+    <string name="shortcut_text_note_short">Νέο κείμενο</string>
+    <string name="shortcut_list_note">Νέα λίστα</string>
+    <string name="shortcut_list_note_short">Νέα λίστα</string>
+    <string name="shortcut_reminders">Υπενθυμίσεις</string>
+    <string name="shortcut_reminders_short">Υπενθυμίσεις</string>
+
+    <string name="note_location_active">Σημειώσεις</string>
+    <string name="note_location_archived">Αρχειοθετημένες</string>
+    <string name="note_location_deleted">Διαγραμμένες</string>
+    <string name="note_location_labels">Ετικέτες</string>
+
+    <string name="note_pinned">Καρφιτσωμένες</string>
+    <string name="note_not_pinned">Άλλες</string>
+
+    <string name="note_placeholder_active">Δεν έχετε σημειώσεις.\nΠατήστε + για προσθήκη.</string>
+    <string name="note_placeholder_archived">Καμία αρχειοθετημένη σημείωση</string>
+    <string name="note_placeholder_deleted">Ο κάδος είναι άδειος</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d ακόμη στοιχείο</item>
+        <item quantity="other">+ %d ακόμη στοιχεία</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d επιλεγμένο στοιχείο</item>
+        <item quantity="other">+ %d επιλεγμένα στοιχεία</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Οι σημειώσεις στον κάδο διαγράφονται αυτόματα μετά από %d ημέρες.</string>
+    <string name="trash_delete_message">Αυτή η σημείωση θα διαγραφεί οριστικά.</string>
+    <string name="trash_delete_selected_message">Οι επιλεγμένες σημειώσεις θα διαγραφούν οριστικά.</string>
+    <string name="trash_empty_message">Όλες οι σημειώσεις στον κάδο θα διαγραφούν οριστικά.</string>
+
+    <string name="search_hint">Αναζήτηση σημειώσεων</string>
+    <string name="search_empty_placeholder">Καμία σημείωση δεν ταιριάζει. Δοκιμάστε άλλον όρο.</string>
+
+    <string name="sort_title">Επιλογές ταξινόμησης</string>
+    <string name="sort_direction">Κατεύθυνση</string>
+    <string name="sort_direction_ascending">Αύξουσα</string>
+    <string name="sort_direction_descending">Φθίνουσα</string>
+    <string name="sort_field">Ταξινόμηση κατά</string>
+    <string name="sort_field_created">Ημερομηνία δημιουργίας</string>
+    <string name="sort_field_modified">Ημερομηνία τροποποίησης</string>
+    <string name="sort_field_title">Τίτλος</string>
+
+    <string name="edit_add_title">Δημιουργία σημείωσης</string>
+    <string name="edit_change_title">Επεξεργασία σημείωσης</string>
+    <string name="edit_hint_note_title">Τίτλος</string>
+    <string name="edit_hint_note_content">Σημείωση</string>
+    <string name="edit_hint_note_item">Στοιχείο λίστας</string>
+
+    <string name="edit_message_blank_note_discarded">Η κενή σημείωση απορρίφθηκε.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Σημείωση αρχειοθετήθηκε.</item>
+        <item quantity="other">Σημειώσεις αρχειοθετήθηκαν.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Σημείωση μεταφέρθηκε στον κάδο.</item>
+        <item quantity="other">Σημειώσεις μεταφέρθηκαν στον κάδο.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Σημείωση επαναφέρθηκε.</item>
+        <item quantity="other">Σημειώσεις επαναφέρθηκαν.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Σημείωση επανήλθε από το αρχείο.</item>
+        <item quantity="other">Σημειώσεις επανήλθαν από το αρχείο.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Δεν μπορείτε να επεξεργαστείτε σημείωση στον κάδο.</string>
+
+    <string name="edit_copy_suffix">Αντίγραφο</string>
+    <string name="edit_copy_untitled_name">Χωρίς τίτλο</string>
+
+    <string name="edit_convert_keep_checked">Οι σημειώσεις κειμένου δεν υποστηρίζουν πλαίσια. Διαγραφή επιλεγμένων;</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d επιλεγμένο στοιχείο</item>
+        <item quantity="other">%d επιλεγμένα στοιχεία</item>
+    </plurals>
+
+    <string name="note_reminders">Υπενθυμίσεις</string>
+    <string name="reminder_upcoming">Επερχόμενες</string>
+    <string name="reminder_today">Σήμερα</string>
+    <string name="reminder_overdue">Εκπρόθεσμη</string>
+    <string name="reminder_date">Ημερομηνία</string>
+    <string name="reminder_time">Ώρα</string>
+    <string name="reminder_invalid_time">Αυτή η ώρα έχει ήδη περάσει.</string>
+    <string name="reminder_notif_channel_title">Υπενθυμίσεις</string>
+    <string name="reminder_notif_channel_descr">Υπενθυμίσεις σε σημειώσεις</string>
+    <string name="reminder_empty_placeholder">Δεν έχουν οριστεί υπενθυμίσεις</string>
+    <string name="reminder_restricted_battery">Οι υπενθυμίσεις μπορεί να μην λειτουργούν σωστά γιατί η εφαρμογή έχει περιορισμένη χρήση μπαταρίας. Αλλαγή στις ρυθμίσεις εφαρμογής.</string>
+    <string name="reminder_notif_permission">Για αποστολή υπενθυμίσεων, η εφαρμογή χρειάζεται άδεια. Πατήστε OK για να ζητηθεί η άδεια. Έπειτα μπορείτε να ορίσετε υπενθύμιση.</string>
+    <string name="reminder_notif_permission_denied">Η άδεια ειδοποιήσεων απορρίφθηκε. Οι υπενθυμίσεις δεν θα λειτουργούν μέχρι να ενεργοποιηθεί.</string>
+
+    <string name="label_create">Δημιουργία νέας ετικέτας</string>
+    <string name="label_edit">Επεξεργασία ονόματος ετικέτας</string>
+    <string name="label_manage">Διαχείριση ετικετών</string>
+    <string name="label_select">Επιλογή ετικετών</string>
+    <string name="label_already_exists">Υπάρχει ήδη ετικέτα με αυτό το όνομα.</string>
+    <string name="label_hidden_option">Απόκρυψη σημειώσεων με αυτή την ετικέτα από τις ενεργές και αρχειοθετημένες</string>
+    <string name="label_empty_placeholder">Δεν έχουν δημιουργηθεί ετικέτες</string>
+    <string name="label_delete_message">Οι επιλεγμένες ετικέτες θα διαγραφούν, αλλά οι σχετικές σημειώσεις θα διατηρηθούν.</string>
+    <string name="label_notes_empty_placeholder">Καμία σημείωση με αυτή την ετικέτα</string>
+
+    <string name="pref_group_appearance">Εμφάνιση</string>
+    <string name="pref_theme">Θέμα εφαρμογής</string>
+    <string name="pref_theme_light">Φωτεινό</string>
+    <string name="pref_theme_dark">Σκούρο</string>
+    <string name="pref_theme_system">Όπως το σύστημα</string>
+    <string name="pref_dynamic_colors">Χρήση δυναμικών χρωμάτων</string>
+    <string name="pref_strikethrough_checked">Διαγραφή επιλεγμένων στοιχείων</string>
+    <string name="pref_preview_labels">Μέγιστος αριθμός ετικετών στην προεπισκόπηση</string>
+
+    <string name="widget_guide_title">Widgets</string>
+
+    <string name="pref_shown_date">Ημερομηνία στις σημειώσεις</string>
+    <string name="pref_shown_date_added">Δημιουργία</string>
+    <string name="pref_shown_date_modified">Τελευταία τροποποίηση</string>
+    <string name="pref_shown_date_none">Καμία ημερομηνία</string>
+
+    <string name="pref_preview_lines">Μέγιστες γραμμές στην προεπισκόπηση</string>
+    <string name="pref_preview_lines_summary">Ορίστε πόσες γραμμές και στοιχεία εμφανίζονται στις σημειώσεις, για κάθε διάταξη και τύπο σημείωσης</string>
+    <string name="pref_preview_lines_grid_layout">Πλέγμα</string>
+    <string name="pref_preview_lines_list_layout">Λίστα</string>
+    <string name="pref_preview_lines_text">Γραμμές σε προεπισκόπηση κειμένου</string>
+    <string name="pref_preview_lines_list">Στοιχεία σε προεπισκόπηση λίστας</string>
+
+    <string name="pref_group_behavior">Συμπεριφορά</string>
+    <string name="pref_behavior_swipe_action_left">Σύρσιμο αριστερά</string>
+    <string name="pref_behavior_swipe_action_right">Σύρσιμο δεξιά</string>
+    <string name="pref_behavior_move_checked">Μετακίνηση επιλεγμένων στο τέλος</string>
+
+    <string name="pref_group_data">Δεδομένα</string>
+    <string name="pref_data_export">Εξαγωγή δεδομένων</string>
+    <string name="pref_data_export_summary">Εξαγωγή σημειώσεων ως JSON</string>
+    <string name="pref_data_encrypted_export">Κρυπτογραφημένη εξαγωγή</string>
+    <string name="pref_data_encrypted_export_summary">Κρυπτογραφεί τις εξαγόμενες σημειώσεις. Πρόσβαση μόνο με σωστό κωδικό.</string>
+    <string name="pref_data_auto_export">Αυτόματη εξαγωγή</string>
+    <string name="pref_data_auto_export_summary">Εξαγωγή των δεδομένων της εφαρμογής σε αρχείο, μία φορά την ημέρα.</string>
+    <string name="pref_data_auto_export_date">(Τελευταία εξαγωγή: %s)</string>
+    <string name="pref_data_import">Εισαγωγή δεδομένων</string>
+    <string name="pref_data_import_summary">Εισαγωγή προηγούμενων εξαχθέντων JSON, συγχώνευση με υπάρχοντα.</string>
+    <string name="pref_data_clear">Διαγραφή όλων των δεδομένων</string>
+    <string name="pref_data_clear_confirm_message">Όλα τα δεδομένα σημειώσεων θα διαγραφούν οριστικά! Δεν αναιρείται.</string>
+    <string name="pref_data_clear_success_message">Όλα τα δεδομένα διαγράφηκαν.</string>
+
+    <string name="pref_group_about">Σχετικά</string>
+    <string name="pref_about_view_source">Προβολή στο Github (Πρωτότυπο)</string>
+    <string name="pref_about_view_source_fork">Προβολή στο Github (Fork)</string>
+    <string name="pref_about_view_licenses">Άδειες ανοιχτού κώδικα</string>
+    <string name="pref_about_version">Έκδοση</string>
+
+    <string name="pref_restart_dialog_title">Απαιτείται επανεκκίνηση!</string>
+    <string name="pref_restart_dialog_description">Απαιτείται επανεκκίνηση για να ισχύσουν οι αλλαγές. Θέλετε να επανεκκινήσετε την εφαρμογή τώρα;</string>
+
+    <string name="export_success">Η εξαγωγή ολοκληρώθηκε!</string>
+    <string name="export_fail">Σφάλμα κατά την εξαγωγή.</string>
+    <string name="export_serialization_fail">Σφάλμα κατά την εξαγωγή. Δοκιμάστε να απενεργοποιήσετε την κρυπτογράφηση.</string>
+    <string name="encrypted_export_dialog_title">Ορισμός κωδικού</string>
+    <string name="encrypted_export_password">Κωδικός</string>
+    <string name="encrypted_export_repeat_password">Επιβεβαίωση κωδικού</string>
+    <string name="encrypted_export_password_matching_error">Οι κωδικοί δεν ταιριάζουν</string>
+    <string name="encrypted_export_key_generation_successful">Η κρυπτογράφηση ενεργοποιήθηκε!</string>
+    <string name="encrypted_export_key_deletion_successful">Η κρυπτογράφηση απενεργοποιήθηκε!</string>
+    <string name="import_success">Η εισαγωγή ολοκληρώθηκε!</string>
+    <string name="import_future_version">Η εισαγωγή ολοκληρώθηκε! Κάποιες πληροφορίες μπορεί να χάθηκαν λόγω νεότερης έκδοσης.</string>
+    <string name="import_bad_input">Σφάλμα κατά την ανάγνωση του αρχείου.</string>
+    <string name="import_bad_format">Δεν ήταν δυνατή η εισαγωγή, μη έγκυρο JSON.</string>
+    <string name="import_bad_data">Δεν ήταν δυνατή η εισαγωγή, κάποια πεδία έχουν μη έγκυρες τιμές. Ίσως από νεότερη έκδοση — ενημερώστε.</string>
+    <string name="encrypted_import_dialog_title">Εισαγωγή κωδικού</string>
+    <string name="encrypted_import_key_error">Σφάλμα στην αποκρυπτογράφηση. Ελέγξτε τον κωδικό.</string>
+    <string name="encrypted_import_encryption_unsupported">Η εισαγωγή δεν είναι δυνατή, αυτή η έκδοση Android δεν υποστηρίζει κρυπτογράφηση.</string>
+    <string name="auto_export_message">Για ενεργοποίηση αυτόματης εξαγωγής, επιλέξτε αρχείο. Τα δεδομένα εξάγονται μία φορά την ημέρα όσο η εφαρμογή είναι ανοιχτή. Πατήστε OK για συνέχεια.</string>
+    <string name="auto_export_fail">Η αυτόματη εξαγωγή απέτυχε. Βεβαιωθείτε ότι η τοποθεσία υπάρχει και είναι προσβάσιμη, και ξανα-ρυθμίστε.</string>
+
+    <string name="content_descrp_open_drawer">Άνοιγμα μενού</string>
+    <string name="content_descrp_back">Πίσω</string>
+    <string name="content_descrp_label_hidden">Σημειώσεις με αυτή την ετικέτα είναι κρυφές</string>
+
+    <string name="date_rel_today">Σήμερα, %s</string>
+    <string name="date_rel_yesterday">Χθες, %s</string>
+    <string name="date_rel_tomorrow">Αύριο, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">πριν %d ημέρες, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">σε %d ημέρες, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Όροι & Πολιτική]]></string>
+    <string name="rate_this_app_5">Βαθμολογήστε με 5★</string>
+    <string name="get_more_apps">Άλλες εφαρμογές</string>
+    <string name="share_this_app">Κοινή χρήση</string>
+
+    <string name="pref_language">Γλώσσα</string>
+    <string name="pref_language_system">Προεπιλογή συστήματος</string>
+    <string name="msg_consent_not_required">Οι ρυθμίσεις απορρήτου είναι διαθέσιμες μόνο σε περιοχές όπου απαιτείται συγκατάθεση.</string>
+
+    <string name="exit_press_back_again">Πατήστε ξανά πίσω για έξοδο</string>
+    <string name="reminder_saved_for">Υπενθύμιση για %1$s</string>
+    <string name="color_default">Προεπιλογή</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Ρυθμίσεις απορρήτου</string>
+    <string name="pref_privacy_settings_summary">Διαχείριση συγκατάθεσης διαφημίσεων (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">ΣΥΝΔΡΟΜΗ PREMIUM</string>
+    <string name="vip_status_active">ΕΝΕΡΓΗ</string>
+    <string name="vip_status_inactive">ΑΝΕΝΕΡΓΗ</string>
+    <string name="vip_expires_until">Ενεργή · %1$s</string>
+
+    <string name="vip_benefits_title">Τι κερδίζετε</string>
+    <string name="vip_benefit_no_banner">Χωρίς διαφημίσεις banner</string>
+    <string name="vip_benefit_no_interstitial">Χωρίς διαφημίσεις πλήρους οθόνης</string>
+    <string name="vip_benefit_no_app_open">Χωρίς διαφημίσεις εκκίνησης / επανεκκίνησης</string>
+    <string name="vip_benefit_support">Υποστηρίξτε τη συνεχή ανάπτυξη</string>
+
+    <string name="vip_action_activate">Ενεργοποίηση Premium</string>
+    <string name="vip_action_reset">Επαναφορά Premium</string>
+    <string name="vip_footer_info">Το Premium χρησιμοποιεί κλειδί ενεργοποίησης offline — καμία πληρωμή στην εφαρμογή.</string>
+
+    <string name="vip_dialog_title">Εισαγωγή κλειδιού Premium</string>
+    <string name="vip_dialog_subtitle">Κάθε κλειδί ενεργοποιεί το Premium για 30 ημέρες.</string>
+    <string name="vip_dialog_input_hint">Κλειδί ενεργοποίησης</string>
+    <string name="vip_dialog_btn_activate">Ενεργοποίηση</string>
+    <string name="vip_dialog_btn_cancel">Άκυρο</string>
+
+    <string name="vip_msg_success">Premium ενεργό · %1$d ημέρες</string>
+    <string name="vip_msg_invalid">Μη έγκυρο κλειδί. Δοκιμάστε ξανά.</string>
+    <string name="vip_reset_title">Επαναφορά Premium;</string>
+    <string name="vip_reset_message">Όλα τα προνόμια Premium θα αφαιρεθούν αμέσως.</string>
+    <string name="vip_reset_confirm">Επαναφορά</string>
+
+    <string name="first_run_language_title">Επιλέξτε τη γλώσσα σας</string>
+</resources>

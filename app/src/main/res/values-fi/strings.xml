@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Muistiinpanot</string>
+    <string name="action_archive">Arkistoi</string>
+    <string name="action_cancel">Peruuta</string>
+    <string name="action_clear">Tyhjennä</string>
+    <string name="action_convert_to_list">Muunna luetteloksi</string>
+    <string name="action_convert_to_text">Muunna tekstiksi</string>
+    <string name="action_copy">Tee kopio</string>
+    <string name="action_delete">Poista</string>
+    <string name="action_delete_checked">Poista valitut</string>
+    <string name="action_delete_forever">Poista pysyvästi</string>
+    <string name="action_delete_selection">Poista valinta</string>
+    <string name="action_delete_selection_forever">Poista valinta pysyvästi</string>
+    <string name="action_empty_trash">Tyhjennä roskakori</string>
+    <string name="action_empty_trash_short">Tyhjennä</string>
+    <string name="action_keep">Säilytä</string>
+    <string name="action_labels">Vaihda tunnisteita</string>
+    <string name="action_layout_grid">Ruudukkonäkymä</string>
+    <string name="action_layout_list">Luettelonäkymä</string>
+    <string name="action_manage">Hallitse</string>
+    <string name="action_mark_as_done">Merkitse tehdyksi</string>
+    <string name="action_none">Ei mitään</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Avaa</string>
+    <string name="action_pin">Kiinnitä</string>
+    <string name="action_postpone">Lykkää</string>
+    <string name="action_reminder_add">Lisää muistutus</string>
+    <string name="action_reminder_edit">Muokkaa muistutusta</string>
+    <string name="action_rename">Nimeä uudelleen</string>
+    <string name="action_restore">Palauta</string>
+    <string name="action_search">Etsi</string>
+    <string name="action_select_all">Valitse kaikki</string>
+    <string name="action_settings">Asetukset</string>
+    <string name="action_share">Jaa</string>
+    <string name="action_unarchive">Poista arkistosta</string>
+    <string name="action_uncheck_all">Poista valinnat</string>
+    <string name="action_undo">Kumoa</string>
+    <string name="action_unpin">Irrota</string>
+
+    <string name="shortcut_text_note">Uusi tekstimuistio</string>
+    <string name="shortcut_text_note_short">Uusi teksti</string>
+    <string name="shortcut_list_note">Uusi luettelo</string>
+    <string name="shortcut_list_note_short">Uusi luettelo</string>
+    <string name="shortcut_reminders">Muistutukset</string>
+    <string name="shortcut_reminders_short">Muistutukset</string>
+
+    <string name="note_location_active">Muistiinpanot</string>
+    <string name="note_location_archived">Arkistoidut</string>
+    <string name="note_location_deleted">Poistetut</string>
+    <string name="note_location_labels">Tunnisteet</string>
+
+    <string name="note_pinned">Kiinnitetyt</string>
+    <string name="note_not_pinned">Muut</string>
+
+    <string name="note_placeholder_active">Sinulla ei ole muistiinpanoja.\nLisää napsauttamalla +.</string>
+    <string name="note_placeholder_archived">Ei arkistoituja muistiinpanoja</string>
+    <string name="note_placeholder_deleted">Roskakori on tyhjä</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d muu kohde</item>
+        <item quantity="other">+ %d muuta kohdetta</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d valittu kohde</item>
+        <item quantity="other">+ %d valittua kohdetta</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Roskakorin muistiinpanot poistetaan automaattisesti %d päivän kuluttua.</string>
+    <string name="trash_delete_message">Tämä muistiinpano poistetaan pysyvästi.</string>
+    <string name="trash_delete_selected_message">Valitut muistiinpanot poistetaan pysyvästi.</string>
+    <string name="trash_empty_message">Kaikki roskakorin muistiinpanot poistetaan pysyvästi.</string>
+
+    <string name="search_hint">Etsi muistiinpanoja</string>
+    <string name="search_empty_placeholder">Hakuasi vastaavia muistiinpanoja ei löytynyt. Kokeile toista hakua.</string>
+
+    <string name="sort_title">Lajitteluasetukset</string>
+    <string name="sort_direction">Lajittelusuunta</string>
+    <string name="sort_direction_ascending">Nouseva</string>
+    <string name="sort_direction_descending">Laskeva</string>
+    <string name="sort_field">Lajitteluperuste</string>
+    <string name="sort_field_created">Luontipäivä</string>
+    <string name="sort_field_modified">Muokattu</string>
+    <string name="sort_field_title">Otsikko</string>
+
+    <string name="edit_add_title">Luo muistiinpano</string>
+    <string name="edit_change_title">Muokkaa muistiinpanoa</string>
+    <string name="edit_hint_note_title">Otsikko</string>
+    <string name="edit_hint_note_content">Muistiinpano</string>
+    <string name="edit_hint_note_item">Luettelokohde</string>
+
+    <string name="edit_message_blank_note_discarded">Tyhjä muistiinpano hylätty.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Muistiinpano arkistoitu.</item>
+        <item quantity="other">Muistiinpanot arkistoitu.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Muistiinpano siirretty roskakoriin.</item>
+        <item quantity="other">Muistiinpanot siirretty roskakoriin.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Muistiinpano palautettu.</item>
+        <item quantity="other">Muistiinpanot palautettu.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Muistiinpano poistettu arkistosta.</item>
+        <item quantity="other">Muistiinpanot poistettu arkistosta.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Roskakorissa olevaa muistiinpanoa ei voi muokata.</string>
+
+    <string name="edit_copy_suffix">Kopio</string>
+    <string name="edit_copy_untitled_name">Nimetön</string>
+
+    <string name="edit_convert_keep_checked">Tekstimuistiot eivät tue valintaruutuja. Poistetaanko valitut kohteet?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d valittu kohde</item>
+        <item quantity="other">%d valittua kohdetta</item>
+    </plurals>
+
+    <string name="note_reminders">Muistutukset</string>
+    <string name="reminder_upcoming">Tulevat</string>
+    <string name="reminder_today">Tänään</string>
+    <string name="reminder_overdue">Myöhässä</string>
+    <string name="reminder_date">Päivämäärä</string>
+    <string name="reminder_time">Aika</string>
+    <string name="reminder_invalid_time">Tämä aika on jo mennyt.</string>
+    <string name="reminder_notif_channel_title">Muistutukset</string>
+    <string name="reminder_notif_channel_descr">Muistiinpanoihin asetetut muistutukset</string>
+    <string name="reminder_empty_placeholder">Ei muistutuksia</string>
+    <string name="reminder_restricted_battery">Muistutukset eivät välttämättä toimi oikein, koska sovellus on rajoittanut akun käyttöä. Voi muuttaa sovelluksen asetuksissa.</string>
+    <string name="reminder_notif_permission">Muistutusten lähettäminen vaatii luvan. Napsauta OK ja anna lupa. Sen jälkeen voit asettaa muistutuksen.</string>
+    <string name="reminder_notif_permission_denied">Ilmoituslupa hylätty. Muistutukset eivät toimi ennen kuin lupa myönnetään.</string>
+
+    <string name="label_create">Luo uusi tunniste</string>
+    <string name="label_edit">Muokkaa tunnisteen nimeä</string>
+    <string name="label_manage">Hallitse tunnisteita</string>
+    <string name="label_select">Valitse tunnisteet</string>
+    <string name="label_already_exists">Tunniste tällä nimellä on jo olemassa.</string>
+    <string name="label_hidden_option">Piilota tällä tunnisteella merkityt muistiinpanot aktiivisista ja arkistoiduista</string>
+    <string name="label_empty_placeholder">Ei luotuja tunnisteita</string>
+    <string name="label_delete_message">Valitut tunnisteet poistetaan, mutta niihin liittyvät muistiinpanot säilytetään.</string>
+    <string name="label_notes_empty_placeholder">Ei tällä tunnisteella merkittyjä muistiinpanoja</string>
+
+    <string name="pref_group_appearance">Ulkoasu</string>
+    <string name="pref_theme">Sovelluksen teema</string>
+    <string name="pref_theme_light">Vaalea</string>
+    <string name="pref_theme_dark">Tumma</string>
+    <string name="pref_theme_system">Seuraa järjestelmää</string>
+    <string name="pref_dynamic_colors">Käytä dynaamisia värejä</string>
+    <string name="pref_strikethrough_checked">Yliviivaa valitut kohteet</string>
+    <string name="pref_preview_labels">Tunnisteiden enimmäismäärä esikatselussa</string>
+
+    <string name="widget_guide_title">Widgetit</string>
+
+    <string name="pref_shown_date">Muistiinpanoissa näytettävä päivä</string>
+    <string name="pref_shown_date_added">Luontipäivä</string>
+    <string name="pref_shown_date_modified">Viimeksi muokattu</string>
+    <string name="pref_shown_date_none">Ei päivää</string>
+
+    <string name="pref_preview_lines">Esikatselun rivien enimmäismäärä</string>
+    <string name="pref_preview_lines_summary">Määritä, kuinka monta riviä ja kohdetta näytetään muistiinpanoissa, kullekin asettelulle ja muistiinpanon tyypille</string>
+    <string name="pref_preview_lines_grid_layout">Ruudukko</string>
+    <string name="pref_preview_lines_list_layout">Luettelo</string>
+    <string name="pref_preview_lines_text">Rivit tekstimuistion esikatselussa</string>
+    <string name="pref_preview_lines_list">Kohteet luettelomuistion esikatselussa</string>
+
+    <string name="pref_group_behavior">Toiminta</string>
+    <string name="pref_behavior_swipe_action_left">Pyyhkäisy vasemmalle</string>
+    <string name="pref_behavior_swipe_action_right">Pyyhkäisy oikealle</string>
+    <string name="pref_behavior_move_checked">Siirrä valitut kohteet alas</string>
+
+    <string name="pref_group_data">Tiedot</string>
+    <string name="pref_data_export">Vie tiedot</string>
+    <string name="pref_data_export_summary">Vie muistiinpanot JSON-muodossa</string>
+    <string name="pref_data_encrypted_export">Salattu vienti</string>
+    <string name="pref_data_encrypted_export_summary">Salaa viedyt muistiinpanot. Pääsy vaatii oikean salasanan.</string>
+    <string name="pref_data_auto_export">Automaattinen vienti</string>
+    <string name="pref_data_auto_export_summary">Vie sovelluksen tiedot tiedostoon automaattisesti kerran päivässä.</string>
+    <string name="pref_data_auto_export_date">(Viimeksi viety: %s)</string>
+    <string name="pref_data_import">Tuo tiedot</string>
+    <string name="pref_data_import_summary">Tuo aiemmin viety JSON-data, yhdistä olemassa olevaan.</string>
+    <string name="pref_data_clear">Tyhjennä kaikki tiedot</string>
+    <string name="pref_data_clear_confirm_message">Kaikki muistiinpanotiedot tyhjennetään pysyvästi! Ei voida peruuttaa.</string>
+    <string name="pref_data_clear_success_message">Kaikki tiedot tyhjennetty.</string>
+
+    <string name="pref_group_about">Tietoja</string>
+    <string name="pref_about_view_source">Näytä Githubissa (Alkuperäinen)</string>
+    <string name="pref_about_view_source_fork">Näytä Githubissa (Fork)</string>
+    <string name="pref_about_view_licenses">Avoimen lähdekoodin lisenssit</string>
+    <string name="pref_about_version">Versio</string>
+
+    <string name="pref_restart_dialog_title">Uudelleenkäynnistys vaaditaan!</string>
+    <string name="pref_restart_dialog_description">Muutosten käyttöönotto vaatii uudelleenkäynnistyksen. Käynnistetäänkö sovellus nyt uudelleen?</string>
+
+    <string name="export_success">Tiedot viety!</string>
+    <string name="export_fail">Viennin aikana tapahtui virhe.</string>
+    <string name="export_serialization_fail">Viennin aikana tapahtui virhe. Kokeile poistaa salaus ja yritä uudelleen.</string>
+    <string name="encrypted_export_dialog_title">Aseta salasana</string>
+    <string name="encrypted_export_password">Salasana</string>
+    <string name="encrypted_export_repeat_password">Vahvista salasana</string>
+    <string name="encrypted_export_password_matching_error">Salasanat eivät täsmää</string>
+    <string name="encrypted_export_key_generation_successful">Salaus käytössä!</string>
+    <string name="encrypted_export_key_deletion_successful">Salaus pois käytöstä!</string>
+    <string name="import_success">Tiedot tuotu!</string>
+    <string name="import_future_version">Tiedot tuotu! Joitakin tietoja on saattanut kadota, koska data on uudemmasta versiosta.</string>
+    <string name="import_bad_input">Tämän tiedoston lukemisessa tapahtui virhe.</string>
+    <string name="import_bad_format">Tietoja ei voitu tuoda, JSON-muoto virheellinen.</string>
+    <string name="import_bad_data">Tietoja ei voitu tuoda, joillakin kentillä on virheellisiä arvoja. Voi olla uudemmasta versiosta — päivitä sovellus.</string>
+    <string name="encrypted_import_dialog_title">Anna salasana</string>
+    <string name="encrypted_import_key_error">Tiedoston purkamisessa tapahtui virhe. Tarkista salasana.</string>
+    <string name="encrypted_import_encryption_unsupported">Tuonti ei onnistu, tämä Android-versio ei tue salausta.</string>
+    <string name="auto_export_message">Automaattisen viennin käyttöönottoon valitse tiedosto, jonne tiedot tallennetaan. Tiedot viedään kerran päivässä sovelluksen ollessa avoinna. Jatka napsauttamalla OK.</string>
+    <string name="auto_export_fail">Automaattinen vienti epäonnistui. Varmista, että vientisijainti on edelleen olemassa ja saavutettavissa, ja määritä se uudelleen.</string>
+
+    <string name="content_descrp_open_drawer">Avaa valikko</string>
+    <string name="content_descrp_back">Takaisin</string>
+    <string name="content_descrp_label_hidden">Tällä tunnisteella merkityt muistiinpanot ovat piilotettuja</string>
+
+    <string name="date_rel_today">Tänään, %s</string>
+    <string name="date_rel_yesterday">Eilen, %s</string>
+    <string name="date_rel_tomorrow">Huomenna, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d päivää sitten, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">%d päivän päästä, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Käyttöehdot & Käytäntö]]></string>
+    <string name="rate_this_app_5">Anna 5★ arvio</string>
+    <string name="get_more_apps">Lisää sovelluksia</string>
+    <string name="share_this_app">Jaa tämä sovellus</string>
+
+    <string name="pref_language">Kieli</string>
+    <string name="pref_language_system">Järjestelmän oletus</string>
+    <string name="msg_consent_not_required">Yksityisyysasetukset ovat saatavilla vain alueilla, joissa suostumus vaaditaan.</string>
+
+    <string name="exit_press_back_again">Paina takaisin uudelleen poistuaksesi</string>
+    <string name="reminder_saved_for">Muistutus asetettu ajalle %1$s</string>
+    <string name="color_default">Oletus</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Yksityisyysasetukset</string>
+    <string name="pref_privacy_settings_summary">Hallitse mainossuostumusta (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-JÄSENYYS</string>
+    <string name="vip_status_active">AKTIIVINEN</string>
+    <string name="vip_status_inactive">EI AKTIIVINEN</string>
+    <string name="vip_expires_until">Aktiivinen · %1$s</string>
+
+    <string name="vip_benefits_title">Mitä saat</string>
+    <string name="vip_benefit_no_banner">Ei bannerimainoksia</string>
+    <string name="vip_benefit_no_interstitial">Ei kokoruutumainoksia</string>
+    <string name="vip_benefit_no_app_open">Ei käynnistys- / jatkamismainoksia</string>
+    <string name="vip_benefit_support">Tue jatkuvaa kehitystä</string>
+
+    <string name="vip_action_activate">Aktivoi Premium</string>
+    <string name="vip_action_reset">Nollaa Premium</string>
+    <string name="vip_footer_info">Premium käyttää offline-aktivointiavainta — ei sovelluksensisäisiä maksuja.</string>
+
+    <string name="vip_dialog_title">Anna Premium-avain</string>
+    <string name="vip_dialog_subtitle">Jokainen avain aktivoi Premiumin 30 päiväksi.</string>
+    <string name="vip_dialog_input_hint">Aktivointiavain</string>
+    <string name="vip_dialog_btn_activate">Aktivoi</string>
+    <string name="vip_dialog_btn_cancel">Peruuta</string>
+
+    <string name="vip_msg_success">Premium aktivoitu · %1$d päivää</string>
+    <string name="vip_msg_invalid">Virheellinen avain. Yritä uudelleen.</string>
+    <string name="vip_reset_title">Nollataanko Premium?</string>
+    <string name="vip_reset_message">Kaikki Premium-edut poistetaan välittömästi.</string>
+    <string name="vip_reset_confirm">Nollaa</string>
+
+    <string name="first_run_language_title">Valitse kielesi</string>
+</resources>

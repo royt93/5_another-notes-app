@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Nota</string>
+    <string name="action_archive">Arkib</string>
+    <string name="action_cancel">Batal</string>
+    <string name="action_clear">Kosongkan</string>
+    <string name="action_convert_to_list">Tukar kepada senarai</string>
+    <string name="action_convert_to_text">Tukar kepada teks</string>
+    <string name="action_copy">Buat salinan</string>
+    <string name="action_delete">Padam</string>
+    <string name="action_delete_checked">Padam item bertanda</string>
+    <string name="action_delete_forever">Padam selamanya</string>
+    <string name="action_delete_selection">Padam pilihan</string>
+    <string name="action_delete_selection_forever">Padam pilihan selamanya</string>
+    <string name="action_empty_trash">Kosongkan tong sampah</string>
+    <string name="action_empty_trash_short">Kosongkan</string>
+    <string name="action_keep">Simpan</string>
+    <string name="action_labels">Tukar label</string>
+    <string name="action_layout_grid">Lihat grid</string>
+    <string name="action_layout_list">Lihat senarai</string>
+    <string name="action_manage">Urus</string>
+    <string name="action_mark_as_done">Tanda selesai</string>
+    <string name="action_none">Tiada</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Buka</string>
+    <string name="action_pin">Sematkan</string>
+    <string name="action_postpone">Tangguh</string>
+    <string name="action_reminder_add">Tambah peringatan</string>
+    <string name="action_reminder_edit">Edit peringatan</string>
+    <string name="action_rename">Tukar nama</string>
+    <string name="action_restore">Pulihkan</string>
+    <string name="action_search">Cari</string>
+    <string name="action_select_all">Pilih semua</string>
+    <string name="action_settings">Tetapan</string>
+    <string name="action_share">Kongsi</string>
+    <string name="action_unarchive">Buang arkib</string>
+    <string name="action_uncheck_all">Buang tanda semua</string>
+    <string name="action_undo">Buat asal</string>
+    <string name="action_unpin">Buang sematan</string>
+
+    <string name="shortcut_text_note">Nota teks baru</string>
+    <string name="shortcut_text_note_short">Teks baru</string>
+    <string name="shortcut_list_note">Senarai baru</string>
+    <string name="shortcut_list_note_short">Senarai baru</string>
+    <string name="shortcut_reminders">Peringatan</string>
+    <string name="shortcut_reminders_short">Peringatan</string>
+
+    <string name="note_location_active">Nota</string>
+    <string name="note_location_archived">Diarkibkan</string>
+    <string name="note_location_deleted">Dipadam</string>
+    <string name="note_location_labels">Label</string>
+
+    <string name="note_pinned">Disematkan</string>
+    <string name="note_not_pinned">Lain-lain</string>
+
+    <string name="note_placeholder_active">Anda tiada nota.\nKetik + untuk tambah.</string>
+    <string name="note_placeholder_archived">Tiada nota diarkibkan</string>
+    <string name="note_placeholder_deleted">Tong sampah kosong</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="other">+ %d item lain</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="other">+ %d item bertanda</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Nota dalam tong sampah dipadam automatik selepas %d hari.</string>
+    <string name="trash_delete_message">Nota ini akan dipadam selamanya.</string>
+    <string name="trash_delete_selected_message">Nota yang dipilih akan dipadam selamanya.</string>
+    <string name="trash_empty_message">Semua nota dalam tong sampah akan dipadam selamanya.</string>
+
+    <string name="search_hint">Cari nota</string>
+    <string name="search_empty_placeholder">Tiada nota dijumpai. Cuba kata kunci lain.</string>
+
+    <string name="sort_title">Pilihan susunan</string>
+    <string name="sort_direction">Arah susunan</string>
+    <string name="sort_direction_ascending">Menaik</string>
+    <string name="sort_direction_descending">Menurun</string>
+    <string name="sort_field">Susun ikut</string>
+    <string name="sort_field_created">Tarikh dicipta</string>
+    <string name="sort_field_modified">Tarikh diubah</string>
+    <string name="sort_field_title">Tajuk</string>
+
+    <string name="edit_add_title">Cipta nota</string>
+    <string name="edit_change_title">Edit nota</string>
+    <string name="edit_hint_note_title">Tajuk</string>
+    <string name="edit_hint_note_content">Nota</string>
+    <string name="edit_hint_note_item">Item senarai</string>
+
+    <string name="edit_message_blank_note_discarded">Nota kosong dibuang.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">Nota diarkibkan.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">Nota dialihkan ke tong sampah.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">Nota dipulihkan.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">Nota dikeluarkan dari arkib.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Tidak boleh edit nota dalam tong sampah.</string>
+
+    <string name="edit_copy_suffix">Salinan</string>
+    <string name="edit_copy_untitled_name">Tanpa tajuk</string>
+
+    <string name="edit_convert_keep_checked">Nota teks tidak menyokong kotak tanda. Padam item bertanda?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">%d item bertanda</item>
+    </plurals>
+
+    <string name="note_reminders">Peringatan</string>
+    <string name="reminder_upcoming">Akan datang</string>
+    <string name="reminder_today">Hari ini</string>
+    <string name="reminder_overdue">Tertangguh</string>
+    <string name="reminder_date">Tarikh</string>
+    <string name="reminder_time">Masa</string>
+    <string name="reminder_invalid_time">Masa ini sudah berlalu.</string>
+    <string name="reminder_notif_channel_title">Peringatan</string>
+    <string name="reminder_notif_channel_descr">Peringatan ditetapkan pada nota</string>
+    <string name="reminder_empty_placeholder">Tiada peringatan ditetapkan</string>
+    <string name="reminder_restricted_battery">Peringatan mungkin tidak berfungsi kerana penggunaan bateri dihadkan. Anda boleh ubah dalam tetapan apl.</string>
+    <string name="reminder_notif_permission">Untuk hantar peringatan, apl perlukan kebenaran. Ketik OK untuk minta kebenaran. Selepas itu anda boleh tetapkan peringatan.</string>
+    <string name="reminder_notif_permission_denied">Kebenaran notifikasi ditolak. Peringatan tidak akan berfungsi sehingga diaktifkan.</string>
+
+    <string name="label_create">Cipta label baru</string>
+    <string name="label_edit">Edit nama label</string>
+    <string name="label_manage">Urus label</string>
+    <string name="label_select">Pilih label</string>
+    <string name="label_already_exists">Label dengan nama ini sudah wujud.</string>
+    <string name="label_hidden_option">Sembunyikan nota dengan label ini dari aktif dan diarkibkan</string>
+    <string name="label_empty_placeholder">Tiada label dicipta</string>
+    <string name="label_delete_message">Label yang dipilih akan dipadam, tetapi nota berkaitan akan disimpan.</string>
+    <string name="label_notes_empty_placeholder">Tiada nota berlabel ini</string>
+
+    <string name="pref_group_appearance">Penampilan</string>
+    <string name="pref_theme">Tema apl</string>
+    <string name="pref_theme_light">Terang</string>
+    <string name="pref_theme_dark">Gelap</string>
+    <string name="pref_theme_system">Ikut sistem</string>
+    <string name="pref_dynamic_colors">Guna warna dinamik</string>
+    <string name="pref_strikethrough_checked">Garis pada item bertanda</string>
+    <string name="pref_preview_labels">Bilangan maksimum label dalam pratonton</string>
+
+    <string name="widget_guide_title">Widget</string>
+
+    <string name="pref_shown_date">Tarikh ditunjukkan pada nota</string>
+    <string name="pref_shown_date_added">Tarikh dicipta</string>
+    <string name="pref_shown_date_modified">Tarikh ubah terakhir</string>
+    <string name="pref_shown_date_none">Tiada tarikh</string>
+
+    <string name="pref_preview_lines">Bilangan baris maksimum dalam pratonton</string>
+    <string name="pref_preview_lines_summary">Konfigurasi bilangan baris dan item ditunjukkan, untuk setiap mod susun atur dan jenis nota</string>
+    <string name="pref_preview_lines_grid_layout">Susun atur grid</string>
+    <string name="pref_preview_lines_list_layout">Susun atur senarai</string>
+    <string name="pref_preview_lines_text">Baris dalam pratonton nota teks</string>
+    <string name="pref_preview_lines_list">Item dalam pratonton nota senarai</string>
+
+    <string name="pref_group_behavior">Tingkah laku</string>
+    <string name="pref_behavior_swipe_action_left">Tindakan leret kiri</string>
+    <string name="pref_behavior_swipe_action_right">Tindakan leret kanan</string>
+    <string name="pref_behavior_move_checked">Pindahkan item bertanda ke bawah</string>
+
+    <string name="pref_group_data">Data</string>
+    <string name="pref_data_export">Eksport data</string>
+    <string name="pref_data_export_summary">Eksport data nota sebagai JSON</string>
+    <string name="pref_data_encrypted_export">Eksport tersulit</string>
+    <string name="pref_data_encrypted_export_summary">Sulitkan nota yang dieksport. Tidak boleh dicapai tanpa kata laluan yang betul.</string>
+    <string name="pref_data_auto_export">Eksport data automatik</string>
+    <string name="pref_data_auto_export_summary">Eksport data apl ke fail secara automatik, sekali sehari.</string>
+    <string name="pref_data_auto_export_date">(Eksport terakhir: %s)</string>
+    <string name="pref_data_import">Import data</string>
+    <string name="pref_data_import_summary">Import data JSON yang dieksport sebelum ini, gabung dengan data sedia ada.</string>
+    <string name="pref_data_clear">Kosongkan semua data</string>
+    <string name="pref_data_clear_confirm_message">Semua data nota akan dikosongkan selamanya! Tidak boleh dibuat asal.</string>
+    <string name="pref_data_clear_success_message">Semua data dikosongkan dengan berjaya.</string>
+
+    <string name="pref_group_about">Mengenai</string>
+    <string name="pref_about_view_source">Lihat di Github (Asal)</string>
+    <string name="pref_about_view_source_fork">Lihat di Github (Fork)</string>
+    <string name="pref_about_view_licenses">Lesen sumber terbuka</string>
+    <string name="pref_about_version">Versi</string>
+
+    <string name="pref_restart_dialog_title">Mulakan semula diperlukan!</string>
+    <string name="pref_restart_dialog_description">Mulakan semula diperlukan untuk perubahan ini berkuat kuasa. Adakah anda mahu mulakan semula sekarang?</string>
+
+    <string name="export_success">Data berjaya dieksport!</string>
+    <string name="export_fail">Ralat berlaku semasa eksport data.</string>
+    <string name="export_serialization_fail">Ralat berlaku semasa eksport. Cuba matikan penyulitan dan cuba lagi.</string>
+    <string name="encrypted_export_dialog_title">Tetapkan kata laluan</string>
+    <string name="encrypted_export_password">Kata laluan</string>
+    <string name="encrypted_export_repeat_password">Sahkan kata laluan</string>
+    <string name="encrypted_export_password_matching_error">Kata laluan tidak sepadan</string>
+    <string name="encrypted_export_key_generation_successful">Penyulitan diaktifkan dengan berjaya!</string>
+    <string name="encrypted_export_key_deletion_successful">Penyulitan dimatikan dengan berjaya!</string>
+    <string name="import_success">Data berjaya diimport!</string>
+    <string name="import_future_version">Data berjaya diimport! Sebahagian maklumat mungkin hilang kerana data dari versi lebih baru.</string>
+    <string name="import_bad_input">Ralat berlaku semasa membaca fail ini.</string>
+    <string name="import_bad_format">Tidak dapat import data, format JSON tidak sah.</string>
+    <string name="import_bad_data">Tidak dapat import data, sesetengah medan ada nilai tidak sah. Mungkin dari versi lebih baru — kemas kini apl.</string>
+    <string name="encrypted_import_dialog_title">Masukkan kata laluan</string>
+    <string name="encrypted_import_key_error">Ralat berlaku semasa nyahsulit fail. Sahkan kata laluan.</string>
+    <string name="encrypted_import_encryption_unsupported">Tidak dapat import, versi Android ini tidak menyokong penyulitan.</string>
+    <string name="auto_export_message">Untuk dayakan eksport automatik, pilih fail untuk simpan data. Data akan dieksport sekali sehari sambil apl dibuka. Ketik OK untuk teruskan.</string>
+    <string name="auto_export_fail">Eksport automatik gagal. Pastikan lokasi eksport masih wujud dan boleh diakses, kemudian konfigur semula.</string>
+
+    <string name="content_descrp_open_drawer">Buka laci</string>
+    <string name="content_descrp_back">Kembali</string>
+    <string name="content_descrp_label_hidden">Nota dengan label ini disembunyikan</string>
+
+    <string name="date_rel_today">Hari ini, %s</string>
+    <string name="date_rel_yesterday">Semalam, %s</string>
+    <string name="date_rel_tomorrow">Esok, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d hari lalu, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">Dalam %d hari, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Terma & Polisi]]></string>
+    <string name="rate_this_app_5">Beri 5★</string>
+    <string name="get_more_apps">Apl lain</string>
+    <string name="share_this_app">Kongsi apl ini</string>
+
+    <string name="pref_language">Bahasa</string>
+    <string name="pref_language_system">Lalai sistem</string>
+    <string name="msg_consent_not_required">Tetapan privasi hanya tersedia di kawasan yang memerlukan persetujuan.</string>
+
+    <string name="exit_press_back_again">Tekan kembali sekali lagi untuk keluar</string>
+    <string name="reminder_saved_for">Peringatan ditetapkan untuk %1$s</string>
+    <string name="color_default">Lalai</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Tetapan privasi</string>
+    <string name="pref_privacy_settings_summary">Urus persetujuan iklan (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">KEAHLIAN PREMIUM</string>
+    <string name="vip_status_active">AKTIF</string>
+    <string name="vip_status_inactive">TIDAK AKTIF</string>
+    <string name="vip_expires_until">Aktif · %1$s</string>
+
+    <string name="vip_benefits_title">Yang anda dapat</string>
+    <string name="vip_benefit_no_banner">Tiada iklan banner</string>
+    <string name="vip_benefit_no_interstitial">Tiada iklan skrin penuh</string>
+    <string name="vip_benefit_no_app_open">Tiada iklan ketika buka/sambung</string>
+    <string name="vip_benefit_support">Sokong pembangunan berterusan</string>
+
+    <string name="vip_action_activate">Aktifkan Premium</string>
+    <string name="vip_action_reset">Set semula Premium</string>
+    <string name="vip_footer_info">Premium guna kunci pengaktifan luar talian — tiada bayaran dalam apl.</string>
+
+    <string name="vip_dialog_title">Masukkan kunci Premium</string>
+    <string name="vip_dialog_subtitle">Setiap kunci aktifkan Premium selama 30 hari.</string>
+    <string name="vip_dialog_input_hint">Kunci pengaktifan</string>
+    <string name="vip_dialog_btn_activate">Aktifkan</string>
+    <string name="vip_dialog_btn_cancel">Batal</string>
+
+    <string name="vip_msg_success">Premium aktif · %1$d hari</string>
+    <string name="vip_msg_invalid">Kunci tidak sah. Cuba lagi.</string>
+    <string name="vip_reset_title">Set semula Premium?</string>
+    <string name="vip_reset_message">Semua manfaat Premium akan dialih keluar serta-merta.</string>
+    <string name="vip_reset_confirm">Set semula</string>
+
+    <string name="first_run_language_title">Pilih bahasa anda</string>
+</resources>

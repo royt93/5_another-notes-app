@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Jegyzetek</string>
+    <string name="action_archive">Archiválás</string>
+    <string name="action_cancel">Mégse</string>
+    <string name="action_clear">Törlés</string>
+    <string name="action_convert_to_list">Listává alakít</string>
+    <string name="action_convert_to_text">Szöveggé alakít</string>
+    <string name="action_copy">Másolat készítése</string>
+    <string name="action_delete">Törlés</string>
+    <string name="action_delete_checked">Bejelölt törlése</string>
+    <string name="action_delete_forever">Végleges törlés</string>
+    <string name="action_delete_selection">Kiválasztás törlése</string>
+    <string name="action_delete_selection_forever">Kiválasztás végleges törlése</string>
+    <string name="action_empty_trash">Lomtár ürítése</string>
+    <string name="action_empty_trash_short">Ürítés</string>
+    <string name="action_keep">Megtartás</string>
+    <string name="action_labels">Címkék módosítása</string>
+    <string name="action_layout_grid">Rács nézet</string>
+    <string name="action_layout_list">Lista nézet</string>
+    <string name="action_manage">Kezelés</string>
+    <string name="action_mark_as_done">Készként megjelölés</string>
+    <string name="action_none">Nincs</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Megnyitás</string>
+    <string name="action_pin">Rögzítés</string>
+    <string name="action_postpone">Halasztás</string>
+    <string name="action_reminder_add">Emlékeztető hozzáadása</string>
+    <string name="action_reminder_edit">Emlékeztető szerkesztése</string>
+    <string name="action_rename">Átnevezés</string>
+    <string name="action_restore">Visszaállítás</string>
+    <string name="action_search">Keresés</string>
+    <string name="action_select_all">Összes kijelölése</string>
+    <string name="action_settings">Beállítások</string>
+    <string name="action_share">Megosztás</string>
+    <string name="action_unarchive">Archiválás visszavonása</string>
+    <string name="action_uncheck_all">Összes kijelölés visszavonása</string>
+    <string name="action_undo">Visszavonás</string>
+    <string name="action_unpin">Rögzítés feloldása</string>
+
+    <string name="shortcut_text_note">Új szöveges jegyzet</string>
+    <string name="shortcut_text_note_short">Új szöveg</string>
+    <string name="shortcut_list_note">Új lista</string>
+    <string name="shortcut_list_note_short">Új lista</string>
+    <string name="shortcut_reminders">Emlékeztetők</string>
+    <string name="shortcut_reminders_short">Emlékeztetők</string>
+
+    <string name="note_location_active">Jegyzetek</string>
+    <string name="note_location_archived">Archivált</string>
+    <string name="note_location_deleted">Törölt</string>
+    <string name="note_location_labels">Címkék</string>
+
+    <string name="note_pinned">Rögzített</string>
+    <string name="note_not_pinned">Egyéb</string>
+
+    <string name="note_placeholder_active">Nincsenek jegyzeteid.\nKattints a + gombra hozzáadáshoz.</string>
+    <string name="note_placeholder_archived">Nincsenek archivált jegyzetek</string>
+    <string name="note_placeholder_deleted">A lomtár üres</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d további elem</item>
+        <item quantity="other">+ %d további elem</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d bejelölt elem</item>
+        <item quantity="other">+ %d bejelölt elem</item>
+    </plurals>
+
+    <string name="trash_reminder_message">A lomtárban lévő jegyzetek %d nap után automatikusan törlődnek.</string>
+    <string name="trash_delete_message">Ez a jegyzet véglegesen törölve lesz.</string>
+    <string name="trash_delete_selected_message">A kijelölt jegyzetek véglegesen törölve lesznek.</string>
+    <string name="trash_empty_message">A lomtárban lévő összes jegyzet véglegesen törölve lesz.</string>
+
+    <string name="search_hint">Jegyzetek keresése</string>
+    <string name="search_empty_placeholder">Nincs találat. Próbálj másik keresést.</string>
+
+    <string name="sort_title">Rendezési beállítások</string>
+    <string name="sort_direction">Rendezés iránya</string>
+    <string name="sort_direction_ascending">Növekvő</string>
+    <string name="sort_direction_descending">Csökkenő</string>
+    <string name="sort_field">Rendezés szerint</string>
+    <string name="sort_field_created">Létrehozás dátuma</string>
+    <string name="sort_field_modified">Módosítás dátuma</string>
+    <string name="sort_field_title">Cím</string>
+
+    <string name="edit_add_title">Jegyzet létrehozása</string>
+    <string name="edit_change_title">Jegyzet szerkesztése</string>
+    <string name="edit_hint_note_title">Cím</string>
+    <string name="edit_hint_note_content">Jegyzet</string>
+    <string name="edit_hint_note_item">Listaelem</string>
+
+    <string name="edit_message_blank_note_discarded">Üres jegyzet eldobva.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">Jegyzet archiválva.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">Jegyzet a lomtárba helyezve.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">Jegyzet visszaállítva.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">Jegyzet kivéve az archívumból.</item>
+    </plurals>
+    <string name="edit_in_trash_message">A lomtárban lévő jegyzet nem szerkeszthető.</string>
+
+    <string name="edit_copy_suffix">Másolat</string>
+    <string name="edit_copy_untitled_name">Cím nélküli</string>
+
+    <string name="edit_convert_keep_checked">A szöveges jegyzetek nem támogatják a jelölőnégyzeteket. Eltávolítja a bejelölt elemeket?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">%d bejelölt elem</item>
+    </plurals>
+
+    <string name="note_reminders">Emlékeztetők</string>
+    <string name="reminder_upcoming">Közelgő</string>
+    <string name="reminder_today">Ma</string>
+    <string name="reminder_overdue">Lejárt</string>
+    <string name="reminder_date">Dátum</string>
+    <string name="reminder_time">Idő</string>
+    <string name="reminder_invalid_time">Ez az idő már elmúlt.</string>
+    <string name="reminder_notif_channel_title">Emlékeztetők</string>
+    <string name="reminder_notif_channel_descr">Jegyzetekre állított emlékeztetők</string>
+    <string name="reminder_empty_placeholder">Nincsenek emlékeztetők beállítva</string>
+    <string name="reminder_restricted_battery">Az emlékeztetők talán nem működnek megfelelően, mert az alkalmazás korlátozott akkumulátorhasználatú. Az alkalmazás beállításaiban módosítható.</string>
+    <string name="reminder_notif_permission">Az emlékeztető értesítések küldéséhez engedély szükséges. Kattints OK-ra az engedély kérésére. Ezután beállíthatsz emlékeztetőt.</string>
+    <string name="reminder_notif_permission_denied">Az értesítési engedély elutasítva. Az emlékeztetők nem működnek, amíg nincs engedélyezve.</string>
+
+    <string name="label_create">Új címke létrehozása</string>
+    <string name="label_edit">Címke nevének szerkesztése</string>
+    <string name="label_manage">Címkék kezelése</string>
+    <string name="label_select">Címkék kiválasztása</string>
+    <string name="label_already_exists">Már létezik ilyen nevű címke.</string>
+    <string name="label_hidden_option">Ezzel a címkével rendelkező jegyzetek elrejtése az aktívak és archiváltak közül</string>
+    <string name="label_empty_placeholder">Nincsenek létrehozott címkék</string>
+    <string name="label_delete_message">A kijelölt címkék törölve lesznek, de a hozzájuk tartozó jegyzetek megmaradnak.</string>
+    <string name="label_notes_empty_placeholder">Nincsenek ezzel a címkével ellátott jegyzetek</string>
+
+    <string name="pref_group_appearance">Kinézet</string>
+    <string name="pref_theme">Alkalmazás témája</string>
+    <string name="pref_theme_light">Világos</string>
+    <string name="pref_theme_dark">Sötét</string>
+    <string name="pref_theme_system">Rendszer szerint</string>
+    <string name="pref_dynamic_colors">Dinamikus színek használata</string>
+    <string name="pref_strikethrough_checked">Bejelölt elemek áthúzása</string>
+    <string name="pref_preview_labels">Címkék maximális száma az előnézetben</string>
+
+    <string name="widget_guide_title">Modulok</string>
+
+    <string name="pref_shown_date">Jegyzeten megjelenő dátum</string>
+    <string name="pref_shown_date_added">Létrehozás dátuma</string>
+    <string name="pref_shown_date_modified">Utolsó módosítás</string>
+    <string name="pref_shown_date_none">Nincs dátum</string>
+
+    <string name="pref_preview_lines">Sorok maximális száma az előnézetben</string>
+    <string name="pref_preview_lines_summary">Állítsd be, hány sor és elem jelenjen meg a jegyzeteken minden elrendezési mód és jegyzettípus esetén</string>
+    <string name="pref_preview_lines_grid_layout">Rács elrendezés</string>
+    <string name="pref_preview_lines_list_layout">Lista elrendezés</string>
+    <string name="pref_preview_lines_text">Sorok szöveges jegyzet előnézetben</string>
+    <string name="pref_preview_lines_list">Elemek lista jegyzet előnézetben</string>
+
+    <string name="pref_group_behavior">Viselkedés</string>
+    <string name="pref_behavior_swipe_action_left">Balra húzás művelete</string>
+    <string name="pref_behavior_swipe_action_right">Jobbra húzás művelete</string>
+    <string name="pref_behavior_move_checked">Bejelölt elemek mozgatása alulra</string>
+
+    <string name="pref_group_data">Adatok</string>
+    <string name="pref_data_export">Adatok exportálása</string>
+    <string name="pref_data_export_summary">Jegyzetek exportálása JSON-ként</string>
+    <string name="pref_data_encrypted_export">Titkosított export</string>
+    <string name="pref_data_encrypted_export_summary">Titkosítja az exportált jegyzeteket. Helyes jelszó nélkül nem hozzáférhető.</string>
+    <string name="pref_data_auto_export">Automatikus export</string>
+    <string name="pref_data_auto_export_summary">Az alkalmazás adatainak automatikus exportálása fájlba, naponta egyszer.</string>
+    <string name="pref_data_auto_export_date">(Utolsó export: %s)</string>
+    <string name="pref_data_import">Adatok importálása</string>
+    <string name="pref_data_import_summary">Korábban exportált JSON adatok importálása, egyesítés a meglévő adatokkal.</string>
+    <string name="pref_data_clear">Összes adat törlése</string>
+    <string name="pref_data_clear_confirm_message">Az összes jegyzetadat véglegesen törölve lesz! Nem visszavonható.</string>
+    <string name="pref_data_clear_success_message">Az összes adat sikeresen törölve.</string>
+
+    <string name="pref_group_about">Névjegy</string>
+    <string name="pref_about_view_source">Megtekintés Githubon (Eredeti)</string>
+    <string name="pref_about_view_source_fork">Megtekintés Githubon (Fork)</string>
+    <string name="pref_about_view_licenses">Nyílt forráskódú licencek</string>
+    <string name="pref_about_version">Verzió</string>
+
+    <string name="pref_restart_dialog_title">Újraindítás szükséges!</string>
+    <string name="pref_restart_dialog_description">A változtatások érvényesítéséhez újraindítás szükséges. Most akarsz újraindítani?</string>
+
+    <string name="export_success">Adatok sikeresen exportálva!</string>
+    <string name="export_fail">Hiba történt az exportálás során.</string>
+    <string name="export_serialization_fail">Hiba történt. Próbáld kikapcsolni a titkosítást és próbáld újra.</string>
+    <string name="encrypted_export_dialog_title">Jelszó beállítása</string>
+    <string name="encrypted_export_password">Jelszó</string>
+    <string name="encrypted_export_repeat_password">Jelszó megerősítése</string>
+    <string name="encrypted_export_password_matching_error">A jelszavak nem egyeznek</string>
+    <string name="encrypted_export_key_generation_successful">Titkosítás sikeresen engedélyezve!</string>
+    <string name="encrypted_export_key_deletion_successful">Titkosítás sikeresen kikapcsolva!</string>
+    <string name="import_success">Adatok sikeresen importálva!</string>
+    <string name="import_future_version">Adatok sikeresen importálva! Néhány információ elveszhetett, mert az adat újabb verzióból származik.</string>
+    <string name="import_bad_input">Hiba történt a fájl olvasásakor.</string>
+    <string name="import_bad_format">Az adatok nem importálhatók, érvénytelen JSON formátum.</string>
+    <string name="import_bad_data">Az adatok nem importálhatók, néhány mező értéke érvénytelen. Lehet újabb verzióból — frissítsd az alkalmazást.</string>
+    <string name="encrypted_import_dialog_title">Jelszó megadása</string>
+    <string name="encrypted_import_key_error">Hiba történt a fájl visszafejtésekor. Ellenőrizd a jelszót.</string>
+    <string name="encrypted_import_encryption_unsupported">Nem importálható, ez az Android verzió nem támogatja a titkosítást.</string>
+    <string name="auto_export_message">Az automatikus export engedélyezéséhez válassz egy fájlt az adatok mentésére. Az adatok naponta egyszer exportálva lesznek, miközben az alkalmazás meg van nyitva. Kattints OK a folytatáshoz.</string>
+    <string name="auto_export_fail">Az automatikus export sikertelen. Győződj meg arról, hogy az export hely még létezik és elérhető, majd újrakonfiguráld.</string>
+
+    <string name="content_descrp_open_drawer">Fiók megnyitása</string>
+    <string name="content_descrp_back">Vissza</string>
+    <string name="content_descrp_label_hidden">Az ezzel a címkével rendelkező jegyzetek el vannak rejtve</string>
+
+    <string name="date_rel_today">Ma, %s</string>
+    <string name="date_rel_yesterday">Tegnap, %s</string>
+    <string name="date_rel_tomorrow">Holnap, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d napja, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">%d nap múlva, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Feltételek és Szabályzat]]></string>
+    <string name="rate_this_app_5">Értékeld 5★-gal</string>
+    <string name="get_more_apps">Több alkalmazás</string>
+    <string name="share_this_app">Alkalmazás megosztása</string>
+
+    <string name="pref_language">Nyelv</string>
+    <string name="pref_language_system">Rendszer alapértelmezett</string>
+    <string name="msg_consent_not_required">Az adatvédelmi beállítások csak olyan régiókban érhetők el, ahol hozzájárulás szükséges.</string>
+
+    <string name="exit_press_back_again">Nyomd meg újra a vissza gombot a kilépéshez</string>
+    <string name="reminder_saved_for">Emlékeztető beállítva: %1$s</string>
+    <string name="color_default">Alapértelmezett</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Adatvédelmi beállítások</string>
+    <string name="pref_privacy_settings_summary">Hirdetési hozzájárulás kezelése (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM TAGSÁG</string>
+    <string name="vip_status_active">AKTÍV</string>
+    <string name="vip_status_inactive">INAKTÍV</string>
+    <string name="vip_expires_until">Aktív · %1$s</string>
+
+    <string name="vip_benefits_title">Mit kapsz</string>
+    <string name="vip_benefit_no_banner">Nincsenek banner hirdetések</string>
+    <string name="vip_benefit_no_interstitial">Nincsenek teljes képernyős hirdetések</string>
+    <string name="vip_benefit_no_app_open">Nincsenek indítási / folytatási hirdetések</string>
+    <string name="vip_benefit_support">Támogasd a folyamatos fejlesztést</string>
+
+    <string name="vip_action_activate">Premium aktiválása</string>
+    <string name="vip_action_reset">Premium visszaállítása</string>
+    <string name="vip_footer_info">A Premium offline aktiválási kulcsot használ — nincs alkalmazáson belüli fizetés.</string>
+
+    <string name="vip_dialog_title">Add meg a Premium kulcsot</string>
+    <string name="vip_dialog_subtitle">Minden kulcs 30 napra aktiválja a Premiumot.</string>
+    <string name="vip_dialog_input_hint">Aktiválási kulcs</string>
+    <string name="vip_dialog_btn_activate">Aktiválás</string>
+    <string name="vip_dialog_btn_cancel">Mégse</string>
+
+    <string name="vip_msg_success">Premium aktiválva · %1$d nap</string>
+    <string name="vip_msg_invalid">Érvénytelen kulcs. Próbáld újra.</string>
+    <string name="vip_reset_title">Premium visszaállítása?</string>
+    <string name="vip_reset_message">Az összes Premium előny azonnal eltávolítva.</string>
+    <string name="vip_reset_confirm">Visszaállítás</string>
+
+    <string name="first_run_language_title">Válaszd ki a nyelvedet</string>
+</resources>

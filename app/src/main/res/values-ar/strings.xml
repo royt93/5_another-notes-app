@@ -280,4 +280,5 @@
     <string name="exit_press_back_again">اضغط رجوع مرة أخرى للخروج</string>
     <string name="reminder_saved_for">تم ضبط التذكير لـ %1$s</string>
     <string name="color_default">افتراضي</string>
+    <string name="first_run_language_title">اختر لغتك</string>
 </resources>

@@ -262,4 +262,5 @@
     <string name="exit_press_back_again">Naciśnij ponownie wstecz, aby wyjść</string>
     <string name="reminder_saved_for">Przypomnienie ustawione na %1$s</string>
     <string name="color_default">Domyślny</string>
+    <string name="first_run_language_title">Wybierz swój język</string>
 </resources>

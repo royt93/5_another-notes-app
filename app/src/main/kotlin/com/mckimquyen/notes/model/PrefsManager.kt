@@ -47,6 +47,9 @@ class PrefsManager @Inject constructor(
     var lastTrashReminderTime: Long by preference(LAST_TRASH_REMIND_TIME, 0)
     var lastRestrictedBatteryReminderTime: Long by preference(LAST_RESTRICTED_BATTERY_REMIND_TIME, 0)
 
+    /** True once the user has seen (and dismissed) the first-run language picker. */
+    var hasPickedFirstRunLanguage: Boolean by preference(FIRST_RUN_LANGUAGE_PICKED, false)
+
     val sortSettings: SortSettings
         get() = SortSettings(sortField, sortDirection)
 
@@ -184,6 +187,7 @@ class PrefsManager @Inject constructor(
 
         // Legacy keys
         private const val SWIPE_ACTION = "swipe_action"
+        private const val FIRST_RUN_LANGUAGE_PICKED = "first_run_language_picked"
 
         private val PREFS_XML = listOf(
             R.xml.prefs,

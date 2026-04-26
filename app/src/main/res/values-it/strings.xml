@@ -237,4 +237,5 @@ Cliccare OK per procedere.</string>
     <string name="exit_press_back_again">Premi indietro di nuovo per uscire</string>
     <string name="reminder_saved_for">Promemoria impostato per %1$s</string>
     <string name="color_default">Predefinito</string>
+    <string name="first_run_language_title">Scegli la tua lingua</string>
 </resources>

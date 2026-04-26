@@ -242,4 +242,5 @@
     <string name="exit_press_back_again">Pressione voltar novamente para sair</string>
     <string name="reminder_saved_for">Lembrete definido para %1$s</string>
     <string name="color_default">Padrão</string>
+    <string name="first_run_language_title">Escolha o seu idioma</string>
 </resources>

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">नोट्स</string>
+    <string name="action_archive">संग्रहित करें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_clear">साफ़ करें</string>
+    <string name="action_convert_to_list">सूची में बदलें</string>
+    <string name="action_convert_to_text">पाठ में बदलें</string>
+    <string name="action_copy">प्रति बनाएं</string>
+    <string name="action_delete">हटाएं</string>
+    <string name="action_delete_checked">चयनित हटाएं</string>
+    <string name="action_delete_forever">हमेशा के लिए हटाएं</string>
+    <string name="action_delete_selection">चयन हटाएं</string>
+    <string name="action_delete_selection_forever">चयन हमेशा के लिए हटाएं</string>
+    <string name="action_empty_trash">कूड़ा खाली करें</string>
+    <string name="action_empty_trash_short">खाली करें</string>
+    <string name="action_keep">रखें</string>
+    <string name="action_labels">लेबल बदलें</string>
+    <string name="action_layout_grid">ग्रिड दृश्य</string>
+    <string name="action_layout_list">सूची दृश्य</string>
+    <string name="action_manage">प्रबंधित करें</string>
+    <string name="action_mark_as_done">पूर्ण के रूप में चिह्नित करें</string>
+    <string name="action_none">कोई नहीं</string>
+    <string name="action_ok">ठीक है</string>
+    <string name="action_open">खोलें</string>
+    <string name="action_pin">पिन</string>
+    <string name="action_postpone">स्थगित करें</string>
+    <string name="action_reminder_add">रिमाइंडर जोड़ें</string>
+    <string name="action_reminder_edit">रिमाइंडर संपादित करें</string>
+    <string name="action_rename">नाम बदलें</string>
+    <string name="action_restore">पुनर्स्थापित करें</string>
+    <string name="action_search">खोजें</string>
+    <string name="action_select_all">सभी चुनें</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="action_share">साझा करें</string>
+    <string name="action_unarchive">संग्रह से निकालें</string>
+    <string name="action_uncheck_all">सभी अनचेक करें</string>
+    <string name="action_undo">पूर्ववत करें</string>
+    <string name="action_unpin">पिन हटाएं</string>
+
+    <string name="shortcut_text_note">नया पाठ नोट</string>
+    <string name="shortcut_text_note_short">नया पाठ</string>
+    <string name="shortcut_list_note">नई सूची</string>
+    <string name="shortcut_list_note_short">नई सूची</string>
+    <string name="shortcut_reminders">रिमाइंडर</string>
+    <string name="shortcut_reminders_short">रिमाइंडर</string>
+
+    <string name="note_location_active">नोट्स</string>
+    <string name="note_location_archived">संग्रहित</string>
+    <string name="note_location_deleted">हटाए गए</string>
+    <string name="note_location_labels">लेबल</string>
+
+    <string name="note_pinned">पिन किए</string>
+    <string name="note_not_pinned">अन्य</string>
+
+    <string name="note_placeholder_active">आपके पास कोई नोट नहीं है।\nजोड़ने के लिए + दबाएं।</string>
+    <string name="note_placeholder_archived">कोई संग्रहित नोट नहीं</string>
+    <string name="note_placeholder_deleted">कूड़ा खाली है</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="other">+ %d और सूची आइटम</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="other">+ %d चयनित आइटम</item>
+    </plurals>
+
+    <string name="trash_reminder_message">कूड़े के नोट %d दिनों बाद स्वचालित रूप से हटा दिए जाते हैं।</string>
+    <string name="trash_delete_message">यह नोट स्थायी रूप से हटा दिया जाएगा।</string>
+    <string name="trash_delete_selected_message">चयनित नोट स्थायी रूप से हटा दिए जाएंगे।</string>
+    <string name="trash_empty_message">कूड़े के सभी नोट स्थायी रूप से हटा दिए जाएंगे।</string>
+
+    <string name="search_hint">नोट्स खोजें</string>
+    <string name="search_empty_placeholder">कोई मिलान नहीं मिला। दूसरी क्वेरी आज़माएं।</string>
+
+    <string name="sort_title">क्रमबद्ध विकल्प</string>
+    <string name="sort_direction">क्रम दिशा</string>
+    <string name="sort_direction_ascending">आरोही</string>
+    <string name="sort_direction_descending">अवरोही</string>
+    <string name="sort_field">क्रमबद्ध करें</string>
+    <string name="sort_field_created">निर्माण तिथि</string>
+    <string name="sort_field_modified">संशोधन तिथि</string>
+    <string name="sort_field_title">शीर्षक</string>
+
+    <string name="edit_add_title">नोट बनाएं</string>
+    <string name="edit_change_title">नोट संपादित करें</string>
+    <string name="edit_hint_note_title">शीर्षक</string>
+    <string name="edit_hint_note_content">नोट</string>
+    <string name="edit_hint_note_item">सूची आइटम</string>
+
+    <string name="edit_message_blank_note_discarded">खाली नोट हटाया।</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">नोट संग्रहित।</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">नोट कूड़े में ले जाए।</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">नोट पुनर्स्थापित।</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">नोट संग्रह से हटाए।</item>
+    </plurals>
+    <string name="edit_in_trash_message">कूड़े में नोट संपादित नहीं कर सकते।</string>
+
+    <string name="edit_copy_suffix">प्रति</string>
+    <string name="edit_copy_untitled_name">शीर्षकहीन</string>
+
+    <string name="edit_convert_keep_checked">पाठ नोट चेकबॉक्स का समर्थन नहीं करते। चयनित आइटम हटाएं?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">%d चयनित आइटम</item>
+    </plurals>
+
+    <string name="note_reminders">रिमाइंडर</string>
+    <string name="reminder_upcoming">आगामी</string>
+    <string name="reminder_today">आज</string>
+    <string name="reminder_overdue">समय बीत गया</string>
+    <string name="reminder_date">तारीख</string>
+    <string name="reminder_time">समय</string>
+    <string name="reminder_invalid_time">यह समय पहले ही बीत चुका है।</string>
+    <string name="reminder_notif_channel_title">रिमाइंडर</string>
+    <string name="reminder_notif_channel_descr">नोट पर सेट किए गए रिमाइंडर</string>
+    <string name="reminder_empty_placeholder">कोई रिमाइंडर सेट नहीं</string>
+    <string name="reminder_restricted_battery">ऐप ने बैटरी उपयोग सीमित किया है, इसलिए रिमाइंडर सही से काम नहीं कर सकते। ऐप सेटिंग में बदला जा सकता है।</string>
+    <string name="reminder_notif_permission">रिमाइंडर सूचनाएं भेजने के लिए ऐप को अनुमति चाहिए। ठीक है दबाकर अनुमति दें। उसके बाद रिमाइंडर सेट कर सकेंगे।</string>
+    <string name="reminder_notif_permission_denied">सूचना अनुमति अस्वीकृत। सक्षम होने तक रिमाइंडर काम नहीं करेगा।</string>
+
+    <string name="label_create">नया लेबल बनाएं</string>
+    <string name="label_edit">लेबल नाम संपादित करें</string>
+    <string name="label_manage">लेबल प्रबंधित करें</string>
+    <string name="label_select">लेबल चुनें</string>
+    <string name="label_already_exists">इस नाम का लेबल पहले से है।</string>
+    <string name="label_hidden_option">इस लेबल वाले नोटों को सक्रिय और संग्रहित से छिपाएं</string>
+    <string name="label_empty_placeholder">कोई लेबल नहीं बनाए</string>
+    <string name="label_delete_message">चयनित लेबल हटाए जाएंगे, लेकिन उनसे जुड़े नोट सुरक्षित रहेंगे।</string>
+    <string name="label_notes_empty_placeholder">इस लेबल वाला कोई नोट नहीं</string>
+
+    <string name="pref_group_appearance">दिखावट</string>
+    <string name="pref_theme">ऐप थीम</string>
+    <string name="pref_theme_light">रोशनी</string>
+    <string name="pref_theme_dark">अंधेरा</string>
+    <string name="pref_theme_system">सिस्टम के अनुसार</string>
+    <string name="pref_dynamic_colors">डायनामिक रंग उपयोग करें</string>
+    <string name="pref_strikethrough_checked">चयनित आइटम पर रेखा</string>
+    <string name="pref_preview_labels">पूर्वावलोकन में अधिकतम लेबल</string>
+
+    <string name="widget_guide_title">विजेट</string>
+
+    <string name="pref_shown_date">नोट पर दिखाई जाने वाली तारीख</string>
+    <string name="pref_shown_date_added">निर्माण तिथि</string>
+    <string name="pref_shown_date_modified">अंतिम संशोधन</string>
+    <string name="pref_shown_date_none">कोई तारीख नहीं</string>
+
+    <string name="pref_preview_lines">पूर्वावलोकन में अधिकतम पंक्तियां</string>
+    <string name="pref_preview_lines_summary">हर लेआउट और नोट प्रकार के लिए दिखाई गई पंक्तियों और आइटमों की संख्या कॉन्फ़िगर करें</string>
+    <string name="pref_preview_lines_grid_layout">ग्रिड लेआउट</string>
+    <string name="pref_preview_lines_list_layout">सूची लेआउट</string>
+    <string name="pref_preview_lines_text">पाठ नोट पूर्वावलोकन में पंक्तियां</string>
+    <string name="pref_preview_lines_list">सूची नोट पूर्वावलोकन में आइटम</string>
+
+    <string name="pref_group_behavior">व्यवहार</string>
+    <string name="pref_behavior_swipe_action_left">बाएं स्वाइप क्रिया</string>
+    <string name="pref_behavior_swipe_action_right">दाएं स्वाइप क्रिया</string>
+    <string name="pref_behavior_move_checked">चयनित आइटम नीचे ले जाएं</string>
+
+    <string name="pref_group_data">डेटा</string>
+    <string name="pref_data_export">डेटा निर्यात</string>
+    <string name="pref_data_export_summary">नोट डेटा JSON के रूप में निर्यात करें</string>
+    <string name="pref_data_encrypted_export">एन्क्रिप्टेड निर्यात</string>
+    <string name="pref_data_encrypted_export_summary">निर्यात किए गए नोटों को एन्क्रिप्ट करता है। सही पासवर्ड के बिना पहुंच संभव नहीं।</string>
+    <string name="pref_data_auto_export">स्वचालित डेटा निर्यात</string>
+    <string name="pref_data_auto_export_summary">ऐप का डेटा प्रतिदिन एक बार स्वचालित रूप से फ़ाइल में निर्यात करें।</string>
+    <string name="pref_data_auto_export_date">(पिछला निर्यात: %s)</string>
+    <string name="pref_data_import">डेटा आयात</string>
+    <string name="pref_data_import_summary">पहले निर्यात किए गए JSON डेटा को आयात करें, मौजूदा डेटा के साथ मर्ज करें।</string>
+    <string name="pref_data_clear">सभी डेटा साफ़ करें</string>
+    <string name="pref_data_clear_confirm_message">सभी नोट डेटा स्थायी रूप से साफ़ हो जाएगा! इसे पूर्ववत नहीं किया जा सकता।</string>
+    <string name="pref_data_clear_success_message">सभी डेटा सफलतापूर्वक साफ़ किया गया।</string>
+
+    <string name="pref_group_about">के बारे में</string>
+    <string name="pref_about_view_source">Github पर देखें (मूल)</string>
+    <string name="pref_about_view_source_fork">Github पर देखें (Fork)</string>
+    <string name="pref_about_view_licenses">ओपन सोर्स लाइसेंस</string>
+    <string name="pref_about_version">संस्करण</string>
+
+    <string name="pref_restart_dialog_title">पुनरारंभ आवश्यक!</string>
+    <string name="pref_restart_dialog_description">परिवर्तन प्रभावी करने के लिए पुनरारंभ आवश्यक। क्या अभी पुनरारंभ करें?</string>
+
+    <string name="export_success">डेटा सफलतापूर्वक निर्यात!</string>
+    <string name="export_fail">डेटा निर्यात में त्रुटि।</string>
+    <string name="export_serialization_fail">निर्यात में त्रुटि। एन्क्रिप्शन बंद करके पुनः प्रयास करें।</string>
+    <string name="encrypted_export_dialog_title">पासवर्ड सेट करें</string>
+    <string name="encrypted_export_password">पासवर्ड</string>
+    <string name="encrypted_export_repeat_password">पासवर्ड पुष्टि करें</string>
+    <string name="encrypted_export_password_matching_error">पासवर्ड मेल नहीं खाते</string>
+    <string name="encrypted_export_key_generation_successful">एन्क्रिप्शन सफलतापूर्वक सक्षम!</string>
+    <string name="encrypted_export_key_deletion_successful">एन्क्रिप्शन सफलतापूर्वक अक्षम!</string>
+    <string name="import_success">डेटा सफलतापूर्वक आयात!</string>
+    <string name="import_future_version">डेटा सफलतापूर्वक आयात! कुछ जानकारी खो सकती है क्योंकि डेटा बाद के संस्करण से है।</string>
+    <string name="import_bad_input">इस फ़ाइल को पढ़ने में त्रुटि।</string>
+    <string name="import_bad_format">डेटा आयात नहीं हो सका, JSON अमान्य है।</string>
+    <string name="import_bad_data">डेटा आयात नहीं हो सका, कुछ फ़ील्ड में अमान्य मान। बाद के संस्करण का डेटा हो सकता है — ऐप अपडेट करें।</string>
+    <string name="encrypted_import_dialog_title">पासवर्ड दर्ज करें</string>
+    <string name="encrypted_import_key_error">फ़ाइल को डिक्रिप्ट करने में त्रुटि। पासवर्ड सही है यह जांचें।</string>
+    <string name="encrypted_import_encryption_unsupported">आयात नहीं हो सकता, यह Android संस्करण एन्क्रिप्शन का समर्थन नहीं करता।</string>
+    <string name="auto_export_message">स्वचालित निर्यात सक्षम करने के लिए, डेटा सहेजने हेतु एक फ़ाइल चुनें। ऐप खुले रहने पर डेटा प्रतिदिन एक बार निर्यात होगा। जारी रखने के लिए ठीक है दबाएं।</string>
+    <string name="auto_export_fail">स्वचालित निर्यात विफल। निर्यात स्थान मौजूद और सुलभ है यह सुनिश्चित करें, फिर पुनः कॉन्फ़िगर करें।</string>
+
+    <string name="content_descrp_open_drawer">ड्रॉवर खोलें</string>
+    <string name="content_descrp_back">वापस जाएं</string>
+    <string name="content_descrp_label_hidden">इस लेबल के नोट छिपे हैं</string>
+
+    <string name="date_rel_today">आज, %s</string>
+    <string name="date_rel_yesterday">कल, %s</string>
+    <string name="date_rel_tomorrow">कल, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d दिन पहले, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">%d दिन में, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[शर्तें और नीति]]></string>
+    <string name="rate_this_app_5">5★ रेट करें</string>
+    <string name="get_more_apps">और ऐप देखें</string>
+    <string name="share_this_app">यह ऐप साझा करें</string>
+
+    <string name="pref_language">भाषा</string>
+    <string name="pref_language_system">सिस्टम डिफ़ॉल्ट</string>
+    <string name="msg_consent_not_required">गोपनीयता सेटिंग केवल उन क्षेत्रों में उपलब्ध है जहां सहमति आवश्यक है।</string>
+
+    <string name="exit_press_back_again">बाहर निकलने के लिए वापस फिर से दबाएं</string>
+    <string name="reminder_saved_for">%1$s के लिए रिमाइंडर सेट किया</string>
+    <string name="color_default">डिफ़ॉल्ट</string>
+
+    <string name="pref_vip_title">प्रीमियम</string>
+    <string name="pref_privacy_settings">गोपनीयता सेटिंग</string>
+    <string name="pref_privacy_settings_summary">विज्ञापन सहमति प्रबंधित करें (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">प्रीमियम</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">प्रीमियम सदस्यता</string>
+    <string name="vip_status_active">सक्रिय</string>
+    <string name="vip_status_inactive">निष्क्रिय</string>
+    <string name="vip_expires_until">सक्रिय · %1$s</string>
+
+    <string name="vip_benefits_title">लाभ</string>
+    <string name="vip_benefit_no_banner">कोई बैनर विज्ञापन नहीं</string>
+    <string name="vip_benefit_no_interstitial">कोई पूर्ण-स्क्रीन विज्ञापन नहीं</string>
+    <string name="vip_benefit_no_app_open">कोई स्प्लैश/रेज़्यूम विज्ञापन नहीं</string>
+    <string name="vip_benefit_support">निरंतर विकास का समर्थन</string>
+
+    <string name="vip_action_activate">प्रीमियम सक्रिय करें</string>
+    <string name="vip_action_reset">प्रीमियम रीसेट</string>
+    <string name="vip_footer_info">प्रीमियम ऑफ़लाइन सक्रियण कुंजी का उपयोग करता है — ऐप में कोई भुगतान नहीं।</string>
+
+    <string name="vip_dialog_title">प्रीमियम कुंजी दर्ज करें</string>
+    <string name="vip_dialog_subtitle">हर कुंजी 30 दिनों के लिए प्रीमियम सक्रिय करती है।</string>
+    <string name="vip_dialog_input_hint">सक्रियण कुंजी</string>
+    <string name="vip_dialog_btn_activate">सक्रिय करें</string>
+    <string name="vip_dialog_btn_cancel">रद्द करें</string>
+
+    <string name="vip_msg_success">प्रीमियम सक्रिय · %1$d दिन</string>
+    <string name="vip_msg_invalid">अमान्य कुंजी। पुनः प्रयास करें।</string>
+    <string name="vip_reset_title">प्रीमियम रीसेट करें?</string>
+    <string name="vip_reset_message">सभी प्रीमियम लाभ तुरंत हटा दिए जाएंगे।</string>
+    <string name="vip_reset_confirm">रीसेट</string>
+
+    <string name="first_run_language_title">अपनी भाषा चुनें</string>
+</resources>

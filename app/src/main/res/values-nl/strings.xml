@@ -268,4 +268,5 @@
     <string name="exit_press_back_again">Druk nogmaals op terug om af te sluiten</string>
     <string name="reminder_saved_for">Herinnering ingesteld voor %1$s</string>
     <string name="color_default">Standaard</string>
+    <string name="first_run_language_title">Kies je taal</string>
 </resources>

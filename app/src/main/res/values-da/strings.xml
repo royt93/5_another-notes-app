@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Noter</string>
+    <string name="action_archive">Arkivér</string>
+    <string name="action_cancel">Annullér</string>
+    <string name="action_clear">Ryd</string>
+    <string name="action_convert_to_list">Konvertér til liste</string>
+    <string name="action_convert_to_text">Konvertér til tekst</string>
+    <string name="action_copy">Lav en kopi</string>
+    <string name="action_delete">Slet</string>
+    <string name="action_delete_checked">Slet markerede</string>
+    <string name="action_delete_forever">Slet permanent</string>
+    <string name="action_delete_selection">Slet markering</string>
+    <string name="action_delete_selection_forever">Slet markering permanent</string>
+    <string name="action_empty_trash">Tøm papirkurv</string>
+    <string name="action_empty_trash_short">Tøm</string>
+    <string name="action_keep">Behold</string>
+    <string name="action_labels">Skift etiketter</string>
+    <string name="action_layout_grid">Vis som gitter</string>
+    <string name="action_layout_list">Vis som liste</string>
+    <string name="action_manage">Administrér</string>
+    <string name="action_mark_as_done">Markér som færdig</string>
+    <string name="action_none">Ingen</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Åbn</string>
+    <string name="action_pin">Fastgør</string>
+    <string name="action_postpone">Udsæt</string>
+    <string name="action_reminder_add">Tilføj påmindelse</string>
+    <string name="action_reminder_edit">Rediger påmindelse</string>
+    <string name="action_rename">Omdøb</string>
+    <string name="action_restore">Gendan</string>
+    <string name="action_search">Søg</string>
+    <string name="action_select_all">Markér alle</string>
+    <string name="action_settings">Indstillinger</string>
+    <string name="action_share">Del</string>
+    <string name="action_unarchive">Fjern arkivering</string>
+    <string name="action_uncheck_all">Fjern alle markeringer</string>
+    <string name="action_undo">Fortryd</string>
+    <string name="action_unpin">Frigør</string>
+
+    <string name="shortcut_text_note">Ny tekstnote</string>
+    <string name="shortcut_text_note_short">Ny tekst</string>
+    <string name="shortcut_list_note">Ny listenote</string>
+    <string name="shortcut_list_note_short">Ny liste</string>
+    <string name="shortcut_reminders">Påmindelser</string>
+    <string name="shortcut_reminders_short">Påmindelser</string>
+
+    <string name="note_location_active">Noter</string>
+    <string name="note_location_archived">Arkiveret</string>
+    <string name="note_location_deleted">Slettet</string>
+    <string name="note_location_labels">Etiketter</string>
+
+    <string name="note_pinned">Fastgjorte</string>
+    <string name="note_not_pinned">Andre</string>
+
+    <string name="note_placeholder_active">Du har ingen noter.\nTryk på + for at tilføje.</string>
+    <string name="note_placeholder_archived">Ingen arkiverede noter</string>
+    <string name="note_placeholder_deleted">Papirkurven er tom</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d andet listepunkt</item>
+        <item quantity="other">+ %d andre listepunkter</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d markeret punkt</item>
+        <item quantity="other">+ %d markerede punkter</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Noter i papirkurven slettes automatisk efter %d dage.</string>
+    <string name="trash_delete_message">Denne note slettes permanent.</string>
+    <string name="trash_delete_selected_message">Valgte noter slettes permanent.</string>
+    <string name="trash_empty_message">Alle noter i papirkurven slettes permanent.</string>
+
+    <string name="search_hint">Søg noter</string>
+    <string name="search_empty_placeholder">Ingen noter matcher din søgning. Prøv en anden søgning.</string>
+
+    <string name="sort_title">Sorteringsmuligheder</string>
+    <string name="sort_direction">Sorteringsretning</string>
+    <string name="sort_direction_ascending">Stigende</string>
+    <string name="sort_direction_descending">Faldende</string>
+    <string name="sort_field">Sortér efter</string>
+    <string name="sort_field_created">Oprettet</string>
+    <string name="sort_field_modified">Ændret</string>
+    <string name="sort_field_title">Titel</string>
+
+    <string name="edit_add_title">Opret note</string>
+    <string name="edit_change_title">Rediger note</string>
+    <string name="edit_hint_note_title">Titel</string>
+    <string name="edit_hint_note_content">Note</string>
+    <string name="edit_hint_note_item">Listepunkt</string>
+
+    <string name="edit_message_blank_note_discarded">Tom note kasseret.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Note arkiveret.</item>
+        <item quantity="other">Noter arkiveret.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Note flyttet til papirkurv.</item>
+        <item quantity="other">Noter flyttet til papirkurv.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Note gendannet.</item>
+        <item quantity="other">Noter gendannet.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Note fjernet fra arkiv.</item>
+        <item quantity="other">Noter fjernet fra arkiv.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Kan ikke redigere note i papirkurven.</string>
+
+    <string name="edit_copy_suffix">Kopi</string>
+    <string name="edit_copy_untitled_name">Uden titel</string>
+
+    <string name="edit_convert_keep_checked">Tekstnoter understøtter ikke afkrydsningsfelter. Fjern markerede punkter?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d markeret punkt</item>
+        <item quantity="other">%d markerede punkter</item>
+    </plurals>
+
+    <string name="note_reminders">Påmindelser</string>
+    <string name="reminder_upcoming">Kommende</string>
+    <string name="reminder_today">I dag</string>
+    <string name="reminder_overdue">Forfaldet</string>
+    <string name="reminder_date">Dato</string>
+    <string name="reminder_time">Tid</string>
+    <string name="reminder_invalid_time">Dette tidspunkt er allerede passeret.</string>
+    <string name="reminder_notif_channel_title">Påmindelser</string>
+    <string name="reminder_notif_channel_descr">Påmindelser sat på noter</string>
+    <string name="reminder_empty_placeholder">Ingen påmindelser indstillet</string>
+    <string name="reminder_restricted_battery">Påmindelser virker måske ikke korrekt fordi appen har begrænset batteribrug. Kan ændres i app-indstillinger.</string>
+    <string name="reminder_notif_permission">For at sende påmindelser har appen brug for en tilladelse. Tryk OK for at give tilladelse. Derefter kan du indstille en påmindelse.</string>
+    <string name="reminder_notif_permission_denied">Notifikationstilladelse afvist. Påmindelser virker ikke før det er aktiveret.</string>
+
+    <string name="label_create">Opret ny etiket</string>
+    <string name="label_edit">Rediger etiketnavn</string>
+    <string name="label_manage">Administrer etiketter</string>
+    <string name="label_select">Vælg etiketter</string>
+    <string name="label_already_exists">En etiket med dette navn findes allerede.</string>
+    <string name="label_hidden_option">Skjul noter med denne etiket fra aktive og arkiverede noter</string>
+    <string name="label_empty_placeholder">Ingen etiketter oprettet</string>
+    <string name="label_delete_message">Valgte etiketter slettes, men noter knyttet til dem bevares.</string>
+    <string name="label_notes_empty_placeholder">Ingen noter tagget med denne etiket</string>
+
+    <string name="pref_group_appearance">Udseende</string>
+    <string name="pref_theme">App-tema</string>
+    <string name="pref_theme_light">Lys</string>
+    <string name="pref_theme_dark">Mørk</string>
+    <string name="pref_theme_system">Følg systemet</string>
+    <string name="pref_dynamic_colors">Brug dynamiske farver</string>
+    <string name="pref_strikethrough_checked">Gennemstreg markerede punkter</string>
+    <string name="pref_preview_labels">Maks etiketter i forhåndsvisning</string>
+
+    <string name="widget_guide_title">Widgets</string>
+
+    <string name="pref_shown_date">Dato vist på noter</string>
+    <string name="pref_shown_date_added">Oprettelsesdato</string>
+    <string name="pref_shown_date_modified">Sidst ændret</string>
+    <string name="pref_shown_date_none">Ingen dato</string>
+
+    <string name="pref_preview_lines">Maks linjer i forhåndsvisning</string>
+    <string name="pref_preview_lines_summary">Konfigurer hvor mange linjer og punkter der vises på noter, for hver layout-tilstand og notetype</string>
+    <string name="pref_preview_lines_grid_layout">Gitter-layout</string>
+    <string name="pref_preview_lines_list_layout">Liste-layout</string>
+    <string name="pref_preview_lines_text">Linjer i tekstnote-forhåndsvisning</string>
+    <string name="pref_preview_lines_list">Punkter i listenote-forhåndsvisning</string>
+
+    <string name="pref_group_behavior">Adfærd</string>
+    <string name="pref_behavior_swipe_action_left">Stryg venstre</string>
+    <string name="pref_behavior_swipe_action_right">Stryg højre</string>
+    <string name="pref_behavior_move_checked">Flyt markerede til bunden</string>
+
+    <string name="pref_group_data">Data</string>
+    <string name="pref_data_export">Eksportér data</string>
+    <string name="pref_data_export_summary">Eksportér noter som JSON</string>
+    <string name="pref_data_encrypted_export">Krypteret eksport</string>
+    <string name="pref_data_encrypted_export_summary">Krypterer eksporterede noter. Adgang kræver korrekt adgangskode.</string>
+    <string name="pref_data_auto_export">Automatisk eksport</string>
+    <string name="pref_data_auto_export_summary">Eksporter appens data til fil automatisk en gang om dagen.</string>
+    <string name="pref_data_auto_export_date">(Sidst eksporteret: %s)</string>
+    <string name="pref_data_import">Importér data</string>
+    <string name="pref_data_import_summary">Importér tidligere eksporteret JSON-data, flet med eksisterende.</string>
+    <string name="pref_data_clear">Ryd alle data</string>
+    <string name="pref_data_clear_confirm_message">Alle notedata ryddes permanent! Kan ikke fortrydes.</string>
+    <string name="pref_data_clear_success_message">Alle data ryddet.</string>
+
+    <string name="pref_group_about">Om</string>
+    <string name="pref_about_view_source">Se på Github (Original)</string>
+    <string name="pref_about_view_source_fork">Se på Github (Fork)</string>
+    <string name="pref_about_view_licenses">Open source-licenser</string>
+    <string name="pref_about_version">Version</string>
+
+    <string name="pref_restart_dialog_title">Genstart kræves!</string>
+    <string name="pref_restart_dialog_description">Genstart kræves for at ændringerne træder i kraft. Vil du genstarte appen nu?</string>
+
+    <string name="export_success">Data eksporteret!</string>
+    <string name="export_fail">Der opstod en fejl under eksport.</string>
+    <string name="export_serialization_fail">Der opstod en fejl. Prøv at deaktivere kryptering og prøv igen.</string>
+    <string name="encrypted_export_dialog_title">Indstil adgangskode</string>
+    <string name="encrypted_export_password">Adgangskode</string>
+    <string name="encrypted_export_repeat_password">Bekræft adgangskode</string>
+    <string name="encrypted_export_password_matching_error">Adgangskoder matcher ikke</string>
+    <string name="encrypted_export_key_generation_successful">Kryptering aktiveret!</string>
+    <string name="encrypted_export_key_deletion_successful">Kryptering deaktiveret!</string>
+    <string name="import_success">Data importeret!</string>
+    <string name="import_future_version">Data importeret! Nogle oplysninger er måske gået tabt da data kommer fra en nyere version.</string>
+    <string name="import_bad_input">Der opstod en fejl ved læsning af filen.</string>
+    <string name="import_bad_format">Kunne ikke importere, JSON-format ugyldigt.</string>
+    <string name="import_bad_data">Kunne ikke importere, nogle felter har ugyldige værdier. Måske fra nyere version — opdater appen.</string>
+    <string name="encrypted_import_dialog_title">Indtast adgangskode</string>
+    <string name="encrypted_import_key_error">Der opstod en fejl ved dekryptering. Tjek adgangskoden.</string>
+    <string name="encrypted_import_encryption_unsupported">Kunne ikke importere, denne Android-version understøtter ikke kryptering.</string>
+    <string name="auto_export_message">For at aktivere automatisk eksport, vælg en fil at gemme data til. Data eksporteres en gang om dagen mens appen er åben. Tryk OK for at fortsætte.</string>
+    <string name="auto_export_fail">Automatisk eksport mislykkedes. Sørg for at eksportplaceringen stadig findes og er tilgængelig, og konfigurer derefter igen.</string>
+
+    <string name="content_descrp_open_drawer">Åbn menu</string>
+    <string name="content_descrp_back">Tilbage</string>
+    <string name="content_descrp_label_hidden">Noter med denne etiket er skjult</string>
+
+    <string name="date_rel_today">I dag, %s</string>
+    <string name="date_rel_yesterday">I går, %s</string>
+    <string name="date_rel_tomorrow">I morgen, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d dage siden, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">Om %d dage, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Vilkår & Politik]]></string>
+    <string name="rate_this_app_5">Bedøm 5★</string>
+    <string name="get_more_apps">Flere apps</string>
+    <string name="share_this_app">Del denne app</string>
+
+    <string name="pref_language">Sprog</string>
+    <string name="pref_language_system">Systemstandard</string>
+    <string name="msg_consent_not_required">Privatlivsindstillinger er kun tilgængelige i regioner hvor samtykke kræves.</string>
+
+    <string name="exit_press_back_again">Tryk tilbage igen for at afslutte</string>
+    <string name="reminder_saved_for">Påmindelse sat til %1$s</string>
+    <string name="color_default">Standard</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Privatlivsindstillinger</string>
+    <string name="pref_privacy_settings_summary">Administrer reklamesamtykke (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-MEDLEMSKAB</string>
+    <string name="vip_status_active">AKTIV</string>
+    <string name="vip_status_inactive">INAKTIV</string>
+    <string name="vip_expires_until">Aktiv · %1$s</string>
+
+    <string name="vip_benefits_title">Hvad du får</string>
+    <string name="vip_benefit_no_banner">Ingen bannerannoncer</string>
+    <string name="vip_benefit_no_interstitial">Ingen fuldskærmsannoncer</string>
+    <string name="vip_benefit_no_app_open">Ingen start- / fortsæt-annoncer</string>
+    <string name="vip_benefit_support">Støt fortsat udvikling</string>
+
+    <string name="vip_action_activate">Aktivér Premium</string>
+    <string name="vip_action_reset">Nulstil Premium</string>
+    <string name="vip_footer_info">Premium bruger offline aktiveringsnøgle — ingen betaling i appen.</string>
+
+    <string name="vip_dialog_title">Indtast Premium-nøgle</string>
+    <string name="vip_dialog_subtitle">Hver nøgle aktiverer Premium i 30 dage.</string>
+    <string name="vip_dialog_input_hint">Aktiveringsnøgle</string>
+    <string name="vip_dialog_btn_activate">Aktivér</string>
+    <string name="vip_dialog_btn_cancel">Annullér</string>
+
+    <string name="vip_msg_success">Premium aktiveret · %1$d dage</string>
+    <string name="vip_msg_invalid">Ugyldig nøgle. Prøv igen.</string>
+    <string name="vip_reset_title">Nulstille Premium?</string>
+    <string name="vip_reset_message">Alle Premium-fordele fjernes med det samme.</string>
+    <string name="vip_reset_confirm">Nulstil</string>
+
+    <string name="first_run_language_title">Vælg dit sprog</string>
+</resources>

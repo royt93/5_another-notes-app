@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Ghi chú</string>
+    <string name="action_archive">Lưu trữ</string>
+    <string name="action_cancel">Huỷ</string>
+    <string name="action_clear">Xoá</string>
+    <string name="action_convert_to_list">Chuyển thành danh sách</string>
+    <string name="action_convert_to_text">Chuyển thành văn bản</string>
+    <string name="action_copy">Tạo bản sao</string>
+    <string name="action_delete">Xoá</string>
+    <string name="action_delete_checked">Xoá mục đã chọn</string>
+    <string name="action_delete_forever">Xoá vĩnh viễn</string>
+    <string name="action_delete_selection">Xoá mục đã chọn</string>
+    <string name="action_delete_selection_forever">Xoá vĩnh viễn mục đã chọn</string>
+    <string name="action_empty_trash">Dọn thùng rác</string>
+    <string name="action_empty_trash_short">Dọn</string>
+    <string name="action_keep">Giữ lại</string>
+    <string name="action_labels">Đổi nhãn</string>
+    <string name="action_layout_grid">Hiển thị dạng lưới</string>
+    <string name="action_layout_list">Hiển thị dạng danh sách</string>
+    <string name="action_manage">Quản lý</string>
+    <string name="action_mark_as_done">Đánh dấu đã xong</string>
+    <string name="action_none">Không</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Mở</string>
+    <string name="action_pin">Ghim</string>
+    <string name="action_postpone">Hoãn lại</string>
+    <string name="action_reminder_add">Thêm lời nhắc</string>
+    <string name="action_reminder_edit">Sửa lời nhắc</string>
+    <string name="action_rename">Đổi tên</string>
+    <string name="action_restore">Khôi phục</string>
+    <string name="action_search">Tìm kiếm</string>
+    <string name="action_select_all">Chọn tất cả</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="action_share">Chia sẻ</string>
+    <string name="action_unarchive">Bỏ lưu trữ</string>
+    <string name="action_uncheck_all">Bỏ chọn tất cả</string>
+    <string name="action_undo">Hoàn tác</string>
+    <string name="action_unpin">Bỏ ghim</string>
+
+    <string name="shortcut_text_note">Ghi chú văn bản mới</string>
+    <string name="shortcut_text_note_short">Văn bản</string>
+    <string name="shortcut_list_note">Danh sách mới</string>
+    <string name="shortcut_list_note_short">Danh sách</string>
+    <string name="shortcut_reminders">Lời nhắc</string>
+    <string name="shortcut_reminders_short">Lời nhắc</string>
+
+    <string name="note_location_active">Ghi chú</string>
+    <string name="note_location_archived">Đã lưu trữ</string>
+    <string name="note_location_deleted">Đã xoá</string>
+    <string name="note_location_labels">Nhãn</string>
+
+    <string name="note_pinned">Đã ghim</string>
+    <string name="note_not_pinned">Khác</string>
+
+    <string name="note_placeholder_active">Bạn chưa có ghi chú nào.\nNhấn + để thêm.</string>
+    <string name="note_placeholder_archived">Không có ghi chú đã lưu trữ</string>
+    <string name="note_placeholder_deleted">Thùng rác trống</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="other">+ %d mục khác trong danh sách</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="other">+ %d mục đã chọn</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Ghi chú trong thùng rác sẽ tự động bị xoá sau %d ngày.</string>
+    <string name="trash_delete_message">Ghi chú này sẽ bị xoá vĩnh viễn.</string>
+    <string name="trash_delete_selected_message">Các ghi chú đã chọn sẽ bị xoá vĩnh viễn.</string>
+    <string name="trash_empty_message">Tất cả ghi chú trong thùng rác sẽ bị xoá vĩnh viễn.</string>
+
+    <string name="search_hint">Tìm trong ghi chú</string>
+    <string name="search_empty_placeholder">Không tìm thấy ghi chú phù hợp. Hãy thử từ khoá khác.</string>
+
+    <string name="sort_title">Tuỳ chọn sắp xếp</string>
+    <string name="sort_direction">Hướng sắp xếp</string>
+    <string name="sort_direction_ascending">Tăng dần</string>
+    <string name="sort_direction_descending">Giảm dần</string>
+    <string name="sort_field">Sắp xếp theo</string>
+    <string name="sort_field_created">Ngày tạo</string>
+    <string name="sort_field_modified">Ngày sửa</string>
+    <string name="sort_field_title">Tiêu đề</string>
+
+    <string name="edit_add_title">Tạo ghi chú</string>
+    <string name="edit_change_title">Sửa ghi chú</string>
+    <string name="edit_hint_note_title">Tiêu đề</string>
+    <string name="edit_hint_note_content">Nội dung</string>
+    <string name="edit_hint_note_item">Mục danh sách</string>
+
+    <string name="edit_message_blank_note_discarded">Đã loại bỏ ghi chú trống.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">Đã lưu trữ ghi chú.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">Đã chuyển ghi chú vào thùng rác.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">Đã khôi phục ghi chú.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">Đã bỏ lưu trữ ghi chú.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Không thể chỉnh sửa ghi chú trong thùng rác.</string>
+
+    <string name="edit_copy_suffix">Bản sao</string>
+    <string name="edit_copy_untitled_name">Không tiêu đề</string>
+
+    <string name="edit_convert_keep_checked">Ghi chú văn bản không hỗ trợ ô đánh dấu. Xoá các mục đã đánh dấu?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">%d mục đã đánh dấu</item>
+    </plurals>
+
+    <string name="note_reminders">Lời nhắc</string>
+    <string name="reminder_upcoming">Sắp tới</string>
+    <string name="reminder_today">Hôm nay</string>
+    <string name="reminder_overdue">Đã quá hạn</string>
+    <string name="reminder_date">Ngày</string>
+    <string name="reminder_time">Giờ</string>
+    <string name="reminder_invalid_time">Thời điểm này đã trôi qua.</string>
+    <string name="reminder_notif_channel_title">Lời nhắc</string>
+    <string name="reminder_notif_channel_descr">Lời nhắc được đặt cho ghi chú</string>
+    <string name="reminder_empty_placeholder">Chưa đặt lời nhắc nào</string>
+    <string name="reminder_restricted_battery">Lời nhắc có thể không hoạt động đúng vì ứng dụng đang bị giới hạn pin. Bạn có thể đổi trong cài đặt ứng dụng.</string>
+    <string name="reminder_notif_permission">Để gửi thông báo lời nhắc, ứng dụng cần một quyền. Nhấn OK để cấp quyền. Sau đó bạn có thể đặt lời nhắc.</string>
+    <string name="reminder_notif_permission_denied">Quyền thông báo đã bị từ chối. Lời nhắc sẽ không hoạt động cho đến khi được bật.</string>
+
+    <string name="label_create">Tạo nhãn mới</string>
+    <string name="label_edit">Sửa tên nhãn</string>
+    <string name="label_manage">Quản lý nhãn</string>
+    <string name="label_select">Chọn nhãn</string>
+    <string name="label_already_exists">Đã có nhãn với tên này.</string>
+    <string name="label_hidden_option">Ẩn ghi chú có nhãn này khỏi mục Đang dùng và Đã lưu trữ</string>
+    <string name="label_empty_placeholder">Chưa tạo nhãn nào</string>
+    <string name="label_delete_message">Các nhãn được chọn sẽ bị xoá, nhưng ghi chú gắn với chúng vẫn được giữ lại.</string>
+    <string name="label_notes_empty_placeholder">Không có ghi chú gắn nhãn này</string>
+
+    <string name="pref_group_appearance">Giao diện</string>
+    <string name="pref_theme">Chủ đề ứng dụng</string>
+    <string name="pref_theme_light">Sáng</string>
+    <string name="pref_theme_dark">Tối</string>
+    <string name="pref_theme_system">Theo hệ thống</string>
+    <string name="pref_dynamic_colors">Dùng màu động</string>
+    <string name="pref_strikethrough_checked">Gạch ngang mục đã đánh dấu</string>
+    <string name="pref_preview_labels">Số nhãn tối đa hiển thị</string>
+
+    <string name="widget_guide_title">Tiện ích</string>
+
+    <string name="pref_shown_date">Ngày hiển thị trên ghi chú</string>
+    <string name="pref_shown_date_added">Ngày tạo</string>
+    <string name="pref_shown_date_modified">Ngày sửa cuối</string>
+    <string name="pref_shown_date_none">Không hiển thị ngày</string>
+
+    <string name="pref_preview_lines">Số dòng tối đa khi xem trước</string>
+    <string name="pref_preview_lines_summary">Cấu hình số dòng và mục hiển thị trên ghi chú, theo từng kiểu bố cục và loại ghi chú</string>
+    <string name="pref_preview_lines_grid_layout">Bố cục lưới</string>
+    <string name="pref_preview_lines_list_layout">Bố cục danh sách</string>
+    <string name="pref_preview_lines_text">Dòng xem trước cho ghi chú văn bản</string>
+    <string name="pref_preview_lines_list">Mục xem trước cho ghi chú danh sách</string>
+
+    <string name="pref_group_behavior">Hành vi</string>
+    <string name="pref_behavior_swipe_action_left">Vuốt trái</string>
+    <string name="pref_behavior_swipe_action_right">Vuốt phải</string>
+    <string name="pref_behavior_move_checked">Đẩy mục đã đánh dấu xuống cuối</string>
+
+    <string name="pref_group_data">Dữ liệu</string>
+    <string name="pref_data_export">Xuất dữ liệu</string>
+    <string name="pref_data_export_summary">Xuất ghi chú dạng JSON</string>
+    <string name="pref_data_encrypted_export">Xuất có mã hoá</string>
+    <string name="pref_data_encrypted_export_summary">Mã hoá file xuất ra. Phải nhập đúng mật khẩu mới truy cập được.</string>
+    <string name="pref_data_auto_export">Tự động xuất dữ liệu</string>
+    <string name="pref_data_auto_export_summary">Tự động xuất dữ liệu ứng dụng vào file, mỗi ngày một lần.</string>
+    <string name="pref_data_auto_export_date">(Lần xuất gần nhất: %s)</string>
+    <string name="pref_data_import">Nhập dữ liệu</string>
+    <string name="pref_data_import_summary">Nhập file JSON đã xuất trước đó, gộp với dữ liệu hiện có.</string>
+    <string name="pref_data_clear">Xoá toàn bộ dữ liệu</string>
+    <string name="pref_data_clear_confirm_message">Toàn bộ dữ liệu ghi chú sẽ bị xoá vĩnh viễn! Không thể hoàn tác.</string>
+    <string name="pref_data_clear_success_message">Đã xoá toàn bộ dữ liệu thành công.</string>
+
+    <string name="pref_group_about">Giới thiệu</string>
+    <string name="pref_about_view_source">Xem trên Github (gốc)</string>
+    <string name="pref_about_view_source_fork">Xem trên Github (fork)</string>
+    <string name="pref_about_view_licenses">Giấy phép mã nguồn mở</string>
+    <string name="pref_about_version">Phiên bản</string>
+
+    <string name="pref_restart_dialog_title">Cần khởi động lại!</string>
+    <string name="pref_restart_dialog_description">Cần khởi động lại để các thay đổi có hiệu lực. Bạn có muốn khởi động lại ngay không?</string>
+
+    <string name="export_success">Xuất dữ liệu thành công!</string>
+    <string name="export_fail">Đã xảy ra lỗi khi xuất dữ liệu.</string>
+    <string name="export_serialization_fail">Đã xảy ra lỗi khi xuất dữ liệu. Hãy thử tắt mã hoá và xuất lại.</string>
+    <string name="encrypted_export_dialog_title">Đặt mật khẩu</string>
+    <string name="encrypted_export_password">Mật khẩu</string>
+    <string name="encrypted_export_repeat_password">Xác nhận mật khẩu</string>
+    <string name="encrypted_export_password_matching_error">Mật khẩu không khớp</string>
+    <string name="encrypted_export_key_generation_successful">Đã bật mã hoá thành công!</string>
+    <string name="encrypted_export_key_deletion_successful">Đã tắt mã hoá thành công!</string>
+    <string name="import_success">Nhập dữ liệu thành công!</string>
+    <string name="import_future_version">Đã nhập dữ liệu thành công! Lưu ý có thể đã mất một phần thông tin do dữ liệu đến từ phiên bản mới hơn.</string>
+    <string name="import_bad_input">Đã xảy ra lỗi khi đọc file này.</string>
+    <string name="import_bad_format">Không thể nhập dữ liệu, định dạng JSON không hợp lệ.</string>
+    <string name="import_bad_data">Không thể nhập dữ liệu, một số trường có giá trị không hợp lệ. Có thể do dữ liệu đến từ phiên bản mới hơn — hãy cập nhật ứng dụng.</string>
+    <string name="encrypted_import_dialog_title">Nhập mật khẩu</string>
+    <string name="encrypted_import_key_error">Đã xảy ra lỗi khi giải mã file. Hãy kiểm tra lại mật khẩu.</string>
+    <string name="encrypted_import_encryption_unsupported">Không thể nhập, phiên bản Android này không hỗ trợ mã hoá.</string>
+    <string name="auto_export_message">Để bật tự động xuất, cần chọn một file để lưu. Dữ liệu sẽ được xuất một lần mỗi ngày khi mở ứng dụng. Nhấn OK để tiếp tục.</string>
+    <string name="auto_export_fail">Tự động xuất thất bại. Đảm bảo vị trí xuất vẫn tồn tại và có thể truy cập, sau đó cấu hình lại tự động xuất.</string>
+
+    <string name="content_descrp_open_drawer">Mở ngăn kéo</string>
+    <string name="content_descrp_back">Quay lại</string>
+    <string name="content_descrp_label_hidden">Ghi chú gắn nhãn này đã ẩn</string>
+
+    <string name="date_rel_today">Hôm nay, %s</string>
+    <string name="date_rel_yesterday">Hôm qua, %s</string>
+    <string name="date_rel_tomorrow">Ngày mai, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d ngày trước, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">Trong %d ngày, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Điều khoản & Chính sách]]></string>
+    <string name="rate_this_app_5">Đánh giá 5★</string>
+    <string name="get_more_apps">Khám phá ứng dụng khác</string>
+    <string name="share_this_app">Chia sẻ ứng dụng này</string>
+
+    <string name="pref_language">Ngôn ngữ</string>
+    <string name="pref_language_system">Theo hệ thống</string>
+    <string name="msg_consent_not_required">Cài đặt riêng tư chỉ khả dụng ở khu vực yêu cầu sự đồng ý.</string>
+
+    <string name="exit_press_back_again">Nhấn lần nữa để thoát</string>
+    <string name="reminder_saved_for">Đã đặt lời nhắc cho %1$s</string>
+    <string name="color_default">Mặc định</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Cài đặt riêng tư</string>
+    <string name="pref_privacy_settings_summary">Quản lý sự đồng ý quảng cáo (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">THÀNH VIÊN PREMIUM</string>
+    <string name="vip_status_active">ĐANG KÍCH HOẠT</string>
+    <string name="vip_status_inactive">CHƯA KÍCH HOẠT</string>
+    <string name="vip_expires_until">Đang dùng · %1$s</string>
+
+    <string name="vip_benefits_title">Bạn được gì</string>
+    <string name="vip_benefit_no_banner">Không quảng cáo banner</string>
+    <string name="vip_benefit_no_interstitial">Không quảng cáo toàn màn hình</string>
+    <string name="vip_benefit_no_app_open">Không quảng cáo lúc mở / quay lại</string>
+    <string name="vip_benefit_support">Hỗ trợ phát triển ứng dụng</string>
+
+    <string name="vip_action_activate">Kích hoạt Premium</string>
+    <string name="vip_action_reset">Huỷ Premium</string>
+    <string name="vip_footer_info">Premium dùng key kích hoạt offline — không có thanh toán trong ứng dụng.</string>
+
+    <string name="vip_dialog_title">Nhập key Premium</string>
+    <string name="vip_dialog_subtitle">Mỗi key kích hoạt Premium trong 30 ngày.</string>
+    <string name="vip_dialog_input_hint">Key kích hoạt</string>
+    <string name="vip_dialog_btn_activate">Kích hoạt</string>
+    <string name="vip_dialog_btn_cancel">Huỷ</string>
+
+    <string name="vip_msg_success">Đã kích hoạt Premium · %1$d ngày</string>
+    <string name="vip_msg_invalid">Key không hợp lệ. Hãy thử lại.</string>
+    <string name="vip_reset_title">Huỷ Premium?</string>
+    <string name="vip_reset_message">Tất cả quyền lợi Premium sẽ bị huỷ ngay lập tức.</string>
+    <string name="vip_reset_confirm">Huỷ</string>
+
+    <string name="first_run_language_title">Chọn ngôn ngữ của bạn</string>
+</resources>

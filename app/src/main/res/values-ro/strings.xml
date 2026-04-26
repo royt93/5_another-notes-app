@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Notițe</string>
+    <string name="action_archive">Arhivează</string>
+    <string name="action_cancel">Anulează</string>
+    <string name="action_clear">Șterge</string>
+    <string name="action_convert_to_list">Convertește în listă</string>
+    <string name="action_convert_to_text">Convertește în text</string>
+    <string name="action_copy">Creează copie</string>
+    <string name="action_delete">Șterge</string>
+    <string name="action_delete_checked">Șterge bifate</string>
+    <string name="action_delete_forever">Șterge definitiv</string>
+    <string name="action_delete_selection">Șterge selecția</string>
+    <string name="action_delete_selection_forever">Șterge selecția definitiv</string>
+    <string name="action_empty_trash">Golește coșul</string>
+    <string name="action_empty_trash_short">Golește</string>
+    <string name="action_keep">Păstrează</string>
+    <string name="action_labels">Schimbă etichete</string>
+    <string name="action_layout_grid">Vizualizare grilă</string>
+    <string name="action_layout_list">Vizualizare listă</string>
+    <string name="action_manage">Gestionează</string>
+    <string name="action_mark_as_done">Marchează ca finalizat</string>
+    <string name="action_none">Niciuna</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Deschide</string>
+    <string name="action_pin">Fixează</string>
+    <string name="action_postpone">Amână</string>
+    <string name="action_reminder_add">Adaugă memento</string>
+    <string name="action_reminder_edit">Editează memento</string>
+    <string name="action_rename">Redenumește</string>
+    <string name="action_restore">Restaurează</string>
+    <string name="action_search">Caută</string>
+    <string name="action_select_all">Selectează tot</string>
+    <string name="action_settings">Setări</string>
+    <string name="action_share">Partajează</string>
+    <string name="action_unarchive">Dezarhivează</string>
+    <string name="action_uncheck_all">Debifează tot</string>
+    <string name="action_undo">Anulează</string>
+    <string name="action_unpin">Anulează fixarea</string>
+
+    <string name="shortcut_text_note">Notiță text nouă</string>
+    <string name="shortcut_text_note_short">Text nou</string>
+    <string name="shortcut_list_note">Listă nouă</string>
+    <string name="shortcut_list_note_short">Listă nouă</string>
+    <string name="shortcut_reminders">Mementouri</string>
+    <string name="shortcut_reminders_short">Mementouri</string>
+
+    <string name="note_location_active">Notițe</string>
+    <string name="note_location_archived">Arhivate</string>
+    <string name="note_location_deleted">Șterse</string>
+    <string name="note_location_labels">Etichete</string>
+
+    <string name="note_pinned">Fixate</string>
+    <string name="note_not_pinned">Altele</string>
+
+    <string name="note_placeholder_active">Nu ai notițe.\nApasă + pentru a adăuga.</string>
+    <string name="note_placeholder_archived">Nicio notiță arhivată</string>
+    <string name="note_placeholder_deleted">Coșul este gol</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d alt element</item>
+        <item quantity="other">+ %d alte elemente</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d element bifat</item>
+        <item quantity="other">+ %d elemente bifate</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Notițele din coș sunt șterse automat după %d zile.</string>
+    <string name="trash_delete_message">Această notiță va fi ștearsă definitiv.</string>
+    <string name="trash_delete_selected_message">Notițele selectate vor fi șterse definitiv.</string>
+    <string name="trash_empty_message">Toate notițele din coș vor fi șterse definitiv.</string>
+
+    <string name="search_hint">Caută notițe</string>
+    <string name="search_empty_placeholder">Nicio notiță nu corespunde căutării. Încearcă altă interogare.</string>
+
+    <string name="sort_title">Opțiuni de sortare</string>
+    <string name="sort_direction">Direcția sortării</string>
+    <string name="sort_direction_ascending">Crescător</string>
+    <string name="sort_direction_descending">Descrescător</string>
+    <string name="sort_field">Sortează după</string>
+    <string name="sort_field_created">Data creării</string>
+    <string name="sort_field_modified">Data modificării</string>
+    <string name="sort_field_title">Titlu</string>
+
+    <string name="edit_add_title">Creează notiță</string>
+    <string name="edit_change_title">Editează notiță</string>
+    <string name="edit_hint_note_title">Titlu</string>
+    <string name="edit_hint_note_content">Notiță</string>
+    <string name="edit_hint_note_item">Element listă</string>
+
+    <string name="edit_message_blank_note_discarded">Notiță goală eliminată.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Notiță arhivată.</item>
+        <item quantity="other">Notițe arhivate.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Notiță mutată în coș.</item>
+        <item quantity="other">Notițe mutate în coș.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Notiță restaurată.</item>
+        <item quantity="other">Notițe restaurate.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Notiță scoasă din arhivă.</item>
+        <item quantity="other">Notițe scoase din arhivă.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Nu se poate edita o notiță din coș.</string>
+
+    <string name="edit_copy_suffix">Copie</string>
+    <string name="edit_copy_untitled_name">Fără titlu</string>
+
+    <string name="edit_convert_keep_checked">Notițele text nu acceptă casete bifare. Șterge elementele bifate?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d element bifat</item>
+        <item quantity="other">%d elemente bifate</item>
+    </plurals>
+
+    <string name="note_reminders">Mementouri</string>
+    <string name="reminder_upcoming">Viitoare</string>
+    <string name="reminder_today">Astăzi</string>
+    <string name="reminder_overdue">Restante</string>
+    <string name="reminder_date">Data</string>
+    <string name="reminder_time">Ora</string>
+    <string name="reminder_invalid_time">Această oră a trecut deja.</string>
+    <string name="reminder_notif_channel_title">Mementouri</string>
+    <string name="reminder_notif_channel_descr">Mementouri setate pe notițe</string>
+    <string name="reminder_empty_placeholder">Niciun memento setat</string>
+    <string name="reminder_restricted_battery">Mementourile pot să nu funcționeze corect deoarece aplicația are utilizare restrânsă a bateriei. Poate fi schimbat în setările aplicației.</string>
+    <string name="reminder_notif_permission">Pentru a trimite notificări de memento, aplicația are nevoie de o permisiune. Apasă OK pentru a o solicita. Apoi vei putea seta un memento.</string>
+    <string name="reminder_notif_permission_denied">Permisiunea pentru notificări a fost refuzată. Mementourile nu vor funcționa până când nu este activată.</string>
+
+    <string name="label_create">Creează etichetă nouă</string>
+    <string name="label_edit">Editează numele etichetei</string>
+    <string name="label_manage">Gestionează etichetele</string>
+    <string name="label_select">Selectează etichete</string>
+    <string name="label_already_exists">O etichetă cu acest nume există deja.</string>
+    <string name="label_hidden_option">Ascunde notițele cu această etichetă din active și arhivate</string>
+    <string name="label_empty_placeholder">Nicio etichetă creată</string>
+    <string name="label_delete_message">Etichetele selectate vor fi șterse, dar notițele asociate vor fi păstrate.</string>
+    <string name="label_notes_empty_placeholder">Nicio notiță cu această etichetă</string>
+
+    <string name="pref_group_appearance">Aspect</string>
+    <string name="pref_theme">Tema aplicației</string>
+    <string name="pref_theme_light">Luminos</string>
+    <string name="pref_theme_dark">Întunecat</string>
+    <string name="pref_theme_system">Conform sistemului</string>
+    <string name="pref_dynamic_colors">Folosește culori dinamice</string>
+    <string name="pref_strikethrough_checked">Taie elementele bifate</string>
+    <string name="pref_preview_labels">Numărul maxim de etichete în previzualizare</string>
+
+    <string name="widget_guide_title">Widget-uri</string>
+
+    <string name="pref_shown_date">Data afișată pe notițe</string>
+    <string name="pref_shown_date_added">Data creării</string>
+    <string name="pref_shown_date_modified">Ultima modificare</string>
+    <string name="pref_shown_date_none">Fără dată</string>
+
+    <string name="pref_preview_lines">Numărul maxim de linii în previzualizare</string>
+    <string name="pref_preview_lines_summary">Configurează câte linii și elemente sunt afișate pe notițe, pentru fiecare mod de aspect și tip de notiță</string>
+    <string name="pref_preview_lines_grid_layout">Aspect grilă</string>
+    <string name="pref_preview_lines_list_layout">Aspect listă</string>
+    <string name="pref_preview_lines_text">Linii în previzualizarea notiței text</string>
+    <string name="pref_preview_lines_list">Elemente în previzualizarea notiței listă</string>
+
+    <string name="pref_group_behavior">Comportament</string>
+    <string name="pref_behavior_swipe_action_left">Acțiune glisare stânga</string>
+    <string name="pref_behavior_swipe_action_right">Acțiune glisare dreapta</string>
+    <string name="pref_behavior_move_checked">Mută elementele bifate jos</string>
+
+    <string name="pref_group_data">Date</string>
+    <string name="pref_data_export">Exportă date</string>
+    <string name="pref_data_export_summary">Exportă notițele ca JSON</string>
+    <string name="pref_data_encrypted_export">Export criptat</string>
+    <string name="pref_data_encrypted_export_summary">Criptează notițele exportate. Accesul nu este posibil fără parola corectă.</string>
+    <string name="pref_data_auto_export">Export automat</string>
+    <string name="pref_data_auto_export_summary">Exportă automat datele aplicației într-un fișier, o dată pe zi.</string>
+    <string name="pref_data_auto_export_date">(Ultimul export: %s)</string>
+    <string name="pref_data_import">Importă date</string>
+    <string name="pref_data_import_summary">Importă date JSON exportate anterior, îmbină cu cele existente.</string>
+    <string name="pref_data_clear">Șterge toate datele</string>
+    <string name="pref_data_clear_confirm_message">Toate datele notițelor vor fi șterse permanent! Nu se poate anula.</string>
+    <string name="pref_data_clear_success_message">Toate datele șterse cu succes.</string>
+
+    <string name="pref_group_about">Despre</string>
+    <string name="pref_about_view_source">Vezi pe Github (Original)</string>
+    <string name="pref_about_view_source_fork">Vezi pe Github (Fork)</string>
+    <string name="pref_about_view_licenses">Licențe open source</string>
+    <string name="pref_about_version">Versiune</string>
+
+    <string name="pref_restart_dialog_title">Repornire necesară!</string>
+    <string name="pref_restart_dialog_description">Repornirea este necesară pentru ca modificările să aibă efect. Vrei să repornești aplicația acum?</string>
+
+    <string name="export_success">Date exportate cu succes!</string>
+    <string name="export_fail">A apărut o eroare la export.</string>
+    <string name="export_serialization_fail">A apărut o eroare la export. Încearcă să dezactivezi criptarea și încearcă din nou.</string>
+    <string name="encrypted_export_dialog_title">Setează parola</string>
+    <string name="encrypted_export_password">Parolă</string>
+    <string name="encrypted_export_repeat_password">Confirmă parola</string>
+    <string name="encrypted_export_password_matching_error">Parolele nu se potrivesc</string>
+    <string name="encrypted_export_key_generation_successful">Criptare activată cu succes!</string>
+    <string name="encrypted_export_key_deletion_successful">Criptare dezactivată cu succes!</string>
+    <string name="import_success">Date importate cu succes!</string>
+    <string name="import_future_version">Date importate cu succes! Unele informații pot fi pierdute deoarece datele provin dintr-o versiune mai nouă.</string>
+    <string name="import_bad_input">A apărut o eroare la citirea fișierului.</string>
+    <string name="import_bad_format">Datele nu pot fi importate, format JSON invalid.</string>
+    <string name="import_bad_data">Datele nu pot fi importate, unele câmpuri au valori invalide. Posibil dintr-o versiune mai nouă — actualizează aplicația.</string>
+    <string name="encrypted_import_dialog_title">Introdu parola</string>
+    <string name="encrypted_import_key_error">Eroare la decriptarea fișierului. Verifică parola.</string>
+    <string name="encrypted_import_encryption_unsupported">Nu se poate importa, această versiune Android nu acceptă criptare.</string>
+    <string name="auto_export_message">Pentru a activa exportul automat, alege un fișier pentru salvarea datelor. Datele vor fi exportate o dată pe zi când aplicația este deschisă. Apasă OK pentru a continua.</string>
+    <string name="auto_export_fail">Export automat eșuat. Asigură-te că locația de export există și este accesibilă, apoi reconfigurează.</string>
+
+    <string name="content_descrp_open_drawer">Deschide meniul</string>
+    <string name="content_descrp_back">Înapoi</string>
+    <string name="content_descrp_label_hidden">Notițele cu această etichetă sunt ascunse</string>
+
+    <string name="date_rel_today">Astăzi, %s</string>
+    <string name="date_rel_yesterday">Ieri, %s</string>
+    <string name="date_rel_tomorrow">Mâine, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">acum %d zile, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">în %d zile, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Termeni și politică]]></string>
+    <string name="rate_this_app_5">Evaluează cu 5★</string>
+    <string name="get_more_apps">Mai multe aplicații</string>
+    <string name="share_this_app">Partajează aplicația</string>
+
+    <string name="pref_language">Limbă</string>
+    <string name="pref_language_system">Implicit sistem</string>
+    <string name="msg_consent_not_required">Setările de confidențialitate sunt disponibile doar în regiuni unde consimțământul este necesar.</string>
+
+    <string name="exit_press_back_again">Apasă înapoi din nou pentru a ieși</string>
+    <string name="reminder_saved_for">Memento setat pentru %1$s</string>
+    <string name="color_default">Implicit</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Setări confidențialitate</string>
+    <string name="pref_privacy_settings_summary">Gestionează consimțământul publicitar (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">ABONAMENT PREMIUM</string>
+    <string name="vip_status_active">ACTIV</string>
+    <string name="vip_status_inactive">INACTIV</string>
+    <string name="vip_expires_until">Activ · %1$s</string>
+
+    <string name="vip_benefits_title">Ce primești</string>
+    <string name="vip_benefit_no_banner">Fără reclame banner</string>
+    <string name="vip_benefit_no_interstitial">Fără reclame ecran complet</string>
+    <string name="vip_benefit_no_app_open">Fără reclame la pornire / reluare</string>
+    <string name="vip_benefit_support">Susține dezvoltarea continuă</string>
+
+    <string name="vip_action_activate">Activează Premium</string>
+    <string name="vip_action_reset">Resetează Premium</string>
+    <string name="vip_footer_info">Premium folosește o cheie de activare offline — fără plăți în aplicație.</string>
+
+    <string name="vip_dialog_title">Introdu cheia Premium</string>
+    <string name="vip_dialog_subtitle">Fiecare cheie activează Premium pentru 30 de zile.</string>
+    <string name="vip_dialog_input_hint">Cheie de activare</string>
+    <string name="vip_dialog_btn_activate">Activează</string>
+    <string name="vip_dialog_btn_cancel">Anulează</string>
+
+    <string name="vip_msg_success">Premium activat · %1$d zile</string>
+    <string name="vip_msg_invalid">Cheie invalidă. Încearcă din nou.</string>
+    <string name="vip_reset_title">Resetezi Premium?</string>
+    <string name="vip_reset_message">Toate beneficiile Premium vor fi eliminate imediat.</string>
+    <string name="vip_reset_confirm">Resetează</string>
+
+    <string name="first_run_language_title">Alege limba ta</string>
+</resources>

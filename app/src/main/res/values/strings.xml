@@ -305,4 +305,5 @@
     <string name="vip_reset_message">All Premium benefits will be removed immediately.</string>
     <string name="vip_reset_confirm">Reset</string>
 
+    <string name="first_run_language_title">Choose your language</string>
 </resources>

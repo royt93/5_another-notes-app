@@ -261,4 +261,5 @@
     <string name="exit_press_back_again">Pulsa atrás de nuevo para salir</string>
     <string name="reminder_saved_for">Recordatorio establecido para %1$s</string>
     <string name="color_default">Predeterminado</string>
+    <string name="first_run_language_title">Elige tu idioma</string>
 </resources>

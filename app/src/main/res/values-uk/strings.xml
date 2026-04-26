@@ -262,4 +262,5 @@
     <string name="exit_press_back_again">Натисніть назад ще раз для виходу</string>
     <string name="reminder_saved_for">Нагадування на %1$s</string>
     <string name="color_default">За замовчуванням</string>
+    <string name="first_run_language_title">Виберіть мову</string>
 </resources>

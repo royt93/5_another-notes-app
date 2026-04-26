@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">메모</string>
+    <string name="action_archive">보관</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_clear">지우기</string>
+    <string name="action_convert_to_list">목록으로 변환</string>
+    <string name="action_convert_to_text">텍스트로 변환</string>
+    <string name="action_copy">사본 만들기</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_delete_checked">체크된 항목 삭제</string>
+    <string name="action_delete_forever">영구 삭제</string>
+    <string name="action_delete_selection">선택 삭제</string>
+    <string name="action_delete_selection_forever">선택을 영구 삭제</string>
+    <string name="action_empty_trash">휴지통 비우기</string>
+    <string name="action_empty_trash_short">비우기</string>
+    <string name="action_keep">유지</string>
+    <string name="action_labels">라벨 변경</string>
+    <string name="action_layout_grid">그리드 보기</string>
+    <string name="action_layout_list">목록 보기</string>
+    <string name="action_manage">관리</string>
+    <string name="action_mark_as_done">완료로 표시</string>
+    <string name="action_none">없음</string>
+    <string name="action_ok">확인</string>
+    <string name="action_open">열기</string>
+    <string name="action_pin">고정</string>
+    <string name="action_postpone">연기</string>
+    <string name="action_reminder_add">알림 추가</string>
+    <string name="action_reminder_edit">알림 편집</string>
+    <string name="action_rename">이름 바꾸기</string>
+    <string name="action_restore">복원</string>
+    <string name="action_search">검색</string>
+    <string name="action_select_all">모두 선택</string>
+    <string name="action_settings">설정</string>
+    <string name="action_share">공유</string>
+    <string name="action_unarchive">보관 해제</string>
+    <string name="action_uncheck_all">모든 항목 체크 해제</string>
+    <string name="action_undo">실행 취소</string>
+    <string name="action_unpin">고정 해제</string>
+
+    <string name="shortcut_text_note">새 텍스트 메모</string>
+    <string name="shortcut_text_note_short">텍스트</string>
+    <string name="shortcut_list_note">새 목록 메모</string>
+    <string name="shortcut_list_note_short">목록</string>
+    <string name="shortcut_reminders">알림</string>
+    <string name="shortcut_reminders_short">알림</string>
+
+    <string name="note_location_active">메모</string>
+    <string name="note_location_archived">보관됨</string>
+    <string name="note_location_deleted">삭제됨</string>
+    <string name="note_location_labels">라벨</string>
+
+    <string name="note_pinned">고정됨</string>
+    <string name="note_not_pinned">기타</string>
+
+    <string name="note_placeholder_active">메모가 없습니다.\n+ 를 눌러 추가하세요.</string>
+    <string name="note_placeholder_archived">보관된 메모가 없습니다</string>
+    <string name="note_placeholder_deleted">휴지통이 비어있습니다</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="other">+ %d개 항목 더 있음</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="other">+ 체크된 %d개 항목</item>
+    </plurals>
+
+    <string name="trash_reminder_message">휴지통의 메모는 %d일 후 자동 삭제됩니다.</string>
+    <string name="trash_delete_message">이 메모는 영구 삭제됩니다.</string>
+    <string name="trash_delete_selected_message">선택한 메모는 영구 삭제됩니다.</string>
+    <string name="trash_empty_message">휴지통의 모든 메모가 영구 삭제됩니다.</string>
+
+    <string name="search_hint">메모 검색</string>
+    <string name="search_empty_placeholder">검색 결과가 없습니다. 다른 키워드를 시도하세요.</string>
+
+    <string name="sort_title">정렬 옵션</string>
+    <string name="sort_direction">정렬 방향</string>
+    <string name="sort_direction_ascending">오름차순</string>
+    <string name="sort_direction_descending">내림차순</string>
+    <string name="sort_field">정렬 기준</string>
+    <string name="sort_field_created">생성 날짜</string>
+    <string name="sort_field_modified">수정 날짜</string>
+    <string name="sort_field_title">제목</string>
+
+    <string name="edit_add_title">메모 작성</string>
+    <string name="edit_change_title">메모 편집</string>
+    <string name="edit_hint_note_title">제목</string>
+    <string name="edit_hint_note_content">메모</string>
+    <string name="edit_hint_note_item">목록 항목</string>
+
+    <string name="edit_message_blank_note_discarded">빈 메모를 삭제했습니다.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">메모를 보관했습니다.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">메모를 휴지통으로 이동했습니다.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">메모를 복원했습니다.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">메모 보관을 해제했습니다.</item>
+    </plurals>
+    <string name="edit_in_trash_message">휴지통의 메모는 편집할 수 없습니다.</string>
+
+    <string name="edit_copy_suffix">사본</string>
+    <string name="edit_copy_untitled_name">제목 없음</string>
+
+    <string name="edit_convert_keep_checked">텍스트 메모는 체크박스를 지원하지 않습니다. 체크된 항목을 삭제할까요?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">체크된 %d개 항목</item>
+    </plurals>
+
+    <string name="note_reminders">알림</string>
+    <string name="reminder_upcoming">예정</string>
+    <string name="reminder_today">오늘</string>
+    <string name="reminder_overdue">기한 지남</string>
+    <string name="reminder_date">날짜</string>
+    <string name="reminder_time">시간</string>
+    <string name="reminder_invalid_time">이 시간은 이미 지났습니다.</string>
+    <string name="reminder_notif_channel_title">알림</string>
+    <string name="reminder_notif_channel_descr">메모에 설정된 알림</string>
+    <string name="reminder_empty_placeholder">설정된 알림이 없습니다</string>
+    <string name="reminder_restricted_battery">앱이 배터리 사용을 제한하고 있어 알림이 제대로 작동하지 않을 수 있습니다. 앱 설정에서 변경할 수 있습니다.</string>
+    <string name="reminder_notif_permission">알림을 보내려면 권한이 필요합니다. 확인을 눌러 권한을 허용하세요. 그러면 알림을 설정할 수 있습니다.</string>
+    <string name="reminder_notif_permission_denied">알림 권한이 거부되었습니다. 활성화될 때까지 알림이 작동하지 않습니다.</string>
+
+    <string name="label_create">새 라벨 만들기</string>
+    <string name="label_edit">라벨 이름 편집</string>
+    <string name="label_manage">라벨 관리</string>
+    <string name="label_select">라벨 선택</string>
+    <string name="label_already_exists">동일한 이름의 라벨이 이미 있습니다.</string>
+    <string name="label_hidden_option">이 라벨이 있는 메모를 활성과 보관함에서 숨기기</string>
+    <string name="label_empty_placeholder">생성된 라벨이 없습니다</string>
+    <string name="label_delete_message">선택한 라벨은 삭제되지만 관련 메모는 유지됩니다.</string>
+    <string name="label_notes_empty_placeholder">이 라벨이 붙은 메모가 없습니다</string>
+
+    <string name="pref_group_appearance">모양</string>
+    <string name="pref_theme">앱 테마</string>
+    <string name="pref_theme_light">라이트</string>
+    <string name="pref_theme_dark">다크</string>
+    <string name="pref_theme_system">시스템 따르기</string>
+    <string name="pref_dynamic_colors">다이나믹 컬러 사용</string>
+    <string name="pref_strikethrough_checked">체크된 항목에 취소선</string>
+    <string name="pref_preview_labels">미리보기 최대 라벨 수</string>
+
+    <string name="widget_guide_title">위젯</string>
+
+    <string name="pref_shown_date">메모에 표시할 날짜</string>
+    <string name="pref_shown_date_added">생성 날짜</string>
+    <string name="pref_shown_date_modified">최종 수정 날짜</string>
+    <string name="pref_shown_date_none">날짜 표시 안 함</string>
+
+    <string name="pref_preview_lines">미리보기 최대 줄 수</string>
+    <string name="pref_preview_lines_summary">레이아웃과 메모 유형별로 표시할 줄과 항목 수를 설정합니다</string>
+    <string name="pref_preview_lines_grid_layout">그리드 레이아웃</string>
+    <string name="pref_preview_lines_list_layout">리스트 레이아웃</string>
+    <string name="pref_preview_lines_text">텍스트 메모 미리보기 줄</string>
+    <string name="pref_preview_lines_list">목록 메모 미리보기 항목</string>
+
+    <string name="pref_group_behavior">동작</string>
+    <string name="pref_behavior_swipe_action_left">왼쪽 스와이프 동작</string>
+    <string name="pref_behavior_swipe_action_right">오른쪽 스와이프 동작</string>
+    <string name="pref_behavior_move_checked">체크된 항목을 아래로 이동</string>
+
+    <string name="pref_group_data">데이터</string>
+    <string name="pref_data_export">데이터 내보내기</string>
+    <string name="pref_data_export_summary">메모를 JSON으로 내보냅니다</string>
+    <string name="pref_data_encrypted_export">암호화 내보내기</string>
+    <string name="pref_data_encrypted_export_summary">내보낸 메모를 암호화합니다. 올바른 비밀번호 없이는 접근 불가.</string>
+    <string name="pref_data_auto_export">자동 데이터 내보내기</string>
+    <string name="pref_data_auto_export_summary">앱 데이터를 하루 한 번 자동으로 파일에 내보냅니다.</string>
+    <string name="pref_data_auto_export_date">(마지막 내보내기: %s)</string>
+    <string name="pref_data_import">데이터 가져오기</string>
+    <string name="pref_data_import_summary">이전에 내보낸 JSON 데이터를 가져와 기존 데이터와 병합합니다.</string>
+    <string name="pref_data_clear">모든 데이터 지우기</string>
+    <string name="pref_data_clear_confirm_message">모든 메모 데이터가 영구적으로 삭제됩니다! 되돌릴 수 없습니다.</string>
+    <string name="pref_data_clear_success_message">모든 데이터가 성공적으로 삭제되었습니다.</string>
+
+    <string name="pref_group_about">정보</string>
+    <string name="pref_about_view_source">Github에서 보기 (오리지널)</string>
+    <string name="pref_about_view_source_fork">Github에서 보기 (포크)</string>
+    <string name="pref_about_view_licenses">오픈소스 라이선스</string>
+    <string name="pref_about_version">버전</string>
+
+    <string name="pref_restart_dialog_title">재시작이 필요합니다!</string>
+    <string name="pref_restart_dialog_description">변경사항을 적용하려면 재시작이 필요합니다. 지금 재시작하시겠습니까?</string>
+
+    <string name="export_success">데이터를 성공적으로 내보냈습니다!</string>
+    <string name="export_fail">데이터 내보내기 중 오류가 발생했습니다.</string>
+    <string name="export_serialization_fail">내보내기 중 오류가 발생했습니다. 암호화를 끄고 다시 시도하세요.</string>
+    <string name="encrypted_export_dialog_title">비밀번호 설정</string>
+    <string name="encrypted_export_password">비밀번호</string>
+    <string name="encrypted_export_repeat_password">비밀번호 확인</string>
+    <string name="encrypted_export_password_matching_error">비밀번호가 일치하지 않습니다</string>
+    <string name="encrypted_export_key_generation_successful">암호화가 성공적으로 활성화되었습니다!</string>
+    <string name="encrypted_export_key_deletion_successful">암호화가 성공적으로 비활성화되었습니다!</string>
+    <string name="import_success">데이터를 성공적으로 가져왔습니다!</string>
+    <string name="import_future_version">데이터를 성공적으로 가져왔습니다! 데이터가 더 새 버전에서 왔기 때문에 일부 정보가 손실되었을 수 있습니다.</string>
+    <string name="import_bad_input">파일을 읽는 중 오류가 발생했습니다.</string>
+    <string name="import_bad_format">데이터를 가져올 수 없습니다. JSON 형식이 잘못되었습니다.</string>
+    <string name="import_bad_data">데이터를 가져올 수 없습니다. 일부 필드 값이 잘못되었습니다. 더 새 버전의 데이터일 수 있습니다 — 앱을 업데이트하세요.</string>
+    <string name="encrypted_import_dialog_title">비밀번호 입력</string>
+    <string name="encrypted_import_key_error">파일 복호화 중 오류가 발생했습니다. 비밀번호가 올바른지 확인하세요.</string>
+    <string name="encrypted_import_encryption_unsupported">이 Android 버전은 암호화를 지원하지 않습니다.</string>
+    <string name="auto_export_message">자동 내보내기를 활성화하려면 저장할 파일을 선택해야 합니다. 앱을 열어둘 때 하루 한 번 데이터가 내보내집니다. 계속하려면 확인을 누르세요.</string>
+    <string name="auto_export_fail">자동 내보내기에 실패했습니다. 내보내기 위치가 여전히 존재하고 접근 가능한지 확인하고 자동 내보내기를 다시 설정하세요.</string>
+
+    <string name="content_descrp_open_drawer">서랍 열기</string>
+    <string name="content_descrp_back">뒤로</string>
+    <string name="content_descrp_label_hidden">이 라벨의 메모는 숨겨져 있습니다</string>
+
+    <string name="date_rel_today">오늘 %s</string>
+    <string name="date_rel_yesterday">어제 %s</string>
+    <string name="date_rel_tomorrow">내일 %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d일 전, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">%d일 후, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[이용약관 및 정책]]></string>
+    <string name="rate_this_app_5">★5점으로 평가하기</string>
+    <string name="get_more_apps">다른 앱 보기</string>
+    <string name="share_this_app">이 앱 공유하기</string>
+
+    <string name="pref_language">언어</string>
+    <string name="pref_language_system">시스템 기본</string>
+    <string name="msg_consent_not_required">개인정보 설정은 동의가 필요한 지역에서만 사용 가능합니다.</string>
+
+    <string name="exit_press_back_again">뒤로 한 번 더 눌러 종료</string>
+    <string name="reminder_saved_for">%1$s 알림이 설정되었습니다</string>
+    <string name="color_default">기본</string>
+
+    <string name="pref_vip_title">프리미엄</string>
+    <string name="pref_privacy_settings">개인정보 설정</string>
+    <string name="pref_privacy_settings_summary">광고 동의 관리 (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">프리미엄</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">프리미엄 멤버십</string>
+    <string name="vip_status_active">활성</string>
+    <string name="vip_status_inactive">비활성</string>
+    <string name="vip_expires_until">활성 · %1$s</string>
+
+    <string name="vip_benefits_title">혜택</string>
+    <string name="vip_benefit_no_banner">배너 광고 없음</string>
+    <string name="vip_benefit_no_interstitial">전체화면 광고 없음</string>
+    <string name="vip_benefit_no_app_open">시작 / 재개 광고 없음</string>
+    <string name="vip_benefit_support">지속적인 개발 지원</string>
+
+    <string name="vip_action_activate">프리미엄 활성화</string>
+    <string name="vip_action_reset">프리미엄 초기화</string>
+    <string name="vip_footer_info">프리미엄은 오프라인 활성화 키를 사용합니다 — 인앱 결제 없음.</string>
+
+    <string name="vip_dialog_title">프리미엄 키 입력</string>
+    <string name="vip_dialog_subtitle">각 키는 30일 동안 프리미엄을 활성화합니다.</string>
+    <string name="vip_dialog_input_hint">활성화 키</string>
+    <string name="vip_dialog_btn_activate">활성화</string>
+    <string name="vip_dialog_btn_cancel">취소</string>
+
+    <string name="vip_msg_success">프리미엄 활성화 · %1$d일</string>
+    <string name="vip_msg_invalid">잘못된 키입니다. 다시 시도하세요.</string>
+    <string name="vip_reset_title">프리미엄을 초기화하시겠습니까?</string>
+    <string name="vip_reset_message">모든 프리미엄 혜택이 즉시 제거됩니다.</string>
+    <string name="vip_reset_confirm">초기화</string>
+
+    <string name="first_run_language_title">언어를 선택하세요</string>
+</resources>

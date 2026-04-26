@@ -252,4 +252,5 @@
     <string name="exit_press_back_again">Erneut zurück drücken zum Beenden</string>
     <string name="reminder_saved_for">Erinnerung gesetzt für %1$s</string>
     <string name="color_default">Standard</string>
+    <string name="first_run_language_title">Sprache wählen</string>
 </resources>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Anteckningar</string>
+    <string name="action_archive">Arkivera</string>
+    <string name="action_cancel">Avbryt</string>
+    <string name="action_clear">Rensa</string>
+    <string name="action_convert_to_list">Konvertera till lista</string>
+    <string name="action_convert_to_text">Konvertera till text</string>
+    <string name="action_copy">Skapa kopia</string>
+    <string name="action_delete">Radera</string>
+    <string name="action_delete_checked">Radera markerade</string>
+    <string name="action_delete_forever">Radera permanent</string>
+    <string name="action_delete_selection">Radera urval</string>
+    <string name="action_delete_selection_forever">Radera urval permanent</string>
+    <string name="action_empty_trash">Töm papperskorgen</string>
+    <string name="action_empty_trash_short">Töm</string>
+    <string name="action_keep">Behåll</string>
+    <string name="action_labels">Ändra etiketter</string>
+    <string name="action_layout_grid">Visa som rutnät</string>
+    <string name="action_layout_list">Visa som lista</string>
+    <string name="action_manage">Hantera</string>
+    <string name="action_mark_as_done">Markera som klar</string>
+    <string name="action_none">Ingen</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Öppna</string>
+    <string name="action_pin">Fäst</string>
+    <string name="action_postpone">Skjut upp</string>
+    <string name="action_reminder_add">Lägg till påminnelse</string>
+    <string name="action_reminder_edit">Redigera påminnelse</string>
+    <string name="action_rename">Byt namn</string>
+    <string name="action_restore">Återställ</string>
+    <string name="action_search">Sök</string>
+    <string name="action_select_all">Markera alla</string>
+    <string name="action_settings">Inställningar</string>
+    <string name="action_share">Dela</string>
+    <string name="action_unarchive">Avarkivera</string>
+    <string name="action_uncheck_all">Avmarkera alla</string>
+    <string name="action_undo">Ångra</string>
+    <string name="action_unpin">Lossa</string>
+
+    <string name="shortcut_text_note">Ny textanteckning</string>
+    <string name="shortcut_text_note_short">Ny text</string>
+    <string name="shortcut_list_note">Ny listanteckning</string>
+    <string name="shortcut_list_note_short">Ny lista</string>
+    <string name="shortcut_reminders">Påminnelser</string>
+    <string name="shortcut_reminders_short">Påminnelser</string>
+
+    <string name="note_location_active">Anteckningar</string>
+    <string name="note_location_archived">Arkiverade</string>
+    <string name="note_location_deleted">Raderade</string>
+    <string name="note_location_labels">Etiketter</string>
+
+    <string name="note_pinned">Fästa</string>
+    <string name="note_not_pinned">Andra</string>
+
+    <string name="note_placeholder_active">Du har inga anteckningar.\nTryck på + för att lägga till.</string>
+    <string name="note_placeholder_archived">Inga arkiverade anteckningar</string>
+    <string name="note_placeholder_deleted">Papperskorgen är tom</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d annat listobjekt</item>
+        <item quantity="other">+ %d andra listobjekt</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d markerat objekt</item>
+        <item quantity="other">+ %d markerade objekt</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Anteckningar i papperskorgen raderas automatiskt efter %d dagar.</string>
+    <string name="trash_delete_message">Denna anteckning raderas permanent.</string>
+    <string name="trash_delete_selected_message">Valda anteckningar raderas permanent.</string>
+    <string name="trash_empty_message">Alla anteckningar i papperskorgen raderas permanent.</string>
+
+    <string name="search_hint">Sök anteckningar</string>
+    <string name="search_empty_placeholder">Inga anteckningar matchar sökningen. Prova en annan fråga.</string>
+
+    <string name="sort_title">Sorteringsalternativ</string>
+    <string name="sort_direction">Sorteringsordning</string>
+    <string name="sort_direction_ascending">Stigande</string>
+    <string name="sort_direction_descending">Fallande</string>
+    <string name="sort_field">Sortera efter</string>
+    <string name="sort_field_created">Skapad</string>
+    <string name="sort_field_modified">Ändrad</string>
+    <string name="sort_field_title">Titel</string>
+
+    <string name="edit_add_title">Skapa anteckning</string>
+    <string name="edit_change_title">Redigera anteckning</string>
+    <string name="edit_hint_note_title">Titel</string>
+    <string name="edit_hint_note_content">Anteckning</string>
+    <string name="edit_hint_note_item">Listobjekt</string>
+
+    <string name="edit_message_blank_note_discarded">Tom anteckning kastad.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Anteckning arkiverad.</item>
+        <item quantity="other">Anteckningar arkiverade.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Anteckning flyttad till papperskorgen.</item>
+        <item quantity="other">Anteckningar flyttade till papperskorgen.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Anteckning återställd.</item>
+        <item quantity="other">Anteckningar återställda.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Anteckning avarkiverad.</item>
+        <item quantity="other">Anteckningar avarkiverade.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Kan inte redigera anteckning i papperskorgen.</string>
+
+    <string name="edit_copy_suffix">Kopia</string>
+    <string name="edit_copy_untitled_name">Namnlös</string>
+
+    <string name="edit_convert_keep_checked">Textanteckningar stöder inte kryssrutor. Ta bort markerade?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d markerat objekt</item>
+        <item quantity="other">%d markerade objekt</item>
+    </plurals>
+
+    <string name="note_reminders">Påminnelser</string>
+    <string name="reminder_upcoming">Kommande</string>
+    <string name="reminder_today">Idag</string>
+    <string name="reminder_overdue">Försenad</string>
+    <string name="reminder_date">Datum</string>
+    <string name="reminder_time">Tid</string>
+    <string name="reminder_invalid_time">Denna tid har redan passerat.</string>
+    <string name="reminder_notif_channel_title">Påminnelser</string>
+    <string name="reminder_notif_channel_descr">Påminnelser satta på anteckningar</string>
+    <string name="reminder_empty_placeholder">Inga påminnelser inställda</string>
+    <string name="reminder_restricted_battery">Påminnelsealarm fungerar kanske inte korrekt eftersom appen har begränsat batterianvändning. Detta kan ändras i appens inställningar.</string>
+    <string name="reminder_notif_permission">För att skicka påminnelser behöver appen behörighet. Tryck OK för att begära. Sedan kan du ställa in en påminnelse.</string>
+    <string name="reminder_notif_permission_denied">Notifikationsbehörighet nekad. Påminnelser fungerar inte tills aktiverat.</string>
+
+    <string name="label_create">Skapa ny etikett</string>
+    <string name="label_edit">Redigera etikettnamn</string>
+    <string name="label_manage">Hantera etiketter</string>
+    <string name="label_select">Välj etiketter</string>
+    <string name="label_already_exists">En etikett med detta namn finns redan.</string>
+    <string name="label_hidden_option">Dölj anteckningar med denna etikett från aktiva och arkiverade</string>
+    <string name="label_empty_placeholder">Inga etiketter skapade</string>
+    <string name="label_delete_message">Valda etiketter raderas, men anteckningar kopplade till dem behålls.</string>
+    <string name="label_notes_empty_placeholder">Inga anteckningar märkta med denna etikett</string>
+
+    <string name="pref_group_appearance">Utseende</string>
+    <string name="pref_theme">Apptema</string>
+    <string name="pref_theme_light">Ljus</string>
+    <string name="pref_theme_dark">Mörk</string>
+    <string name="pref_theme_system">Följ system</string>
+    <string name="pref_dynamic_colors">Använd dynamiska färger</string>
+    <string name="pref_strikethrough_checked">Genomstryk markerade objekt</string>
+    <string name="pref_preview_labels">Max etiketter i förhandsvisning</string>
+
+    <string name="widget_guide_title">Widgets</string>
+
+    <string name="pref_shown_date">Datum som visas på anteckningar</string>
+    <string name="pref_shown_date_added">Skapad</string>
+    <string name="pref_shown_date_modified">Senast ändrad</string>
+    <string name="pref_shown_date_none">Inget datum</string>
+
+    <string name="pref_preview_lines">Max rader i förhandsvisning</string>
+    <string name="pref_preview_lines_summary">Konfigurera antalet rader och objekt som visas, för varje layoutläge och anteckningstyp</string>
+    <string name="pref_preview_lines_grid_layout">Rutnät</string>
+    <string name="pref_preview_lines_list_layout">Lista</string>
+    <string name="pref_preview_lines_text">Rader i textanteckning</string>
+    <string name="pref_preview_lines_list">Objekt i listanteckning</string>
+
+    <string name="pref_group_behavior">Beteende</string>
+    <string name="pref_behavior_swipe_action_left">Svep vänster</string>
+    <string name="pref_behavior_swipe_action_right">Svep höger</string>
+    <string name="pref_behavior_move_checked">Flytta markerade till botten</string>
+
+    <string name="pref_group_data">Data</string>
+    <string name="pref_data_export">Exportera data</string>
+    <string name="pref_data_export_summary">Exportera anteckningar som JSON</string>
+    <string name="pref_data_encrypted_export">Krypterad export</string>
+    <string name="pref_data_encrypted_export_summary">Krypterar exporterade anteckningar. Åtkomst kräver rätt lösenord.</string>
+    <string name="pref_data_auto_export">Automatisk export</string>
+    <string name="pref_data_auto_export_summary">Exportera appens data till fil automatiskt, en gång per dag.</string>
+    <string name="pref_data_auto_export_date">(Senaste export: %s)</string>
+    <string name="pref_data_import">Importera data</string>
+    <string name="pref_data_import_summary">Importera tidigare exporterad JSON-data, slå samman med befintlig data.</string>
+    <string name="pref_data_clear">Rensa all data</string>
+    <string name="pref_data_clear_confirm_message">All anteckningsdata kommer rensas permanent! Detta kan inte ångras.</string>
+    <string name="pref_data_clear_success_message">All data rensad.</string>
+
+    <string name="pref_group_about">Om</string>
+    <string name="pref_about_view_source">Visa på Github (Original)</string>
+    <string name="pref_about_view_source_fork">Visa på Github (Fork)</string>
+    <string name="pref_about_view_licenses">Öppna källkodslicenser</string>
+    <string name="pref_about_version">Version</string>
+
+    <string name="pref_restart_dialog_title">Omstart krävs!</string>
+    <string name="pref_restart_dialog_description">Omstart krävs för att ändringarna ska gälla. Vill du starta om appen nu?</string>
+
+    <string name="export_success">Data exporterad!</string>
+    <string name="export_fail">Ett fel inträffade vid export.</string>
+    <string name="export_serialization_fail">Ett fel inträffade. Stäng av kryptering och försök igen.</string>
+    <string name="encrypted_export_dialog_title">Ange lösenord</string>
+    <string name="encrypted_export_password">Lösenord</string>
+    <string name="encrypted_export_repeat_password">Bekräfta lösenord</string>
+    <string name="encrypted_export_password_matching_error">Lösenorden matchar inte</string>
+    <string name="encrypted_export_key_generation_successful">Kryptering aktiverad!</string>
+    <string name="encrypted_export_key_deletion_successful">Kryptering inaktiverad!</string>
+    <string name="import_success">Data importerad!</string>
+    <string name="import_future_version">Data importerad! En del information kan ha förlorats eftersom data kommer från en senare version.</string>
+    <string name="import_bad_input">Ett fel inträffade vid läsning av filen.</string>
+    <string name="import_bad_format">Kunde inte importera, JSON-format ogiltigt.</string>
+    <string name="import_bad_data">Kunde inte importera, vissa fält har ogiltiga värden. Möjligen från senare version — uppdatera appen.</string>
+    <string name="encrypted_import_dialog_title">Ange lösenord</string>
+    <string name="encrypted_import_key_error">Ett fel inträffade vid dekryptering. Kontrollera lösenordet.</string>
+    <string name="encrypted_import_encryption_unsupported">Kunde inte importera, denna Android-version stöder inte kryptering.</string>
+    <string name="auto_export_message">För att aktivera automatisk export, välj en fil att spara data till. Data exporteras en gång per dag medan appen är öppen. Tryck OK för att fortsätta.</string>
+    <string name="auto_export_fail">Automatisk export misslyckades. Säkerställ att exportplatsen finns och är åtkomlig, konfigurera sedan om.</string>
+
+    <string name="content_descrp_open_drawer">Öppna meny</string>
+    <string name="content_descrp_back">Tillbaka</string>
+    <string name="content_descrp_label_hidden">Anteckningar med denna etikett är dolda</string>
+
+    <string name="date_rel_today">Idag, %s</string>
+    <string name="date_rel_yesterday">Igår, %s</string>
+    <string name="date_rel_tomorrow">Imorgon, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d dagar sedan, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">Om %d dagar, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Villkor & Policy]]></string>
+    <string name="rate_this_app_5">Betygsätt 5★</string>
+    <string name="get_more_apps">Fler appar</string>
+    <string name="share_this_app">Dela appen</string>
+
+    <string name="pref_language">Språk</string>
+    <string name="pref_language_system">Systemstandard</string>
+    <string name="msg_consent_not_required">Sekretessinställningar finns endast tillgängliga i regioner där samtycke krävs.</string>
+
+    <string name="exit_press_back_again">Tryck tillbaka igen för att avsluta</string>
+    <string name="reminder_saved_for">Påminnelse satt till %1$s</string>
+    <string name="color_default">Standard</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Sekretessinställningar</string>
+    <string name="pref_privacy_settings_summary">Hantera annonssamtycke (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-MEDLEMSKAP</string>
+    <string name="vip_status_active">AKTIV</string>
+    <string name="vip_status_inactive">INAKTIV</string>
+    <string name="vip_expires_until">Aktiv · %1$s</string>
+
+    <string name="vip_benefits_title">Vad du får</string>
+    <string name="vip_benefit_no_banner">Inga bannerannonser</string>
+    <string name="vip_benefit_no_interstitial">Inga helskärmsannonser</string>
+    <string name="vip_benefit_no_app_open">Inga start- / återupptagningsannonser</string>
+    <string name="vip_benefit_support">Stöd fortsatt utveckling</string>
+
+    <string name="vip_action_activate">Aktivera Premium</string>
+    <string name="vip_action_reset">Återställ Premium</string>
+    <string name="vip_footer_info">Premium använder offline-aktiveringsnyckel — inga betalningar i appen.</string>
+
+    <string name="vip_dialog_title">Ange Premium-nyckel</string>
+    <string name="vip_dialog_subtitle">Varje nyckel aktiverar Premium i 30 dagar.</string>
+    <string name="vip_dialog_input_hint">Aktiveringsnyckel</string>
+    <string name="vip_dialog_btn_activate">Aktivera</string>
+    <string name="vip_dialog_btn_cancel">Avbryt</string>
+
+    <string name="vip_msg_success">Premium aktiverad · %1$d dagar</string>
+    <string name="vip_msg_invalid">Ogiltig nyckel. Försök igen.</string>
+    <string name="vip_reset_title">Återställa Premium?</string>
+    <string name="vip_reset_message">Alla Premium-fördelar tas bort omedelbart.</string>
+    <string name="vip_reset_confirm">Återställ</string>
+
+    <string name="first_run_language_title">Välj ditt språk</string>
+</resources>

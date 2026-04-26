@@ -260,4 +260,5 @@
     <string name="exit_press_back_again">Çıkmak için geri tuşuna tekrar basın</string>
     <string name="reminder_saved_for">Hatırlatıcı %1$s için ayarlandı</string>
     <string name="color_default">Varsayılan</string>
+    <string name="first_run_language_title">Dilini seç</string>
 </resources>

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">บันทึก</string>
+    <string name="action_archive">เก็บถาวร</string>
+    <string name="action_cancel">ยกเลิก</string>
+    <string name="action_clear">ล้าง</string>
+    <string name="action_convert_to_list">แปลงเป็นรายการ</string>
+    <string name="action_convert_to_text">แปลงเป็นข้อความ</string>
+    <string name="action_copy">ทำสำเนา</string>
+    <string name="action_delete">ลบ</string>
+    <string name="action_delete_checked">ลบรายการที่เลือก</string>
+    <string name="action_delete_forever">ลบถาวร</string>
+    <string name="action_delete_selection">ลบที่เลือก</string>
+    <string name="action_delete_selection_forever">ลบที่เลือกถาวร</string>
+    <string name="action_empty_trash">ล้างถังขยะ</string>
+    <string name="action_empty_trash_short">ล้าง</string>
+    <string name="action_keep">เก็บ</string>
+    <string name="action_labels">เปลี่ยนป้ายกำกับ</string>
+    <string name="action_layout_grid">มุมมองตาราง</string>
+    <string name="action_layout_list">มุมมองรายการ</string>
+    <string name="action_manage">จัดการ</string>
+    <string name="action_mark_as_done">ทำเครื่องหมายเสร็จ</string>
+    <string name="action_none">ไม่มี</string>
+    <string name="action_ok">ตกลง</string>
+    <string name="action_open">เปิด</string>
+    <string name="action_pin">ปักหมุด</string>
+    <string name="action_postpone">เลื่อน</string>
+    <string name="action_reminder_add">เพิ่มการแจ้งเตือน</string>
+    <string name="action_reminder_edit">แก้ไขการแจ้งเตือน</string>
+    <string name="action_rename">เปลี่ยนชื่อ</string>
+    <string name="action_restore">กู้คืน</string>
+    <string name="action_search">ค้นหา</string>
+    <string name="action_select_all">เลือกทั้งหมด</string>
+    <string name="action_settings">ตั้งค่า</string>
+    <string name="action_share">แชร์</string>
+    <string name="action_unarchive">เลิกเก็บถาวร</string>
+    <string name="action_uncheck_all">ยกเลิกการเลือกทั้งหมด</string>
+    <string name="action_undo">เลิกทำ</string>
+    <string name="action_unpin">เลิกปักหมุด</string>
+
+    <string name="shortcut_text_note">บันทึกข้อความใหม่</string>
+    <string name="shortcut_text_note_short">ข้อความใหม่</string>
+    <string name="shortcut_list_note">รายการใหม่</string>
+    <string name="shortcut_list_note_short">รายการใหม่</string>
+    <string name="shortcut_reminders">การแจ้งเตือน</string>
+    <string name="shortcut_reminders_short">เตือน</string>
+
+    <string name="note_location_active">บันทึก</string>
+    <string name="note_location_archived">เก็บถาวร</string>
+    <string name="note_location_deleted">ถูกลบ</string>
+    <string name="note_location_labels">ป้ายกำกับ</string>
+
+    <string name="note_pinned">ปักหมุด</string>
+    <string name="note_not_pinned">อื่น ๆ</string>
+
+    <string name="note_placeholder_active">คุณยังไม่มีบันทึก\nแตะ + เพื่อเพิ่ม</string>
+    <string name="note_placeholder_archived">ไม่มีบันทึกที่เก็บถาวร</string>
+    <string name="note_placeholder_deleted">ถังขยะว่างเปล่า</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="other">+ อีก %d รายการ</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="other">+ %d รายการที่เลือก</item>
+    </plurals>
+
+    <string name="trash_reminder_message">บันทึกในถังขยะจะถูกลบอัตโนมัติหลัง %d วัน</string>
+    <string name="trash_delete_message">บันทึกนี้จะถูกลบถาวร</string>
+    <string name="trash_delete_selected_message">บันทึกที่เลือกจะถูกลบถาวร</string>
+    <string name="trash_empty_message">บันทึกทั้งหมดในถังขยะจะถูกลบถาวร</string>
+
+    <string name="search_hint">ค้นหาบันทึก</string>
+    <string name="search_empty_placeholder">ไม่พบบันทึกที่ตรง ลองคำค้นอื่น</string>
+
+    <string name="sort_title">ตัวเลือกการเรียง</string>
+    <string name="sort_direction">ทิศทางเรียง</string>
+    <string name="sort_direction_ascending">น้อยไปมาก</string>
+    <string name="sort_direction_descending">มากไปน้อย</string>
+    <string name="sort_field">เรียงตาม</string>
+    <string name="sort_field_created">วันที่สร้าง</string>
+    <string name="sort_field_modified">วันที่แก้ไข</string>
+    <string name="sort_field_title">หัวเรื่อง</string>
+
+    <string name="edit_add_title">สร้างบันทึก</string>
+    <string name="edit_change_title">แก้ไขบันทึก</string>
+    <string name="edit_hint_note_title">หัวเรื่อง</string>
+    <string name="edit_hint_note_content">บันทึก</string>
+    <string name="edit_hint_note_item">รายการ</string>
+
+    <string name="edit_message_blank_note_discarded">ทิ้งบันทึกว่างแล้ว</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="other">เก็บบันทึกถาวรแล้ว</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="other">ย้ายบันทึกไปถังขยะแล้ว</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="other">กู้คืนบันทึกแล้ว</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="other">เลิกเก็บถาวรบันทึกแล้ว</item>
+    </plurals>
+    <string name="edit_in_trash_message">ไม่สามารถแก้ไขบันทึกในถังขยะได้</string>
+
+    <string name="edit_copy_suffix">สำเนา</string>
+    <string name="edit_copy_untitled_name">ไม่มีชื่อ</string>
+
+    <string name="edit_convert_keep_checked">บันทึกข้อความไม่รองรับเช็คบ็อกซ์ ลบรายการที่เลือกไหม?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="other">%d รายการที่เลือก</item>
+    </plurals>
+
+    <string name="note_reminders">การแจ้งเตือน</string>
+    <string name="reminder_upcoming">กำลังจะมา</string>
+    <string name="reminder_today">วันนี้</string>
+    <string name="reminder_overdue">เลยกำหนด</string>
+    <string name="reminder_date">วันที่</string>
+    <string name="reminder_time">เวลา</string>
+    <string name="reminder_invalid_time">เวลานี้ผ่านมาแล้ว</string>
+    <string name="reminder_notif_channel_title">การแจ้งเตือน</string>
+    <string name="reminder_notif_channel_descr">การแจ้งเตือนที่ตั้งกับบันทึก</string>
+    <string name="reminder_empty_placeholder">ยังไม่ตั้งการแจ้งเตือน</string>
+    <string name="reminder_restricted_battery">การแจ้งเตือนอาจไม่ทำงานถูกต้องเพราะแอปจำกัดการใช้แบตเตอรี่ เปลี่ยนได้ในการตั้งค่าแอป</string>
+    <string name="reminder_notif_permission">เพื่อส่งการแจ้งเตือน แอปต้องการสิทธิ์ แตะตกลงเพื่อขอสิทธิ์ จากนั้นคุณจะสามารถตั้งการแจ้งเตือนได้</string>
+    <string name="reminder_notif_permission_denied">สิทธิ์การแจ้งเตือนถูกปฏิเสธ การแจ้งเตือนจะไม่ทำงานจนกว่าจะเปิด</string>
+
+    <string name="label_create">สร้างป้ายกำกับใหม่</string>
+    <string name="label_edit">แก้ไขชื่อป้ายกำกับ</string>
+    <string name="label_manage">จัดการป้ายกำกับ</string>
+    <string name="label_select">เลือกป้ายกำกับ</string>
+    <string name="label_already_exists">ป้ายกำกับชื่อนี้มีอยู่แล้ว</string>
+    <string name="label_hidden_option">ซ่อนบันทึกที่มีป้ายกำกับนี้จากส่วนใช้งานและเก็บถาวร</string>
+    <string name="label_empty_placeholder">ยังไม่มีป้ายกำกับ</string>
+    <string name="label_delete_message">ป้ายกำกับที่เลือกจะถูกลบ แต่บันทึกที่เกี่ยวข้องจะถูกเก็บไว้</string>
+    <string name="label_notes_empty_placeholder">ไม่มีบันทึกที่ติดป้ายกำกับนี้</string>
+
+    <string name="pref_group_appearance">รูปลักษณ์</string>
+    <string name="pref_theme">ธีมแอป</string>
+    <string name="pref_theme_light">สว่าง</string>
+    <string name="pref_theme_dark">มืด</string>
+    <string name="pref_theme_system">ตามระบบ</string>
+    <string name="pref_dynamic_colors">ใช้สีไดนามิก</string>
+    <string name="pref_strikethrough_checked">ขีดฆ่ารายการที่เลือก</string>
+    <string name="pref_preview_labels">จำนวนป้ายกำกับสูงสุดในตัวอย่าง</string>
+
+    <string name="widget_guide_title">วิดเจ็ต</string>
+
+    <string name="pref_shown_date">วันที่แสดงบนบันทึก</string>
+    <string name="pref_shown_date_added">วันที่สร้าง</string>
+    <string name="pref_shown_date_modified">วันที่แก้ไขล่าสุด</string>
+    <string name="pref_shown_date_none">ไม่แสดงวันที่</string>
+
+    <string name="pref_preview_lines">จำนวนบรรทัดสูงสุดในตัวอย่าง</string>
+    <string name="pref_preview_lines_summary">กำหนดจำนวนบรรทัดและรายการที่แสดงในบันทึก ตามรูปแบบและประเภทบันทึก</string>
+    <string name="pref_preview_lines_grid_layout">รูปแบบตาราง</string>
+    <string name="pref_preview_lines_list_layout">รูปแบบรายการ</string>
+    <string name="pref_preview_lines_text">บรรทัดในตัวอย่างบันทึกข้อความ</string>
+    <string name="pref_preview_lines_list">รายการในตัวอย่างบันทึกรายการ</string>
+
+    <string name="pref_group_behavior">พฤติกรรม</string>
+    <string name="pref_behavior_swipe_action_left">ปัดซ้าย</string>
+    <string name="pref_behavior_swipe_action_right">ปัดขวา</string>
+    <string name="pref_behavior_move_checked">ย้ายรายการที่เลือกไปด้านล่าง</string>
+
+    <string name="pref_group_data">ข้อมูล</string>
+    <string name="pref_data_export">ส่งออกข้อมูล</string>
+    <string name="pref_data_export_summary">ส่งออกบันทึกเป็น JSON</string>
+    <string name="pref_data_encrypted_export">ส่งออกแบบเข้ารหัส</string>
+    <string name="pref_data_encrypted_export_summary">เข้ารหัสบันทึกที่ส่งออก ไม่สามารถเข้าถึงได้หากไม่มีรหัสผ่านที่ถูกต้อง</string>
+    <string name="pref_data_auto_export">ส่งออกอัตโนมัติ</string>
+    <string name="pref_data_auto_export_summary">ส่งออกข้อมูลแอปอัตโนมัติเป็นไฟล์ วันละหนึ่งครั้ง</string>
+    <string name="pref_data_auto_export_date">(ส่งออกล่าสุด: %s)</string>
+    <string name="pref_data_import">นำเข้าข้อมูล</string>
+    <string name="pref_data_import_summary">นำเข้าข้อมูล JSON ที่เคยส่งออก รวมกับข้อมูลที่มีอยู่</string>
+    <string name="pref_data_clear">ล้างข้อมูลทั้งหมด</string>
+    <string name="pref_data_clear_confirm_message">ข้อมูลบันทึกทั้งหมดจะถูกล้างถาวร! ไม่สามารถยกเลิกได้</string>
+    <string name="pref_data_clear_success_message">ล้างข้อมูลทั้งหมดสำเร็จ</string>
+
+    <string name="pref_group_about">เกี่ยวกับ</string>
+    <string name="pref_about_view_source">ดูบน Github (ต้นฉบับ)</string>
+    <string name="pref_about_view_source_fork">ดูบน Github (Fork)</string>
+    <string name="pref_about_view_licenses">ใบอนุญาตโอเพ่นซอร์ส</string>
+    <string name="pref_about_version">เวอร์ชัน</string>
+
+    <string name="pref_restart_dialog_title">ต้องเริ่มใหม่!</string>
+    <string name="pref_restart_dialog_description">ต้องเริ่มแอปใหม่เพื่อให้การเปลี่ยนแปลงมีผล เริ่มใหม่เลยไหม?</string>
+
+    <string name="export_success">ส่งออกข้อมูลสำเร็จ!</string>
+    <string name="export_fail">เกิดข้อผิดพลาดขณะส่งออกข้อมูล</string>
+    <string name="export_serialization_fail">เกิดข้อผิดพลาดขณะส่งออก ลองปิดการเข้ารหัสและลองใหม่</string>
+    <string name="encrypted_export_dialog_title">ตั้งรหัสผ่าน</string>
+    <string name="encrypted_export_password">รหัสผ่าน</string>
+    <string name="encrypted_export_repeat_password">ยืนยันรหัสผ่าน</string>
+    <string name="encrypted_export_password_matching_error">รหัสผ่านไม่ตรง</string>
+    <string name="encrypted_export_key_generation_successful">เปิดการเข้ารหัสสำเร็จ!</string>
+    <string name="encrypted_export_key_deletion_successful">ปิดการเข้ารหัสสำเร็จ!</string>
+    <string name="import_success">นำเข้าข้อมูลสำเร็จ!</string>
+    <string name="import_future_version">นำเข้าข้อมูลสำเร็จ! ข้อมูลบางส่วนอาจสูญหายเพราะมาจากเวอร์ชันใหม่กว่า</string>
+    <string name="import_bad_input">เกิดข้อผิดพลาดขณะอ่านไฟล์นี้</string>
+    <string name="import_bad_format">นำเข้าไม่ได้ รูปแบบ JSON ไม่ถูกต้อง</string>
+    <string name="import_bad_data">นำเข้าไม่ได้ ค่าบางช่องไม่ถูกต้อง อาจเป็นข้อมูลจากเวอร์ชันใหม่กว่า — ลองอัปเดตแอป</string>
+    <string name="encrypted_import_dialog_title">ใส่รหัสผ่าน</string>
+    <string name="encrypted_import_key_error">เกิดข้อผิดพลาดขณะถอดรหัสไฟล์ ตรวจสอบรหัสผ่าน</string>
+    <string name="encrypted_import_encryption_unsupported">นำเข้าไม่ได้ Android เวอร์ชันนี้ไม่รองรับการเข้ารหัส</string>
+    <string name="auto_export_message">หากต้องการส่งออกอัตโนมัติ ต้องเลือกไฟล์เพื่อบันทึกข้อมูล แอปจะส่งออกข้อมูลวันละหนึ่งครั้งเมื่อเปิดแอป แตะตกลงเพื่อดำเนินการต่อ</string>
+    <string name="auto_export_fail">ส่งออกอัตโนมัติล้มเหลว ตรวจสอบว่าตำแหน่งส่งออกยังคงอยู่และเข้าถึงได้ จากนั้นกำหนดค่าใหม่</string>
+
+    <string name="content_descrp_open_drawer">เปิดลิ้นชัก</string>
+    <string name="content_descrp_back">ย้อนกลับ</string>
+    <string name="content_descrp_label_hidden">บันทึกที่มีป้ายกำกับนี้ถูกซ่อน</string>
+
+    <string name="date_rel_today">วันนี้, %s</string>
+    <string name="date_rel_yesterday">เมื่อวาน, %s</string>
+    <string name="date_rel_tomorrow">พรุ่งนี้, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%d วันก่อน, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">อีก %d วัน, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[ข้อตกลงและนโยบาย]]></string>
+    <string name="rate_this_app_5">ให้คะแนน 5★</string>
+    <string name="get_more_apps">ดูแอปอื่น</string>
+    <string name="share_this_app">แชร์แอปนี้</string>
+
+    <string name="pref_language">ภาษา</string>
+    <string name="pref_language_system">ค่าเริ่มต้นของระบบ</string>
+    <string name="msg_consent_not_required">การตั้งค่าความเป็นส่วนตัวมีให้เฉพาะภูมิภาคที่ต้องการความยินยอม</string>
+
+    <string name="exit_press_back_again">กดย้อนกลับอีกครั้งเพื่อออก</string>
+    <string name="reminder_saved_for">ตั้งการแจ้งเตือนสำหรับ %1$s</string>
+    <string name="color_default">ค่าเริ่มต้น</string>
+
+    <string name="pref_vip_title">พรีเมียม</string>
+    <string name="pref_privacy_settings">ความเป็นส่วนตัว</string>
+    <string name="pref_privacy_settings_summary">จัดการความยินยอมโฆษณา (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">พรีเมียม</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">สมาชิกพรีเมียม</string>
+    <string name="vip_status_active">ใช้งาน</string>
+    <string name="vip_status_inactive">ไม่ใช้งาน</string>
+    <string name="vip_expires_until">ใช้งาน · %1$s</string>
+
+    <string name="vip_benefits_title">สิทธิประโยชน์</string>
+    <string name="vip_benefit_no_banner">ไม่มีแบนเนอร์โฆษณา</string>
+    <string name="vip_benefit_no_interstitial">ไม่มีโฆษณาเต็มจอ</string>
+    <string name="vip_benefit_no_app_open">ไม่มีโฆษณาตอนเปิด/กลับมา</string>
+    <string name="vip_benefit_support">สนับสนุนการพัฒนา</string>
+
+    <string name="vip_action_activate">เปิดใช้พรีเมียม</string>
+    <string name="vip_action_reset">รีเซ็ตพรีเมียม</string>
+    <string name="vip_footer_info">พรีเมียมใช้คีย์ออฟไลน์ — ไม่มีการชำระเงินในแอป</string>
+
+    <string name="vip_dialog_title">ใส่คีย์พรีเมียม</string>
+    <string name="vip_dialog_subtitle">แต่ละคีย์เปิดใช้พรีเมียมเป็นเวลา 30 วัน</string>
+    <string name="vip_dialog_input_hint">คีย์เปิดใช้</string>
+    <string name="vip_dialog_btn_activate">เปิดใช้</string>
+    <string name="vip_dialog_btn_cancel">ยกเลิก</string>
+
+    <string name="vip_msg_success">เปิดใช้พรีเมียม · %1$d วัน</string>
+    <string name="vip_msg_invalid">คีย์ไม่ถูกต้อง ลองอีกครั้ง</string>
+    <string name="vip_reset_title">รีเซ็ตพรีเมียม?</string>
+    <string name="vip_reset_message">สิทธิประโยชน์พรีเมียมทั้งหมดจะถูกลบทันที</string>
+    <string name="vip_reset_confirm">รีเซ็ต</string>
+
+    <string name="first_run_language_title">เลือกภาษาของคุณ</string>
+</resources>

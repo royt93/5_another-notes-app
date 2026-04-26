@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_short">Poznámky</string>
+    <string name="action_archive">Archivovat</string>
+    <string name="action_cancel">Zrušit</string>
+    <string name="action_clear">Vymazat</string>
+    <string name="action_convert_to_list">Převést na seznam</string>
+    <string name="action_convert_to_text">Převést na text</string>
+    <string name="action_copy">Vytvořit kopii</string>
+    <string name="action_delete">Smazat</string>
+    <string name="action_delete_checked">Smazat zaškrtnuté</string>
+    <string name="action_delete_forever">Smazat trvale</string>
+    <string name="action_delete_selection">Smazat výběr</string>
+    <string name="action_delete_selection_forever">Smazat výběr trvale</string>
+    <string name="action_empty_trash">Vyprázdnit koš</string>
+    <string name="action_empty_trash_short">Vyprázdnit</string>
+    <string name="action_keep">Zachovat</string>
+    <string name="action_labels">Změnit štítky</string>
+    <string name="action_layout_grid">Zobrazit jako mřížku</string>
+    <string name="action_layout_list">Zobrazit jako seznam</string>
+    <string name="action_manage">Spravovat</string>
+    <string name="action_mark_as_done">Označit jako hotovo</string>
+    <string name="action_none">Žádný</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open">Otevřít</string>
+    <string name="action_pin">Připnout</string>
+    <string name="action_postpone">Odložit</string>
+    <string name="action_reminder_add">Přidat připomínku</string>
+    <string name="action_reminder_edit">Upravit připomínku</string>
+    <string name="action_rename">Přejmenovat</string>
+    <string name="action_restore">Obnovit</string>
+    <string name="action_search">Hledat</string>
+    <string name="action_select_all">Vybrat vše</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="action_share">Sdílet</string>
+    <string name="action_unarchive">Zrušit archivaci</string>
+    <string name="action_uncheck_all">Zrušit zaškrtnutí</string>
+    <string name="action_undo">Vrátit zpět</string>
+    <string name="action_unpin">Odepnout</string>
+
+    <string name="shortcut_text_note">Nová textová poznámka</string>
+    <string name="shortcut_text_note_short">Nový text</string>
+    <string name="shortcut_list_note">Nový seznam</string>
+    <string name="shortcut_list_note_short">Nový seznam</string>
+    <string name="shortcut_reminders">Připomínky</string>
+    <string name="shortcut_reminders_short">Připomínky</string>
+
+    <string name="note_location_active">Poznámky</string>
+    <string name="note_location_archived">Archivované</string>
+    <string name="note_location_deleted">Smazané</string>
+    <string name="note_location_labels">Štítky</string>
+
+    <string name="note_pinned">Připnuté</string>
+    <string name="note_not_pinned">Ostatní</string>
+
+    <string name="note_placeholder_active">Nemáte žádné poznámky.\nKlikněte na + pro přidání.</string>
+    <string name="note_placeholder_archived">Žádné archivované poznámky</string>
+    <string name="note_placeholder_deleted">Koš je prázdný</string>
+
+    <plurals name="note_list_item_info">
+        <item quantity="one">+ %d další položka</item>
+        <item quantity="few">+ %d další položky</item>
+        <item quantity="other">+ %d dalších položek</item>
+    </plurals>
+    <plurals name="note_list_item_info_checked">
+        <item quantity="one">+ %d zaškrtnutá položka</item>
+        <item quantity="few">+ %d zaškrtnuté položky</item>
+        <item quantity="other">+ %d zaškrtnutých položek</item>
+    </plurals>
+
+    <string name="trash_reminder_message">Poznámky v koši se po %d dnech automaticky smažou.</string>
+    <string name="trash_delete_message">Tato poznámka bude trvale smazána.</string>
+    <string name="trash_delete_selected_message">Vybrané poznámky budou trvale smazány.</string>
+    <string name="trash_empty_message">Všechny poznámky v koši budou trvale smazány.</string>
+
+    <string name="search_hint">Hledat poznámky</string>
+    <string name="search_empty_placeholder">Žádné poznámky neodpovídají hledání. Zkuste jiný dotaz.</string>
+
+    <string name="sort_title">Možnosti řazení</string>
+    <string name="sort_direction">Směr řazení</string>
+    <string name="sort_direction_ascending">Vzestupně</string>
+    <string name="sort_direction_descending">Sestupně</string>
+    <string name="sort_field">Řadit podle</string>
+    <string name="sort_field_created">Datum vytvoření</string>
+    <string name="sort_field_modified">Datum úpravy</string>
+    <string name="sort_field_title">Název</string>
+
+    <string name="edit_add_title">Vytvořit poznámku</string>
+    <string name="edit_change_title">Upravit poznámku</string>
+    <string name="edit_hint_note_title">Název</string>
+    <string name="edit_hint_note_content">Poznámka</string>
+    <string name="edit_hint_note_item">Položka seznamu</string>
+
+    <string name="edit_message_blank_note_discarded">Prázdná poznámka zahozena.</string>
+    <plurals name="edit_move_archive_message">
+        <item quantity="one">Poznámka archivována.</item>
+        <item quantity="few">Poznámky archivovány.</item>
+        <item quantity="other">Poznámky archivovány.</item>
+    </plurals>
+    <plurals name="edit_message_move_delete">
+        <item quantity="one">Poznámka přesunuta do koše.</item>
+        <item quantity="few">Poznámky přesunuty do koše.</item>
+        <item quantity="other">Poznámky přesunuty do koše.</item>
+    </plurals>
+    <plurals name="edit_message_move_restore">
+        <item quantity="one">Poznámka obnovena.</item>
+        <item quantity="few">Poznámky obnoveny.</item>
+        <item quantity="other">Poznámky obnoveny.</item>
+    </plurals>
+    <plurals name="edit_message_move_unarchive">
+        <item quantity="one">Archivace zrušena.</item>
+        <item quantity="few">Archivace zrušena.</item>
+        <item quantity="other">Archivace zrušena.</item>
+    </plurals>
+    <string name="edit_in_trash_message">Poznámku v koši nelze upravit.</string>
+
+    <string name="edit_copy_suffix">Kopie</string>
+    <string name="edit_copy_untitled_name">Bez názvu</string>
+
+    <string name="edit_convert_keep_checked">Textové poznámky nepodporují zaškrtávací políčka. Odstranit zaškrtnuté položky?</string>
+
+    <plurals name="edit_checked_items">
+        <item quantity="one">%d zaškrtnutá položka</item>
+        <item quantity="few">%d zaškrtnuté položky</item>
+        <item quantity="other">%d zaškrtnutých položek</item>
+    </plurals>
+
+    <string name="note_reminders">Připomínky</string>
+    <string name="reminder_upcoming">Nadcházející</string>
+    <string name="reminder_today">Dnes</string>
+    <string name="reminder_overdue">Po termínu</string>
+    <string name="reminder_date">Datum</string>
+    <string name="reminder_time">Čas</string>
+    <string name="reminder_invalid_time">Tento čas již uplynul.</string>
+    <string name="reminder_notif_channel_title">Připomínky</string>
+    <string name="reminder_notif_channel_descr">Připomínky nastavené na poznámkách</string>
+    <string name="reminder_empty_placeholder">Žádné připomínky nenastaveny</string>
+    <string name="reminder_restricted_battery">Připomínky nemusí fungovat správně, protože aplikace má omezené využívání baterie. Lze změnit v nastavení aplikace.</string>
+    <string name="reminder_notif_permission">Pro odesílání připomínek aplikace potřebuje oprávnění. Klikněte OK pro udělení. Poté lze nastavit připomínku.</string>
+    <string name="reminder_notif_permission_denied">Oprávnění k oznámením bylo zamítnuto. Připomínky nebudou fungovat, dokud nebude povoleno.</string>
+
+    <string name="label_create">Vytvořit nový štítek</string>
+    <string name="label_edit">Upravit název štítku</string>
+    <string name="label_manage">Spravovat štítky</string>
+    <string name="label_select">Vybrat štítky</string>
+    <string name="label_already_exists">Štítek s tímto názvem již existuje.</string>
+    <string name="label_hidden_option">Skrýt poznámky s tímto štítkem z aktivních a archivovaných</string>
+    <string name="label_empty_placeholder">Žádné štítky nevytvořeny</string>
+    <string name="label_delete_message">Vybrané štítky budou smazány, ale související poznámky budou zachovány.</string>
+    <string name="label_notes_empty_placeholder">Žádné poznámky s tímto štítkem</string>
+
+    <string name="pref_group_appearance">Vzhled</string>
+    <string name="pref_theme">Motiv aplikace</string>
+    <string name="pref_theme_light">Světlý</string>
+    <string name="pref_theme_dark">Tmavý</string>
+    <string name="pref_theme_system">Podle systému</string>
+    <string name="pref_dynamic_colors">Použít dynamické barvy</string>
+    <string name="pref_strikethrough_checked">Přeškrtnout zaškrtnuté položky</string>
+    <string name="pref_preview_labels">Maximální počet štítků v náhledu</string>
+
+    <string name="widget_guide_title">Widgety</string>
+
+    <string name="pref_shown_date">Datum zobrazené na poznámkách</string>
+    <string name="pref_shown_date_added">Datum vytvoření</string>
+    <string name="pref_shown_date_modified">Poslední změna</string>
+    <string name="pref_shown_date_none">Bez data</string>
+
+    <string name="pref_preview_lines">Maximální řádky v náhledu</string>
+    <string name="pref_preview_lines_summary">Nakonfigurujte počet řádků a položek zobrazených v poznámkách pro každý režim rozvržení a typ poznámky</string>
+    <string name="pref_preview_lines_grid_layout">Mřížka</string>
+    <string name="pref_preview_lines_list_layout">Seznam</string>
+    <string name="pref_preview_lines_text">Řádky v náhledu textové poznámky</string>
+    <string name="pref_preview_lines_list">Položky v náhledu seznamu</string>
+
+    <string name="pref_group_behavior">Chování</string>
+    <string name="pref_behavior_swipe_action_left">Akce přejetí vlevo</string>
+    <string name="pref_behavior_swipe_action_right">Akce přejetí vpravo</string>
+    <string name="pref_behavior_move_checked">Přesunout zaškrtnuté dolů</string>
+
+    <string name="pref_group_data">Data</string>
+    <string name="pref_data_export">Exportovat data</string>
+    <string name="pref_data_export_summary">Exportovat poznámky jako JSON</string>
+    <string name="pref_data_encrypted_export">Šifrovaný export</string>
+    <string name="pref_data_encrypted_export_summary">Šifruje exportované poznámky. Přístup pouze se správným heslem.</string>
+    <string name="pref_data_auto_export">Automatický export</string>
+    <string name="pref_data_auto_export_summary">Automaticky exportovat data aplikace do souboru, jednou denně.</string>
+    <string name="pref_data_auto_export_date">(Naposledy exportováno: %s)</string>
+    <string name="pref_data_import">Importovat data</string>
+    <string name="pref_data_import_summary">Importovat dříve exportovaná JSON data, sloučit se stávajícími.</string>
+    <string name="pref_data_clear">Vymazat všechna data</string>
+    <string name="pref_data_clear_confirm_message">Všechna data poznámek budou trvale vymazána! Nelze vrátit zpět.</string>
+    <string name="pref_data_clear_success_message">Všechna data úspěšně vymazána.</string>
+
+    <string name="pref_group_about">O aplikaci</string>
+    <string name="pref_about_view_source">Zobrazit na Github (Originál)</string>
+    <string name="pref_about_view_source_fork">Zobrazit na Github (Fork)</string>
+    <string name="pref_about_view_licenses">Open source licence</string>
+    <string name="pref_about_version">Verze</string>
+
+    <string name="pref_restart_dialog_title">Vyžadován restart!</string>
+    <string name="pref_restart_dialog_description">Pro provedení změn je nutný restart. Chcete aplikaci nyní restartovat?</string>
+
+    <string name="export_success">Data úspěšně exportována!</string>
+    <string name="export_fail">Při exportu nastala chyba.</string>
+    <string name="export_serialization_fail">Chyba při exportu. Zkuste vypnout šifrování a zkusit znovu.</string>
+    <string name="encrypted_export_dialog_title">Nastavit heslo</string>
+    <string name="encrypted_export_password">Heslo</string>
+    <string name="encrypted_export_repeat_password">Potvrdit heslo</string>
+    <string name="encrypted_export_password_matching_error">Hesla se neshodují</string>
+    <string name="encrypted_export_key_generation_successful">Šifrování úspěšně povoleno!</string>
+    <string name="encrypted_export_key_deletion_successful">Šifrování úspěšně zakázáno!</string>
+    <string name="import_success">Data úspěšně importována!</string>
+    <string name="import_future_version">Data úspěšně importována! Některé informace mohly být ztraceny, protože pocházejí z novější verze.</string>
+    <string name="import_bad_input">Při čtení souboru nastala chyba.</string>
+    <string name="import_bad_format">Nelze importovat data, JSON formát neplatný.</string>
+    <string name="import_bad_data">Nelze importovat data, některá pole mají neplatné hodnoty. Možná z novější verze — aktualizujte aplikaci.</string>
+    <string name="encrypted_import_dialog_title">Zadat heslo</string>
+    <string name="encrypted_import_key_error">Chyba při dešifrování souboru. Zkontrolujte heslo.</string>
+    <string name="encrypted_import_encryption_unsupported">Nelze importovat, tato verze Androidu nepodporuje šifrování.</string>
+    <string name="auto_export_message">Pro povolení automatického exportu vyberte soubor pro uložení dat. Data budou exportována jednou denně, když je aplikace otevřena. Pokračujte kliknutím na OK.</string>
+    <string name="auto_export_fail">Automatický export selhal. Ujistěte se, že umístění exportu stále existuje a je dostupné, poté znovu nakonfigurujte.</string>
+
+    <string name="content_descrp_open_drawer">Otevřít zásuvku</string>
+    <string name="content_descrp_back">Zpět</string>
+    <string name="content_descrp_label_hidden">Poznámky s tímto štítkem jsou skryté</string>
+
+    <string name="date_rel_today">Dnes, %s</string>
+    <string name="date_rel_yesterday">Včera, %s</string>
+    <string name="date_rel_tomorrow">Zítra, %s</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">před %d dny, %s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">za %d dní, %s</item>
+    </plurals>
+    <string name="date_rel_absolute">%1$s, %2$s</string>
+    <string name="term_policy"><![CDATA[Podmínky a zásady]]></string>
+    <string name="rate_this_app_5">Hodnotit 5★</string>
+    <string name="get_more_apps">Více aplikací</string>
+    <string name="share_this_app">Sdílet aplikaci</string>
+
+    <string name="pref_language">Jazyk</string>
+    <string name="pref_language_system">Výchozí systému</string>
+    <string name="msg_consent_not_required">Nastavení soukromí jsou dostupná pouze v regionech, kde je vyžadován souhlas.</string>
+
+    <string name="exit_press_back_again">Pro ukončení stiskněte zpět ještě jednou</string>
+    <string name="reminder_saved_for">Připomínka nastavena na %1$s</string>
+    <string name="color_default">Výchozí</string>
+
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Nastavení soukromí</string>
+    <string name="pref_privacy_settings_summary">Spravovat souhlas s reklamami (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM ČLENSTVÍ</string>
+    <string name="vip_status_active">AKTIVNÍ</string>
+    <string name="vip_status_inactive">NEAKTIVNÍ</string>
+    <string name="vip_expires_until">Aktivní · %1$s</string>
+
+    <string name="vip_benefits_title">Co získáte</string>
+    <string name="vip_benefit_no_banner">Žádné bannerové reklamy</string>
+    <string name="vip_benefit_no_interstitial">Žádné celoobrazovkové reklamy</string>
+    <string name="vip_benefit_no_app_open">Žádné spouštěcí / pokračovací reklamy</string>
+    <string name="vip_benefit_support">Podpořte další vývoj</string>
+
+    <string name="vip_action_activate">Aktivovat Premium</string>
+    <string name="vip_action_reset">Resetovat Premium</string>
+    <string name="vip_footer_info">Premium používá offline aktivační klíč — žádné platby v aplikaci.</string>
+
+    <string name="vip_dialog_title">Zadejte Premium klíč</string>
+    <string name="vip_dialog_subtitle">Každý klíč aktivuje Premium na 30 dní.</string>
+    <string name="vip_dialog_input_hint">Aktivační klíč</string>
+    <string name="vip_dialog_btn_activate">Aktivovat</string>
+    <string name="vip_dialog_btn_cancel">Zrušit</string>
+
+    <string name="vip_msg_success">Premium aktivováno · %1$d dní</string>
+    <string name="vip_msg_invalid">Neplatný klíč. Zkuste znovu.</string>
+    <string name="vip_reset_title">Resetovat Premium?</string>
+    <string name="vip_reset_message">Všechny Premium výhody budou okamžitě odstraněny.</string>
+    <string name="vip_reset_confirm">Resetovat</string>
+
+    <string name="first_run_language_title">Vyberte svůj jazyk</string>
+</resources>
