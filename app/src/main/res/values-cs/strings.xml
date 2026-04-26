@@ -281,4 +281,11 @@
     <string name="vip_reset_confirm">Resetovat</string>
 
     <string name="first_run_language_title">Vyberte svůj jazyk</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Sledovat reklamu (Získejte 3 dny Premium)</string>
+    <string name="vip_ad_not_ready_title">Počkejte chvíli</string>
+    <string name="vip_ad_not_ready_message">Reklama ještě není připravena. Zkuste to prosím znovu později!</string>
+    <string name="vip_ad_no_reward">Reklamu jste nedokoukali — odměna nebyla udělena.</string>
 </resources>

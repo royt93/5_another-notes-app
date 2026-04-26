@@ -263,4 +263,11 @@
     <string name="reminder_saved_for">Przypomnienie ustawione na %1$s</string>
     <string name="color_default">Domyślny</string>
     <string name="first_run_language_title">Wybierz swój język</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Obejrzyj reklamę (Zdobądź 3 dni Premium)</string>
+    <string name="vip_ad_not_ready_title">Poczekaj chwilę</string>
+    <string name="vip_ad_not_ready_message">Reklama nie jest jeszcze gotowa. Spróbuj ponownie później!</string>
+    <string name="vip_ad_no_reward">Nie obejrzałeś reklamy do końca — nagroda nie została przyznana.</string>
 </resources>

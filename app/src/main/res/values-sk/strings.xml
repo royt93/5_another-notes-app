@@ -236,4 +236,11 @@
     <string name="vip_reset_message">Všetky Premium výhody budú okamžite odstránené.</string>
     <string name="vip_reset_confirm">Resetovať</string>
     <string name="first_run_language_title">Vyberte si jazyk</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Pozrieť reklamu (Získajte 3 dni Premium)</string>
+    <string name="vip_ad_not_ready_title">Počkajte chvíľu</string>
+    <string name="vip_ad_not_ready_message">Reklama ešte nie je pripravená. Skúste to znova neskôr!</string>
+    <string name="vip_ad_no_reward">Reklamu ste nedopozerali — odmena nebola udelená.</string>
 </resources>

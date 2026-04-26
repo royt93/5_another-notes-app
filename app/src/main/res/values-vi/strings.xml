@@ -267,4 +267,11 @@
     <string name="vip_reset_confirm">Huỷ</string>
 
     <string name="first_run_language_title">Chọn ngôn ngữ của bạn</string>
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Xem quảng cáo (Nhận 3 ngày Premium)</string>
+    <string name="vip_ad_not_ready_title">Đợi một chút</string>
+    <string name="vip_ad_not_ready_message">Quảng cáo chưa sẵn sàng. Vui lòng thử lại sau!</string>
+    <string name="vip_ad_no_reward">Bạn chưa xem hết quảng cáo — không nhận được thưởng.</string>
+
 </resources>

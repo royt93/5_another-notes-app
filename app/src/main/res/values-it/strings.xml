@@ -238,4 +238,11 @@ Cliccare OK per procedere.</string>
     <string name="reminder_saved_for">Promemoria impostato per %1$s</string>
     <string name="color_default">Predefinito</string>
     <string name="first_run_language_title">Scegli la tua lingua</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Guarda l\'annuncio (Ottieni 3 giorni Premium)</string>
+    <string name="vip_ad_not_ready_title">Aspetta un secondo</string>
+    <string name="vip_ad_not_ready_message">L\'annuncio non è ancora pronto. Riprova più tardi!</string>
+    <string name="vip_ad_no_reward">Non hai guardato l\'annuncio per intero — nessuna ricompensa concessa.</string>
 </resources>

@@ -233,4 +233,11 @@
     <string name="reminder_saved_for">Påminnelse satt til %1$s</string>
     <string name="color_default">Standard</string>
     <string name="first_run_language_title">Velg språk</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Se annonse (Få 3 dager Premium)</string>
+    <string name="vip_ad_not_ready_title">Vent et øyeblikk</string>
+    <string name="vip_ad_not_ready_message">Annonsen er ikke klar ennå. Prøv igjen senere!</string>
+    <string name="vip_ad_no_reward">Du så ikke annonsen ferdig – ingen belønning gitt.</string>
 </resources>

@@ -65,11 +65,18 @@ class SplashActivity : BaseAct() {
             } else {
                 LocaleListCompat.forLanguageTags(tag)
             }
-            AppCompatDelegate.setApplicationLocales(locales)
             prefs.hasPickedFirstRunLanguage = true
-            // setApplicationLocales recreates the activity on API 33+; use post
-            // to make sure onDone runs after the recreation if it happens.
-            handler.post { onDone() }
+
+            val currentLocales = AppCompatDelegate.getApplicationLocales()
+            if (currentLocales == locales) {
+                // No recreation will happen, safely call onDone
+                handler.post { onDone() }
+            } else {
+                // This triggers recreation. The new activity will see hasPickedFirstRunLanguage = true
+                // and will automatically call startAdFlow() in onCreate(). 
+                // Do NOT call onDone() here to prevent crashes and double ad loading.
+                AppCompatDelegate.setApplicationLocales(locales)
+            }
         }
 
         SelectorBottomSheet.newInstance(

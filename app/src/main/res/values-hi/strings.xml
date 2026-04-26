@@ -267,4 +267,11 @@
     <string name="vip_reset_confirm">रीसेट</string>
 
     <string name="first_run_language_title">अपनी भाषा चुनें</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">विज्ञापन देखें (3 दिन का Premium पाएं)</string>
+    <string name="vip_ad_not_ready_title">एक पल प्रतीक्षा करें</string>
+    <string name="vip_ad_not_ready_message">विज्ञापन अभी तैयार नहीं है। कृपया बाद में पुनः प्रयास करें!</string>
+    <string name="vip_ad_no_reward">आपने विज्ञापन पूरा नहीं देखा — कोई पुरस्कार नहीं मिला।</string>
 </resources>

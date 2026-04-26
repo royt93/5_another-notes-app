@@ -236,4 +236,11 @@
     <string name="vip_reset_message">Sve Premium pogodnosti bit će uklonjene odmah.</string>
     <string name="vip_reset_confirm">Resetiraj</string>
     <string name="first_run_language_title">Odaberite svoj jezik</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Pogledaj oglas (Ostvari 3 dana Premium)</string>
+    <string name="vip_ad_not_ready_title">Pričekajte trenutak</string>
+    <string name="vip_ad_not_ready_message">Oglas još nije spreman. Molimo pokušajte ponovo kasnije!</string>
+    <string name="vip_ad_no_reward">Niste odgledali oglas do kraja – nagrada nije dodijeljena.</string>
 </resources>

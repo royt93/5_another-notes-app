@@ -269,4 +269,11 @@
     <string name="vip_reset_confirm">Visszaállítás</string>
 
     <string name="first_run_language_title">Válaszd ki a nyelvedet</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Hirdetés megtekintése (3 nap Premium)</string>
+    <string name="vip_ad_not_ready_title">Várj egy percet</string>
+    <string name="vip_ad_not_ready_message">A hirdetés még nem áll készen. Kérjük, próbáld újra később!</string>
+    <string name="vip_ad_no_reward">Nem nézted végig a hirdetést – nem kaptál jutalmat.</string>
 </resources>

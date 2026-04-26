@@ -269,4 +269,11 @@
     <string name="reminder_saved_for">Herinnering ingesteld voor %1$s</string>
     <string name="color_default">Standaard</string>
     <string name="first_run_language_title">Kies je taal</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Bekijk advertentie (Krijg 3 dagen Premium)</string>
+    <string name="vip_ad_not_ready_title">Wacht even</string>
+    <string name="vip_ad_not_ready_message">De advertentie is nog niet klaar. Probeer het later opnieuw!</string>
+    <string name="vip_ad_no_reward">Je hebt de advertentie niet helemaal bekeken — geen beloning ontvangen.</string>
 </resources>

@@ -261,4 +261,11 @@
     <string name="reminder_saved_for">Hatırlatıcı %1$s için ayarlandı</string>
     <string name="color_default">Varsayılan</string>
     <string name="first_run_language_title">Dilini seç</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Reklam İzle (3 Günlük Premium Kazan)</string>
+    <string name="vip_ad_not_ready_title">Bir saniye bekle</string>
+    <string name="vip_ad_not_ready_message">Reklam henüz hazır değil. Lütfen daha sonra tekrar deneyin!</string>
+    <string name="vip_ad_no_reward">Reklamı sonuna kadar izlemediniz — ödül verilmedi.</string>
 </resources>

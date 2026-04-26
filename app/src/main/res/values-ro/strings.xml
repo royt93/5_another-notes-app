@@ -274,4 +274,11 @@
     <string name="vip_reset_confirm">Resetează</string>
 
     <string name="first_run_language_title">Alege limba ta</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Vizionează anunț (Primești 3 zile Premium)</string>
+    <string name="vip_ad_not_ready_title">Așteaptă o secundă</string>
+    <string name="vip_ad_not_ready_message">Anunțul nu este gata încă. Te rugăm să încerci din nou mai târziu!</string>
+    <string name="vip_ad_no_reward">Nu ai vizionat reclama până la capăt — recompensa nu a fost acordată.</string>
 </resources>

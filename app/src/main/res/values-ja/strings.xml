@@ -267,4 +267,11 @@
     <string name="vip_reset_confirm">リセット</string>
 
     <string name="first_run_language_title">言語を選んでください</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">広告を見る (3日間のPremiumを獲得)</string>
+    <string name="vip_ad_not_ready_title">少々お待ちください</string>
+    <string name="vip_ad_not_ready_message">広告の準備がまだできていません。後でもう一度お試しください！</string>
+    <string name="vip_ad_no_reward">広告を最後まで見ていないため、報酬は付与されません。</string>
 </resources>

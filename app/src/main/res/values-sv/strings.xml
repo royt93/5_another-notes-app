@@ -274,4 +274,11 @@
     <string name="vip_reset_confirm">Återställ</string>
 
     <string name="first_run_language_title">Välj ditt språk</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Se annons (Få 3 dagars Premium)</string>
+    <string name="vip_ad_not_ready_title">Vänta en sekund</string>
+    <string name="vip_ad_not_ready_message">Annonsen är inte klar än. Vänligen försök igen senare!</string>
+    <string name="vip_ad_no_reward">Du tittade inte färdigt på annonsen – ingen belöning utdelades.</string>
 </resources>

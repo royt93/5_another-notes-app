@@ -267,4 +267,11 @@
     <string name="vip_reset_confirm">รีเซ็ต</string>
 
     <string name="first_run_language_title">เลือกภาษาของคุณ</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">ดูโฆษณา (รับ Premium 3 วัน)</string>
+    <string name="vip_ad_not_ready_title">รอสักครู่</string>
+    <string name="vip_ad_not_ready_message">โฆษณายังไม่พร้อม โปรดลองอีกครั้งในภายหลัง!</string>
+    <string name="vip_ad_no_reward">คุณดูโฆษณาไม่จบ — ไม่ได้รับรางวัล</string>
 </resources>

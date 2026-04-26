@@ -4,13 +4,16 @@ import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -20,10 +23,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
+import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.databinding.DlgVipActivateBinding
 import com.mckimquyen.notes.databinding.FVipBinding
+import com.roy.sdkadbmob.AdError
 import com.roy.sdkadbmob.AdManager
+import com.roy.sdkadbmob.RewardedAdListener
+import com.roy.sdkadbmob.SafeLogger
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,9 +70,17 @@ class VipFrm : Fragment() {
             playButtonPress(it)
             showActivateDialog()
         }
+        setupWatchAdButton()
         binding.btnReset.setOnClickListener {
             playButtonPress(it)
             showResetConfirm()
+        }
+
+        // Preload ads once when entering screen, only when needed (non-VIP).
+        // Avoids spamming load() from renderState() which can fire many times per session.
+        if (!AdManager.isVipByKeyActive()) {
+            AdManager.loadRewarded(requireContext())
+            AdManager.loadInterstitial(requireContext())
         }
 
         renderState()
@@ -73,12 +88,69 @@ class VipFrm : Fragment() {
         playEntranceAnimation()
     }
 
+    private var isWaitingForAdReward = false
+    private var hasEarnedReward = false
+
     override fun onResume() {
         super.onResume()
+        if (isWaitingForAdReward) {
+            isWaitingForAdReward = false
+            if (!hasEarnedReward) {
+                SafeLogger.w(TAG, "onResume: Callback dropped AND no reward — user closed early.")
+                Toast.makeText(requireContext(), R.string.vip_ad_no_reward, Toast.LENGTH_SHORT).show()
+            }
+        }
         renderState()
     }
 
+    private fun setupWatchAdButton() {
+        binding.btnWatchAd.setOnClickListener {
+            playButtonPress(it)
+            isWaitingForAdReward = true
+            hasEarnedReward = false
+
+            // Listener captures `this@VipFrm` — clear in onDestroyView and at end of flow to avoid leak
+            // through the AdManager singleton. SDK auto-clear only fires when listener===Activity.
+            AdManager.rewardedListener = object : RewardedAdListener {
+                override fun onUserEarnedReward(type: String, amount: Int) {
+                    SafeLogger.d(TAG, "onUserEarnedReward type=$type amount=$amount")
+                    if (hasEarnedReward) return  // dedupe with showRewarded callback
+                    hasEarnedReward = true
+                    isWaitingForAdReward = false
+                    val ctx = context ?: return
+                    grantVip3Days(ctx)
+                }
+            }
+
+            AdManager.showRewarded(requireActivity()) { rewardedSuccess ->
+                // Always swap to a non-capturing no-op listener after the flow ends,
+                // so the singleton doesn't keep this fragment alive.
+                AdManager.rewardedListener = NO_OP_REWARDED_LISTENER
+                if (hasEarnedReward) return@showRewarded
+                isWaitingForAdReward = false
+                val ctx = context ?: return@showRewarded
+
+                if (rewardedSuccess) {
+                    hasEarnedReward = true
+                    grantVip3Days(ctx)
+                    return@showRewarded
+                }
+                // Rewarded ad wasn't ready or user dismissed early.
+                // Important: do NOT fall back to interstitial — granting VIP after a
+                // non-rewarded ad violates AdMob's "incentivized non-rewarded" policy.
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle(R.string.vip_ad_not_ready_title)
+                    .setMessage(R.string.vip_ad_not_ready_message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            }
+        }
+    }
+
     override fun onDestroyView() {
+        // Drop the rewarded listener even if showRewarded callback never fires (process killed
+        // mid-ad, etc.) — the SDK's auto-clear only catches Activity-typed listeners.
+        AdManager.rewardedListener = null
         animators.forEach { it.cancel() }
         animators.clear()
         super.onDestroyView()
@@ -107,12 +179,17 @@ class VipFrm : Fragment() {
             binding.expiryText.isVisible = true
             binding.expiryText.text = getString(R.string.vip_expires_until, expiryFormatted)
             binding.btnReset.isVisible = true
+            binding.btnActivate.isVisible = false
+            binding.btnWatchAd.isVisible = false
         } else {
             binding.statusPill.setBackgroundResource(R.drawable.bg_vip_pill_inactive)
             binding.statusDot.isVisible = false
             binding.statusText.text = getString(R.string.vip_status_inactive)
             binding.expiryText.isVisible = false
             binding.btnReset.isVisible = false
+            binding.btnActivate.isVisible = true
+            binding.btnWatchAd.isVisible = true
+            // (loadRewarded/loadInterstitial called once in onViewCreated, not here)
         }
     }
 
@@ -162,7 +239,7 @@ class VipFrm : Fragment() {
                 .start()
         }
         // Buttons soft fade-in.
-        listOf(binding.btnActivate, binding.btnReset).forEach {
+        listOf(binding.btnActivate, binding.btnWatchAd, binding.btnReset).forEach {
             it.alpha = 0f
             it.animate().alpha(1f).setStartDelay(560).setDuration(280).start()
         }
@@ -193,7 +270,7 @@ class VipFrm : Fragment() {
                 val ok = AdManager.activateVipByKey(requireContext(), key, days = ACTIVATION_DAYS)
                 if (ok) {
                     dialog.dismiss()
-                    onActivationSuccess()
+                    onActivationSuccess(days = ACTIVATION_DAYS)
                 } else {
                     dialogBinding.keyInputLayout.error = getString(R.string.vip_msg_invalid)
                 }
@@ -203,14 +280,37 @@ class VipFrm : Fragment() {
         dialog.show()
     }
 
-    private fun onActivationSuccess() {
+    /**
+     * Add 3 days of VIP. ACCUMULATE on top of any remaining time — `activateVipByKey` overwrites
+     * the expiry, so we must compute `remainingDays + 3` before calling it. Otherwise a user
+     * with 25 days left would shrink down to 3.
+     */
+    private fun grantVip3Days(context: Context) {
+        val now = System.currentTimeMillis()
+        val currentExpiry = AdManager.getVipByKeyExpiry().coerceAtLeast(now)
+        val remainingDays = ((currentExpiry - now + ONE_DAY_MS - 1) / ONE_DAY_MS).toInt()
+        val totalDays = remainingDays + REWARD_DAYS
+        val validKey = decodedVipKey()
+        SafeLogger.d(TAG, "grantVip3Days: remaining=$remainingDays + reward=$REWARD_DAYS = $totalDays")
+        if (AdManager.activateVipByKey(context, validKey, days = totalDays)) {
+            // Show "earned 3 days" — user-facing message reflects what was earned, not total.
+            onActivationSuccess(days = REWARD_DAYS)
+        } else {
+            Toast.makeText(context, R.string.vip_msg_invalid, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun decodedVipKey(): String =
+        String(Base64.decode(BuildConfig.VIP_KEY_ENCODED, Base64.NO_WRAP))
+
+    private fun onActivationSuccess(days: Int) {
         animateStatusPillToActive()
         renderState()
         celebrateActivation()
         launchConfetti()
         Snackbar.make(
             binding.root,
-            getString(R.string.vip_msg_success, ACTIVATION_DAYS),
+            getString(R.string.vip_msg_success, days),
             Snackbar.LENGTH_SHORT
         ).show()
     }
@@ -314,8 +414,23 @@ class VipFrm : Fragment() {
         (value * resources.displayMetrics.density).toInt()
 
     companion object {
-        // Each successful key activation grants 30 days of Premium.
+        private const val TAG = "roy93~VipFrm"
         private const val ACTIVATION_DAYS = 30
+        private const val REWARD_DAYS = 3
         private const val CONFETTI_COUNT = 22
+        private const val ONE_DAY_MS = 24L * 60L * 60L * 1000L
+
+        // Top-level non-capturing listener — replaces the per-click anonymous emptyListener that
+        // captured the fragment instance and pinned it inside the AdManager singleton.
+        private val NO_OP_REWARDED_LISTENER = object : RewardedAdListener {
+            override fun onAdLoaded() {}
+            override fun onAdFailedToLoad(error: AdError) {}
+            override fun onAdShowed() {}
+            override fun onAdDismissed() {}
+            override fun onAdClicked() {}
+            override fun onAdFailedToShow(error: AdError) {}
+            override fun onAdNotAvailable() {}
+            override fun onUserEarnedReward(type: String, amount: Int) {}
+        }
     }
 }

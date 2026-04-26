@@ -262,4 +262,11 @@
     <string name="reminder_saved_for">Recordatorio establecido para %1$s</string>
     <string name="color_default">Predeterminado</string>
     <string name="first_run_language_title">Elige tu idioma</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Ver anuncio (Obtén 3 días de Premium)</string>
+    <string name="vip_ad_not_ready_title">Espera un segundo</string>
+    <string name="vip_ad_not_ready_message">El anuncio aún no está listo. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="vip_ad_no_reward">No terminaste el anuncio — no se otorgó recompensa.</string>
 </resources>

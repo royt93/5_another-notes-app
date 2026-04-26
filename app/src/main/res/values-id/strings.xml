@@ -267,4 +267,11 @@
     <string name="vip_reset_confirm">Reset</string>
 
     <string name="first_run_language_title">Pilih bahasa Anda</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Tonton Iklan (Dapatkan 3 Hari Premium)</string>
+    <string name="vip_ad_not_ready_title">Tunggu sebentar</string>
+    <string name="vip_ad_not_ready_message">Iklan belum siap. Silakan coba lagi nanti!</string>
+    <string name="vip_ad_no_reward">Anda tidak menyelesaikan iklan — hadiah tidak diberikan.</string>
 </resources>

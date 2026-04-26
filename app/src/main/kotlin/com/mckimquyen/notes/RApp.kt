@@ -100,6 +100,11 @@ class RApp : Application() {
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
                 vipKeySecret           = decodeVipKey(BuildConfig.VIP_KEY_ENCODED),
+                safety                 = if (BuildConfig.DEBUG) {
+                    com.roy.sdkadbmob.AdSafetyLimits.TEST
+                } else {
+                    com.roy.sdkadbmob.AdSafetyLimits()
+                }
             )
         )
         AdManager.initialize(this) { success, gaid ->

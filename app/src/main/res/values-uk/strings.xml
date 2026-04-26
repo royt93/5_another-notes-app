@@ -263,4 +263,11 @@
     <string name="reminder_saved_for">Нагадування на %1$s</string>
     <string name="color_default">За замовчуванням</string>
     <string name="first_run_language_title">Виберіть мову</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Дивитись рекламу (Отримати 3 дні Premium)</string>
+    <string name="vip_ad_not_ready_title">Зачекайте хвилинку</string>
+    <string name="vip_ad_not_ready_message">Реклама ще не готова. Будь ласка, спробуйте знову пізніше!</string>
+    <string name="vip_ad_no_reward">Ви не додивилися рекламу — нагороду не нараховано.</string>
 </resources>

@@ -306,4 +306,10 @@
     <string name="vip_reset_confirm">Reset</string>
 
     <string name="first_run_language_title">Choose your language</string>
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Watch Ad (Get 3 Days Premium)</string>
+    <string name="vip_ad_not_ready_title">Hold on a second</string>
+    <string name="vip_ad_not_ready_message">The ad is not ready yet. Please try again later!</string>
+    <string name="vip_ad_no_reward">You didn\'t finish the ad — no reward granted.</string>
+
 </resources>

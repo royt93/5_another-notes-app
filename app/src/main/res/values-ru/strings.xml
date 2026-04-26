@@ -287,4 +287,11 @@
     <string name="reminder_saved_for">Напоминание установлено на %1$s</string>
     <string name="color_default">По умолчанию</string>
     <string name="first_run_language_title">Выберите язык</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Смотреть рекламу (Получить 3 дня Premium)</string>
+    <string name="vip_ad_not_ready_title">Подождите секунду</string>
+    <string name="vip_ad_not_ready_message">Реклама еще не готова. Пожалуйста, повторите попытку позже!</string>
+    <string name="vip_ad_no_reward">Вы не досмотрели рекламу — награда не начислена.</string>
 </resources>

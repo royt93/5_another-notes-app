@@ -281,4 +281,11 @@
     <string name="reminder_saved_for">تم ضبط التذكير لـ %1$s</string>
     <string name="color_default">افتراضي</string>
     <string name="first_run_language_title">اختر لغتك</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">شاهد الإعلان (احصل على 3 أيام Premium)</string>
+    <string name="vip_ad_not_ready_title">انتظر لحظة</string>
+    <string name="vip_ad_not_ready_message">الإعلان ليس جاهزًا بعد. يرجى المحاولة مرة أخرى لاحقًا!</string>
+    <string name="vip_ad_no_reward">لم تُكمل مشاهدة الإعلان — لم تُمنح أي مكافأة.</string>
 </resources>

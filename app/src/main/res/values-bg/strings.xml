@@ -234,4 +234,11 @@
     <string name="vip_reset_message">Всички предимства на Premium ще бъдат премахнати незабавно.</string>
     <string name="vip_reset_confirm">Нулиране</string>
     <string name="first_run_language_title">Изберете вашия език</string>
+
+
+    <!-- VIP Features -->
+    <string name="vip_action_watch_ad">Гледайте реклама (Вземете 3 дни Premium)</string>
+    <string name="vip_ad_not_ready_title">Изчакайте малко</string>
+    <string name="vip_ad_not_ready_message">Рекламата все още не е готова. Моля, опитайте отново по-късно!</string>
+    <string name="vip_ad_no_reward">Не изгледахте рекламата докрай — не е дадена награда.</string>
 </resources>
