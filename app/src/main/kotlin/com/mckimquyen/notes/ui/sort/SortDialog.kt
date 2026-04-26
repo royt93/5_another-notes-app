@@ -1,9 +1,10 @@
 package com.mckimquyen.notes.ui.sort
 
-import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.databinding.DlgSortBinding
@@ -18,7 +19,7 @@ import debugCheck
 import javax.inject.Inject
 import javax.inject.Provider
 
-class SortDialog : DialogFragment() {
+class SortDialog : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var sharedViewModelProvider: Provider<SharedViewModel>
@@ -32,46 +33,61 @@ class SortDialog : DialogFragment() {
         viewModelProvider.get()
     }
 
+    private var _binding: DlgSortBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireContext().applicationContext as RApp?)?.appComponent?.inject(this)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = requireContext()
-        val binding = DlgSortBinding.inflate(layoutInflater, null, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = DlgSortBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Create dialog
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setView(binding.root)
-            .setTitle(R.string.sort_title)
-            .setPositiveButton(R.string.action_ok) { _, _ ->
-                val field = when (binding.sortFieldRadioGroup.checkedRadioButtonId) {
-                    R.id.sortFieldAddedRadio -> SortField.ADDED_DATE
-                    R.id.sortFieldModifiedRadio -> SortField.MODIFIED_DATE
-                    R.id.sortFieldTitleRadio -> SortField.TITLE
-                    else -> SortField.MODIFIED_DATE  // should not happen
-                }
-                val direction = when (binding.sortDirectionRadioGroup.checkedRadioButtonId) {
-                    R.id.sortDirectionAscRadio -> SortDirection.ASCENDING
-                    R.id.sortDirectionDescRadio -> SortDirection.DESCENDING
-                    else -> SortDirection.DESCENDING  // should not happen
-                }
-                sharedViewModel.changeSortSettings(SortSettings(field, direction))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Close button
+        binding.btnClose.setOnClickListener {
+            dismissAllowingStateLoss()
+        }
+
+        // Apply button — reads radio selections and dispatches to shared VM
+        binding.btnApply.setOnClickListener {
+            val field = when (binding.sortFieldRadioGroup.checkedRadioButtonId) {
+                R.id.sortFieldAddedRadio -> SortField.ADDED_DATE
+                R.id.sortFieldModifiedRadio -> SortField.MODIFIED_DATE
+                R.id.sortFieldTitleRadio -> SortField.TITLE
+                else -> SortField.MODIFIED_DATE
             }
-            .setNegativeButton(R.string.action_cancel, null)
-            .create()
+            val direction = when (binding.sortDirectionRadioGroup.checkedRadioButtonId) {
+                R.id.sortDirectionAscRadio -> SortDirection.ASCENDING
+                R.id.sortDirectionDescRadio -> SortDirection.DESCENDING
+                else -> SortDirection.DESCENDING
+            }
+            sharedViewModel.changeSortSettings(SortSettings(field, direction))
+            dismissAllowingStateLoss()
+        }
 
-        setupViewModelObservers(binding)
+        setupViewModelObservers()
 
         if (savedInstanceState == null) {
             viewModel.start()
         }
-
-        return dialog
     }
 
-    private fun setupViewModelObservers(binding: DlgSortBinding) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setupViewModelObservers() {
         // Using `this` as lifecycle owner, cannot show dialog twice with same instance to avoid double observation.
         debugCheck(!viewModel.sortField.hasObservers()) { "Dialog was shown twice with same instance." }
 

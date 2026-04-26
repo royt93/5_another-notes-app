@@ -51,6 +51,13 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.title.text = title
+
+        // Wire close button — always visible; disabled when isCancelable=false (first-run)
+        binding.btnClose.setOnClickListener {
+            dismissAllowingStateLoss()
+        }
+        binding.btnClose.isEnabled = isCancelable
+
         binding.items.layoutManager = LinearLayoutManager(requireContext())
         binding.items.adapter = Adapter(entries, values, initialValue) { picked ->
             // Animate selection then dismiss — feels more polished than instant dismiss.
@@ -128,7 +135,9 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
             entries: Array<String>,
             values: Array<String>,
             selectedValue: String,
+            cancelable: Boolean = true,
         ) = SelectorBottomSheet().apply {
+            isCancelable = cancelable
             arguments = bundleOf(
                 ARG_REQUEST_KEY to requestKey,
                 ARG_TITLE to title,

@@ -1,54 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorSurface"
-    android:orientation="vertical"
-    android:paddingBottom="8dp">
+    android:orientation="vertical">
 
+    <!-- Drag handle -->
     <View
-        android:id="@+id/handle"
-        android:layout_width="40dp"
-        android:layout_height="4dp"
+        android:layout_width="48dp"
+        android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/bg_bottom_sheet_handle"
-        android:alpha="0.5" />
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_bottom_sheet_handle" />
 
-    <TextView
-        android:id="@+id/title"
+    <!-- Header: Title (left) + Close button (right) -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="12dp"
-        android:textAppearance="?textAppearanceTitleLarge"
-        android:textColor="?colorOnSurface"
-        android:textStyle="bold"
-        tools:ignore="MissingDefaultResource"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:text="Choose your language" />
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="4dp">
 
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="?colorOnSurface"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Choose your language" />
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            android:tint="?colorOnSurfaceVariant"
+            android:contentDescription="@string/action_cancel" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginHorizontal="0dp"
         android:background="?colorOutlineVariant"
-        android:alpha="0.4" />
+        android:alpha="0.5" />
 
+    <!-- Items list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="540dp"
+        android:maxHeight="520dp"
         android:overScrollMode="never"
-        android:scrollbars="vertical"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:scrollbars="none"
+        android:paddingTop="6dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
         tools:itemCount="6"
-        tools:listitem="@layout/i_selector_bottom_sheet"
-        xmlns:tools="http://schemas.android.com/tools" />
+        tools:listitem="@layout/i_selector_bottom_sheet" />
 
 </LinearLayout>

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="60dp"
     android:background="@drawable/bg_selector_item"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingHorizontal="24dp">
+    android:paddingHorizontal="20dp">
 
     <TextView
         android:id="@+id/label"
@@ -23,12 +23,14 @@
 
     <ImageView
         android:id="@+id/check"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:layout_marginStart="16dp"
         android:src="@drawable/ic_check_24"
+        android:tint="?colorPrimary"
         android:visibility="invisible"
         tools:ignore="ContentDescription"
         tools:visibility="visible" />
 
 </LinearLayout>
+
