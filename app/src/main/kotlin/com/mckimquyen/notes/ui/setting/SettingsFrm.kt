@@ -10,17 +10,16 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.fragment.findNavController
-import androidx.preference.DropDownPreference
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
-import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.databinding.FSettingsBinding
@@ -31,8 +30,8 @@ import com.mckimquyen.notes.ext.openBrowserPolicy
 import com.mckimquyen.notes.ext.rateApp
 import com.mckimquyen.notes.ext.shareApp
 import com.mckimquyen.notes.model.PrefsManager
-import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.AppTheme
+import com.roy.sdkadbmob.AdManager
 import com.mckimquyen.notes.ui.common.ConfirmDlg
 import com.mckimquyen.notes.ui.main.MainAct
 import com.mckimquyen.notes.ui.observeEvent
@@ -62,8 +61,9 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
 
     private var binding: FSettingsBinding? = null
 
-    //    private var adView: MaxAdView? = null
-    private var adView: AdView? = null
+    // SDK manages banner lifecycle via ActivityLifecycleCallbacks (autoManageLifecycle=true).
+    // Keep the View ref only so we can explicitly destroy in onDestroyView.
+    private var adView: View? = null
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -136,16 +136,6 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        adView?.resume()
-    }
-
-    override fun onPause() {
-        adView?.pause()
-        super.onPause()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -155,26 +145,24 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
             findNavController().popBackStack()
         }
 
-        // Apply padding so that the settings don't overlap with the navigation bar
-//        val rcv = view.findViewById<RecyclerView>(R.id.recyclerView)
-//        ViewCompat.setOnApplyWindowInsetsListener(rcv) { _, insets ->
-//            val sysWindow = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-//            rcv.updatePadding(bottom = sysWindow.bottom)
-//            insets
-//        }
-
         setupViewModelObservers()
         binding?.layoutAdBanner?.bannerContainer?.let { bannerContainer ->
             binding?.layoutAdBanner?.tvLabelAd?.let { tvLabelAd ->
-                adView = AdMobManager.loadBanner(
+                adView = AdManager.loadBanner(
                     context = requireContext(),
-                    adUnitId = BuildConfig.ADMOB_BANNER_ID,
                     container = bannerContainer,
                     tvLabelAd = tvLabelAd,
-                    adSize = AdSize.LARGE_BANNER,
+                    adSize = AdManager.getAdaptiveBannerSize(requireActivity()),
                 )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        AdManager.bannerDestroy(adView)
+        adView = null
+        super.onDestroyView()
+        binding = null
     }
 
     private fun setupViewModelObservers() {
@@ -203,7 +191,24 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         val context = requireContext()
         setPreferencesFromResource(R.xml.prefs, rootKey)
 
-        requirePreference<DropDownPreference>(PrefsManager.THEME).setOnPreferenceChangeListener { _, theme ->
+        requirePreference<Preference>("privacy_settings").setOnPreferenceClickListener {
+            openPrivacySettings()
+            true
+        }
+
+        requirePreference<ListPreference>("app_language").apply {
+            // Reflect the current per-app locale (Android 13+ persists this; AppCompat backports it).
+            value = AppCompatDelegate.getApplicationLocales().toLanguageTags().substringBefore('-')
+            setOnPreferenceChangeListener { _, newValue ->
+                val tag = newValue as String
+                val locales = if (tag.isEmpty()) LocaleListCompat.getEmptyLocaleList()
+                              else LocaleListCompat.forLanguageTags(tag)
+                AppCompatDelegate.setApplicationLocales(locales)
+                true
+            }
+        }
+
+        requirePreference<ListPreference>(PrefsManager.THEME).setOnPreferenceChangeListener { _, theme ->
             (context.applicationContext as RApp).updateTheme(AppTheme.fromValue(theme as String))
             true
         }
@@ -321,12 +326,27 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     }
 
     override fun onDestroy() {
-        adView?.destroy()
-//        binding?.flAd?.destroyAdBanner(adView)
         super.onDestroy()
         exportDataLauncher = null
         autoExportLauncher = null
     }
+
+    /**
+     * UMP: privacy options form only exists for users in regions where consent is required (EEA / UK / CH).
+     * For everyone else `showConsentFormIfAvailable` no-ops — give the user a clear message instead of
+     * silently doing nothing on tap.
+     */
+    private fun openPrivacySettings() {
+        val info = com.google.android.ump.UserMessagingPlatform.getConsentInformation(requireContext())
+        val required = info.privacyOptionsRequirementStatus ==
+            com.google.android.ump.ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+        if (required) {
+            AdManager.showConsentFormIfAvailable(requireActivity())
+        } else {
+            showMessage(R.string.msg_consent_not_required)
+        }
+    }
+
 
     private fun showMessage(@StringRes messageId: Int) {
         val snackbar = Snackbar.make(requireView(), messageId, Snackbar.LENGTH_SHORT)

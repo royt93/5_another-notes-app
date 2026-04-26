@@ -69,7 +69,7 @@
     <string name="trash_delete_selected_message">Seçilen notlar kalıcı olarak silinecek.</string>
     <string name="trash_empty_message">Geri dönüşüm kutusundaki bütün notlar kalıcı olarak silinecek.</string>
     <string name="search_hint">Notları ara</string>
-    <string name="search_empty_placeholder">Sorgunuz için hiçbir eşleşme bulunamadı.</string>
+    <string name="search_empty_placeholder">Aramanızla eşleşen not yok. Başka bir sorgu deneyin.</string>
     <string name="sort_title">Sıralama seçenekleri</string>
     <string name="sort_direction">Sıralama Yönü</string>
     <string name="sort_direction_ascending">Artan sırada</string>
@@ -104,7 +104,7 @@
     <string name="edit_in_trash_message">Geri dönüşüm kutusundaki not düzenlenemiyor.</string>
     <string name="edit_copy_suffix">Kopyala</string>
     <string name="edit_copy_untitled_name">Başlıksız</string>
-    <string name="edit_convert_keep_checked">İşaretli ögeleri sil?</string>
+    <string name="edit_convert_keep_checked">Metin notları onay kutularını desteklemez. İşaretli öğeler silinsin mi?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d işaretlenmiş öge</item>
         <item quantity="other">%d işaretlenmiş ögeler</item>
@@ -223,4 +223,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Dil</string>
+    <string name="pref_language_system">Sistem varsayılanı</string>
+    <string name="msg_consent_not_required">Gizlilik ayarları yalnızca onayın gerekli olduğu bölgelerde kullanılabilir.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Gizlilik ayarları</string>
+    <string name="pref_privacy_settings_summary">Reklam izinlerini yönet (GDPR / AEA)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM ÜYELİK</string>
+    <string name="vip_status_active">ETKİN</string>
+    <string name="vip_status_inactive">ETKİN DEĞİL</string>
+    <string name="vip_expires_until">Etkin · %1$s</string>
+    <string name="vip_benefits_title">Neler kazanırsın</string>
+    <string name="vip_benefit_no_banner">Banner reklamı yok</string>
+    <string name="vip_benefit_no_interstitial">Tam ekran reklam yok</string>
+    <string name="vip_benefit_no_app_open">Açılış / devam reklamı yok</string>
+    <string name="vip_benefit_support">Geliştirmeye destek ol</string>
+    <string name="vip_action_activate">Premium\'u etkinleştir</string>
+    <string name="vip_action_reset">Premium\'u sıfırla</string>
+    <string name="vip_footer_info">Premium çevrimdışı bir etkinleştirme anahtarı kullanır — uygulama içi ödeme yoktur.</string>
+    <string name="vip_dialog_title">Premium anahtarını gir</string>
+    <string name="vip_dialog_subtitle">Her anahtar Premium\'u 30 gün etkinleştirir.</string>
+    <string name="vip_dialog_input_hint">Etkinleştirme anahtarı</string>
+    <string name="vip_dialog_btn_activate">Etkinleştir</string>
+    <string name="vip_dialog_btn_cancel">İptal</string>
+    <string name="vip_msg_success">Premium etkinleştirildi · %1$d gün</string>
+    <string name="vip_msg_invalid">Geçersiz anahtar. Lütfen tekrar dene.</string>
+    <string name="vip_reset_title">Premium sıfırlansın mı?</string>
+    <string name="vip_reset_message">Tüm Premium avantajları anında kaldırılacak.</string>
+    <string name="vip_reset_confirm">Sıfırla</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Çıkmak için geri tuşuna tekrar basın</string>
+    <string name="reminder_saved_for">Hatırlatıcı %1$s için ayarlandı</string>
+    <string name="color_default">Varsayılan</string>
 </resources>

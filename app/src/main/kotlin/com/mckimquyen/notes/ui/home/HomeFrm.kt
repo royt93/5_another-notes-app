@@ -16,17 +16,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
-import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.NavGraphMainDirections
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.ext.navigateSafe
 import com.mckimquyen.notes.model.entity.NoteStatus
-import com.mckimquyen.notes.sdkadbmob.AdMobManager
+import com.roy.sdkadbmob.AdManager
 import com.mckimquyen.notes.ui.common.ConfirmDlg
 import com.mckimquyen.notes.ui.navigation.HomeDestination
 import com.mckimquyen.notes.ui.note.NoteFrm
@@ -40,7 +37,7 @@ import com.google.android.material.R as RMaterial
  * Start screen fragment displaying a list of notes for different note status,
  * by label, or with a reminder.
  */
-class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.InterstitialAdListener {
+class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: HomeVM.Factory
@@ -48,17 +45,18 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        AdMobManager.setCurrentActivity(requireActivity())
-        AdMobManager.interstitialListener = this
-        AdMobManager.loadInterstitial(requireContext(), BuildConfig.ADMOB_INTERSTITIAL_ID)
-//        createAdInter()
+        // SDK auto-tracks currentActivity via ActivityLifecycleCallbacks; no need to set manually.
+        AdManager.loadInterstitial(requireContext())
         val context = requireContext()
         (context.applicationContext as RApp?)?.appComponent?.inject(this)
     }
 
     override fun onResume() {
         super.onResume()
+
+        // Hide the crown action when the user is already Premium — frees up toolbar space.
+        binding.toolbar.menu.findItem(R.id.itemVip)?.isVisible =
+            !com.roy.sdkadbmob.AdManager.isVipByKeyActive()
 
         val context = requireContext()
 
@@ -105,7 +103,7 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
         // Floating action button
         binding.fab.transitionName = "createNoteTransition"
         binding.fab.setOnClickListener {
-            AdMobManager.showInterstitial(requireActivity()) { success ->
+            AdManager.showInterstitial(requireActivity()) { success ->
                 if (success) {
                     Log.d("roy93~", "Ad đã hiển thị và đóng thành công")
                 } else {
@@ -182,7 +180,7 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
             Log.d("roy93~", "[Ad-Delete] statusChangeEvent: newStatus=${statusChange.newStatus}, count=${statusChange.oldNotes.size}")
             if (statusChange.newStatus == NoteStatus.DELETED) {
                 Log.d("roy93~", "[Ad-Delete] Note DELETED — calling showInterstitial")
-                AdMobManager.showInterstitial(requireActivity()) { success ->
+                AdManager.showInterstitial(requireActivity()) { success ->
                     Log.d("roy93~", "[Ad-Delete] showInterstitial result: success=$success")
                 }
             }
@@ -234,6 +232,7 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.itemVip -> findNavController().navigateSafe(HomeFrmDirections.actionHomeToVip())
             R.id.itemSearch -> findNavController().navigateSafe(HomeFrmDirections.actionHomeToSearch())
             R.id.itemLayout -> viewModel.toggleListLayoutMode()
             R.id.itemSort -> findNavController().navigateSafe(HomeFrmDirections.actionHomeToSort())
@@ -256,33 +255,8 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener, AdMobManager.Interst
         }
     }
 
-    override fun onAdLoaded() {
-    }
-
-    override fun onAdFailedToLoad(error: LoadAdError) {
-    }
-
-    override fun onAdShowed() {
-    }
-
-    override fun onAdDismissed() {
-    }
-
-    override fun onAdClicked() {
-    }
-
-    override fun onAdFailedToShow(error: AdError) {
-    }
-
-    override fun onAdNotAvailable() {
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // Clean up AdMobManager references to prevent memory leaks
-        AdMobManager.interstitialListener = null
-        AdMobManager.clearPendingCallbacks()
-    }
+    // No InterstitialAdListener implementation — only the showInterstitial(activity, onDone) callback
+    // is needed for the post-ad navigation logic. The SDK handles preload + dismiss internally.
 
 //    private var interstitialAd: MaxInterstitialAd? = null
 //

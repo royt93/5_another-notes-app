@@ -77,7 +77,7 @@
     <string name="trash_delete_selected_message">سيتم حذف الملاحظات المحددة نهائيًا.</string>
     <string name="trash_empty_message">سيتم حذف كل الملاحظات الموجودة هنا نهائيًا.</string>
     <string name="search_hint">بحث الملاحظات</string>
-    <string name="search_empty_placeholder">لا توجد ملاحظة متطابقة.</string>
+    <string name="search_empty_placeholder">لا توجد ملاحظات تطابق بحثك. جرب استعلامًا آخر.</string>
     <string name="sort_title">خيارات الترتيب</string>
     <string name="sort_direction">اتجاه الترتيب</string>
     <string name="sort_direction_ascending">تصاعدي</string>
@@ -128,7 +128,7 @@
     <string name="edit_in_trash_message">لا يمكن التعديل في سلة المهملات.</string>
     <string name="edit_copy_suffix">منسوخة</string>
     <string name="edit_copy_untitled_name">بلا عنوان</string>
-    <string name="edit_convert_keep_checked">حذف العناصر المؤشَرة؟</string>
+    <string name="edit_convert_keep_checked">ملاحظات النصوص لا تدعم خانات الاختيار. هل تزيل العناصر المؤشَرة؟</string>
     <plurals name="edit_checked_items">
         <item quantity="zero">لا شيء</item>
         <item quantity="one">عنصر واحد مؤشَر</item>
@@ -243,4 +243,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s، %2$s</string>
+
+    <string name="pref_language">اللغة</string>
+    <string name="pref_language_system">إعداد النظام</string>
+    <string name="msg_consent_not_required">إعدادات الخصوصية متاحة فقط في المناطق التي تتطلب الموافقة.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">النسخة المميزة</string>
+    <string name="pref_privacy_settings">إعدادات الخصوصية</string>
+    <string name="pref_privacy_settings_summary">إدارة موافقة الإعلانات (GDPR / EEA)</string>
+    <string name="vip_screen_title">النسخة المميزة</string>
+    <string name="vip_screen_hero_title">Cat Note المميزة</string>
+    <string name="vip_label_premium">عضوية مميزة</string>
+    <string name="vip_status_active">مفعّل</string>
+    <string name="vip_status_inactive">غير مفعّل</string>
+    <string name="vip_expires_until">مفعّل · %1$s</string>
+    <string name="vip_benefits_title">ماذا تحصل عليه</string>
+    <string name="vip_benefit_no_banner">بدون إعلانات بانر</string>
+    <string name="vip_benefit_no_interstitial">بدون إعلانات بملء الشاشة</string>
+    <string name="vip_benefit_no_app_open">بدون إعلانات بدء التشغيل / الاستئناف</string>
+    <string name="vip_benefit_support">ادعم استمرار التطوير</string>
+    <string name="vip_action_activate">تفعيل النسخة المميزة</string>
+    <string name="vip_action_reset">إعادة تعيين النسخة المميزة</string>
+    <string name="vip_footer_info">تستخدم النسخة المميزة مفتاح تفعيل دون اتصال — لا توجد مدفوعات داخل التطبيق.</string>
+    <string name="vip_dialog_title">أدخل مفتاح النسخة المميزة</string>
+    <string name="vip_dialog_subtitle">كل مفتاح يُفعّل النسخة المميزة لمدة 30 يومًا.</string>
+    <string name="vip_dialog_input_hint">مفتاح التفعيل</string>
+    <string name="vip_dialog_btn_activate">تفعيل</string>
+    <string name="vip_dialog_btn_cancel">إلغاء</string>
+    <string name="vip_msg_success">تم تفعيل النسخة المميزة · %1$d يوم</string>
+    <string name="vip_msg_invalid">مفتاح غير صحيح. حاول مرة أخرى.</string>
+    <string name="vip_reset_title">إعادة تعيين النسخة المميزة؟</string>
+    <string name="vip_reset_message">ستتم إزالة جميع مزايا النسخة المميزة فورًا.</string>
+    <string name="vip_reset_confirm">إعادة تعيين</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">اضغط رجوع مرة أخرى للخروج</string>
+    <string name="reminder_saved_for">تم ضبط التذكير لـ %1$s</string>
+    <string name="color_default">افتراضي</string>
 </resources>

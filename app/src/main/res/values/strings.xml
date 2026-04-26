@@ -75,7 +75,7 @@
     <string name="trash_empty_message">All notes in recycle bin will be permanently deleted.</string>
 
     <string name="search_hint">Search notes</string>
-    <string name="search_empty_placeholder">No notes found for your query.</string>
+    <string name="search_empty_placeholder">No notes match your search. Try another query.</string>
 
     <string name="sort_title">Sort options</string>
     <string name="sort_direction">Sort direction</string>
@@ -115,7 +115,7 @@
     <string name="edit_copy_suffix">Copy</string>
     <string name="edit_copy_untitled_name">Untitled</string>
 
-    <string name="edit_convert_keep_checked">Remove checked items?</string>
+    <string name="edit_convert_keep_checked">Text notes don\'t support checkboxes. Remove the checked items?</string>
 
     <plurals name="edit_checked_items">
         <item quantity="one">%d checked item</item>
@@ -260,5 +260,49 @@
     <string name="rate_this_app_5">Rate this app 5★</string>
     <string name="get_more_apps">Get more apps</string>
     <string name="share_this_app">Share this app</string>
+
+    <!-- Language picker -->
+    <string name="pref_language">Language</string>
+    <string name="pref_language_system">System default</string>
+    <string name="msg_consent_not_required">Privacy settings are only available in regions where consent is required.</string>
+
+    <!-- Misc UX strings -->
+    <string name="exit_press_back_again">Press back again to exit</string>
+    <string name="reminder_saved_for">Reminder set for %1$s</string>
+    <string name="color_default">Default</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Privacy settings</string>
+    <string name="pref_privacy_settings_summary">Manage advertising consent (GDPR / EEA)</string>
+
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM MEMBERSHIP</string>
+    <string name="vip_status_active">ACTIVE</string>
+    <string name="vip_status_inactive">NOT ACTIVE</string>
+    <string name="vip_expires_until">Active · %1$s</string>
+
+    <string name="vip_benefits_title">What you get</string>
+    <string name="vip_benefit_no_banner">No banner ads</string>
+    <string name="vip_benefit_no_interstitial">No fullscreen ads</string>
+    <string name="vip_benefit_no_app_open">No splash / resume ads</string>
+    <string name="vip_benefit_support">Support continued development</string>
+
+    <string name="vip_action_activate">Activate Premium</string>
+    <string name="vip_action_reset">Reset Premium</string>
+    <string name="vip_footer_info">Premium uses an offline activation key — no payment processed in-app.</string>
+
+    <string name="vip_dialog_title">Enter your premium key</string>
+    <string name="vip_dialog_subtitle">Each key activates Premium for 30 days.</string>
+    <string name="vip_dialog_input_hint">Activation key</string>
+    <string name="vip_dialog_btn_activate">Activate</string>
+    <string name="vip_dialog_btn_cancel">Cancel</string>
+
+    <string name="vip_msg_success">Premium activated · %1$d days</string>
+    <string name="vip_msg_invalid">Invalid key. Please try again.</string>
+    <string name="vip_reset_title">Reset Premium?</string>
+    <string name="vip_reset_message">All Premium benefits will be removed immediately.</string>
+    <string name="vip_reset_confirm">Reset</string>
 
 </resources>

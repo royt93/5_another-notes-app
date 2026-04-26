@@ -25,17 +25,17 @@ import kotlinx.serialization.json.Json
 )
 abstract class AppModule {
 
-    @get:Binds
-    abstract val DefaultNotesRepository.bindNotesRepository: NotesRepository
+    @Binds
+    abstract fun bindNotesRepository(impl: DefaultNotesRepository): NotesRepository
 
-    @get:Binds
-    abstract val DefaultLabelsRepository.bindLabelsRepository: LabelsRepository
+    @Binds
+    abstract fun bindLabelsRepository(impl: DefaultLabelsRepository): LabelsRepository
 
-    @get:Binds
-    abstract val DefaultJsonManager.bindJsonManager: JsonManager
+    @Binds
+    abstract fun bindJsonManager(impl: DefaultJsonManager): JsonManager
 
-    @get:Binds
-    abstract val ReceiverAlarmCallback.bindAlarmCallback: ReminderAlarmCallback
+    @Binds
+    abstract fun bindAlarmCallback(impl: ReceiverAlarmCallback): ReminderAlarmCallback
 
     companion object {
         @Provides

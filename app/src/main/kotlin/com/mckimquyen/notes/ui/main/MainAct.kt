@@ -144,8 +144,8 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
                         isEnabled = true
                     } else {
                         doubleBackToExitPressedOnce = true
-                        Toast.makeText(this@MainAct, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-                        exitHandler.postDelayed(resetExitRunnable, 2000)
+                        Toast.makeText(this@MainAct, R.string.exit_press_back_again, Toast.LENGTH_SHORT).show()
+                        exitHandler.postDelayed(resetExitRunnable, 2500)
                     }
                 } else {
                     isEnabled = false

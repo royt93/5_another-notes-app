@@ -73,7 +73,7 @@
     <string name="trash_delete_selected_message">Выбранные заметки будут удалены навсегда.</string>
     <string name="trash_empty_message">Все заметки в корзине будут удалены навсегда.</string>
     <string name="search_hint">Поиск заметок</string>
-    <string name="search_empty_placeholder">Заметки по вашему запросу отсутствуют.</string>
+    <string name="search_empty_placeholder">Заметок по запросу нет. Попробуйте другой запрос.</string>
     <string name="sort_title">Параметры сортировки</string>
     <string name="sort_direction">Порядок сортировки</string>
     <string name="sort_direction_ascending">По возрастанию</string>
@@ -116,7 +116,7 @@
     <string name="edit_in_trash_message">Невозможно редактировать заметку в корзине.</string>
     <string name="edit_copy_suffix">Копия</string>
     <string name="edit_copy_untitled_name">Без названия</string>
-    <string name="edit_convert_keep_checked">Удалить отмеченные пункты?</string>
+    <string name="edit_convert_keep_checked">Текстовые заметки не поддерживают флажки. Удалить отмеченные пункты?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d отмеченный пункт</item>
         <item quantity="few">%d отмеченных пункта</item>
@@ -249,4 +249,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Язык</string>
+    <string name="pref_language_system">Системный по умолчанию</string>
+    <string name="msg_consent_not_required">Настройки конфиденциальности доступны только в регионах, где требуется согласие.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Премиум</string>
+    <string name="pref_privacy_settings">Настройки конфиденциальности</string>
+    <string name="pref_privacy_settings_summary">Управление согласием на рекламу (GDPR / ЕЭЗ)</string>
+    <string name="vip_screen_title">Премиум</string>
+    <string name="vip_screen_hero_title">Cat Note Премиум</string>
+    <string name="vip_label_premium">ПРЕМИУМ-ЧЛЕНСТВО</string>
+    <string name="vip_status_active">АКТИВНО</string>
+    <string name="vip_status_inactive">НЕ АКТИВНО</string>
+    <string name="vip_expires_until">Активно · %1$s</string>
+    <string name="vip_benefits_title">Что вы получаете</string>
+    <string name="vip_benefit_no_banner">Без баннерной рекламы</string>
+    <string name="vip_benefit_no_interstitial">Без полноэкранной рекламы</string>
+    <string name="vip_benefit_no_app_open">Без рекламы при запуске / возврате</string>
+    <string name="vip_benefit_support">Поддержите дальнейшую разработку</string>
+    <string name="vip_action_activate">Активировать Премиум</string>
+    <string name="vip_action_reset">Сбросить Премиум</string>
+    <string name="vip_footer_info">Премиум использует офлайн-ключ активации — без платежей в приложении.</string>
+    <string name="vip_dialog_title">Введите Премиум-ключ</string>
+    <string name="vip_dialog_subtitle">Каждый ключ активирует Премиум на 30 дней.</string>
+    <string name="vip_dialog_input_hint">Ключ активации</string>
+    <string name="vip_dialog_btn_activate">Активировать</string>
+    <string name="vip_dialog_btn_cancel">Отмена</string>
+    <string name="vip_msg_success">Премиум активирован · %1$d дней</string>
+    <string name="vip_msg_invalid">Неверный ключ. Попробуйте снова.</string>
+    <string name="vip_reset_title">Сбросить Премиум?</string>
+    <string name="vip_reset_message">Все преимущества Премиум будут удалены немедленно.</string>
+    <string name="vip_reset_confirm">Сбросить</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Нажмите назад еще раз для выхода</string>
+    <string name="reminder_saved_for">Напоминание установлено на %1$s</string>
+    <string name="color_default">По умолчанию</string>
 </resources>

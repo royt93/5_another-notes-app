@@ -586,7 +586,7 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
     companion object {
         private val NUMBER_FORMAT = NumberFormat.getInstance()
         private const val DELETE_CONFIRM_DIALOG_TAG = "delete_confirm_dialog"
-        private const val STATUS_CHANGE_SNACKBAR_DURATION = 7500
+        private const val STATUS_CHANGE_SNACKBAR_DURATION = 5000
     }
 }
 

@@ -69,7 +69,7 @@
     <string name="trash_delete_selected_message">Ausgewählte Notizen werden dauerhaft gelöscht.</string>
     <string name="trash_empty_message">Alle Notizen im Papierkorb werden endgültig gelöscht.</string>
     <string name="search_hint">Notiz suchen</string>
-    <string name="search_empty_placeholder">Es wurden keine Notizen für Ihre Anfrage gefunden.</string>
+    <string name="search_empty_placeholder">Keine Notizen entsprechen deiner Suche. Versuche eine andere Anfrage.</string>
     <string name="sort_title">Sortieren Einstellungen</string>
     <string name="sort_direction">Sortierreihenfolge</string>
     <string name="sort_direction_ascending">Aufsteigend</string>
@@ -104,7 +104,7 @@
     <string name="edit_in_trash_message">Notizen im Papierkorb können nicht bearbeitet werden.</string>
     <string name="edit_copy_suffix">Kopieren</string>
     <string name="edit_copy_untitled_name">Unbenannt</string>
-    <string name="edit_convert_keep_checked">Markierte Elemente entfernen?</string>
+    <string name="edit_convert_keep_checked">Textnotizen unterstützen keine Kontrollkästchen. Markierte Elemente entfernen?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d markierte Elemente</item>
         <item quantity="other">%d markierte Elelemente</item>
@@ -215,4 +215,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Sprache</string>
+    <string name="pref_language_system">Systemstandard</string>
+    <string name="msg_consent_not_required">Datenschutzeinstellungen sind nur in Regionen verfügbar, in denen eine Einwilligung erforderlich ist.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Datenschutzeinstellungen</string>
+    <string name="pref_privacy_settings_summary">Werbeeinwilligung verwalten (DSGVO / EWR)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-MITGLIEDSCHAFT</string>
+    <string name="vip_status_active">AKTIV</string>
+    <string name="vip_status_inactive">INAKTIV</string>
+    <string name="vip_expires_until">Aktiv · %1$s</string>
+    <string name="vip_benefits_title">Das bekommst du</string>
+    <string name="vip_benefit_no_banner">Keine Banner-Werbung</string>
+    <string name="vip_benefit_no_interstitial">Keine Vollbild-Werbung</string>
+    <string name="vip_benefit_no_app_open">Keine Start- / Wiederaufnahme-Werbung</string>
+    <string name="vip_benefit_support">Unterstütze die weitere Entwicklung</string>
+    <string name="vip_action_activate">Premium aktivieren</string>
+    <string name="vip_action_reset">Premium zurücksetzen</string>
+    <string name="vip_footer_info">Premium nutzt einen Offline-Aktivierungsschlüssel — keine In-App-Zahlungen.</string>
+    <string name="vip_dialog_title">Premium-Schlüssel eingeben</string>
+    <string name="vip_dialog_subtitle">Jeder Schlüssel aktiviert Premium für 30 Tage.</string>
+    <string name="vip_dialog_input_hint">Aktivierungsschlüssel</string>
+    <string name="vip_dialog_btn_activate">Aktivieren</string>
+    <string name="vip_dialog_btn_cancel">Abbrechen</string>
+    <string name="vip_msg_success">Premium aktiviert · %1$d Tage</string>
+    <string name="vip_msg_invalid">Ungültiger Schlüssel. Bitte erneut versuchen.</string>
+    <string name="vip_reset_title">Premium zurücksetzen?</string>
+    <string name="vip_reset_message">Alle Premium-Vorteile werden sofort entfernt.</string>
+    <string name="vip_reset_confirm">Zurücksetzen</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Erneut zurück drücken zum Beenden</string>
+    <string name="reminder_saved_for">Erinnerung gesetzt für %1$s</string>
+    <string name="color_default">Standard</string>
 </resources>

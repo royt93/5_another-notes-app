@@ -1,34 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    tools:background="#ff0000">
+    android:paddingHorizontal="0dp"
+    android:paddingVertical="8dp">
 
-    <TextView
-        android:id="@+id/tvLabelAd"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:background="@drawable/rounded_blue_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Ad"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="2dp">
+
+        <TextView
+            android:id="@+id/tvLabelAd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_blue_bg"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="Ad"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <com.roy.sdkadbmob.ShimmerView
+            android:id="@+id/shimmerLabel"
+            android:tag="shimmerLabel"
+            android:layout_width="32dp"
+            android:layout_height="18dp"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <com.roy.sdkadbmob.ShimmerView
+        android:id="@+id/shimmerBanner"
+        android:tag="shimmerBanner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/bannerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        tools:background="#000000"
-        tools:layout_height="56dp" />
+        android:visibility="gone" />
+
 </LinearLayout>

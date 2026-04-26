@@ -10,6 +10,6 @@ import dagger.Module
 @Module
 abstract class BuildTypeModule {
 
-    @get:Binds
-    abstract val ReleaseBuildTypeBehavior.bind: BuildTypeBehavior
+    @Binds
+    abstract fun bindBuildTypeBehavior(impl: ReleaseBuildTypeBehavior): BuildTypeBehavior
 }

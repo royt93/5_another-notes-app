@@ -88,10 +88,6 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
             duration = resources.getInteger(RMaterial.integer.material_motion_duration_long_1).toLong()
         }
-
-        // Send an event via the sharedViewModel when the transition has finished playing
-        (sharedElementReturnTransition as MaterialContainerTransform).addListener(transitionListener)
-
         super.onCreate(savedInstanceState)
         (requireContext().applicationContext as RApp).appComponent.inject(this)
     }
@@ -113,6 +109,9 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val context = requireContext()
+
+        // Paired with removeListener in onDestroyView; onCreate cannot register here because onDestroyView runs many times.
+        (sharedElementReturnTransition as? MaterialContainerTransform)?.addListener(transitionListener)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             viewModel.saveNote()
@@ -543,12 +542,17 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             params.setMargins(margin.toInt(), margin.toInt(), margin.toInt(), margin.toInt())
             btn.layoutParams = params
             btn.setBackgroundResource(R.drawable.shape_color_circle)
-            
             // Apply color to the circle background programmatically since shape_color_circle is an oval
             val bg = btn.background.mutate() as android.graphics.drawable.GradientDrawable
             bg.setColor(if (color == 0) Color.WHITE else color)
-            
             btn.elevation = 4f
+            // Tooltip + content description: tells the user that the white circle is "no color"
+            // and lets the rest be readable to TalkBack.
+            btn.contentDescription = if (color == 0) getString(R.string.color_default) else null
+            androidx.appcompat.widget.TooltipCompat.setTooltipText(
+                btn,
+                if (color == 0) getString(R.string.color_default) else null
+            )
             btn.setOnClickListener {
                 viewModel.setNoteColor(color)
             }

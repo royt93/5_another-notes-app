@@ -24,8 +24,9 @@
     </group>
 
     <group android:id="@+id/drawerGroupSettings">
-        <item android:id="@+id/drawerItemWidgetGuide" android:checkable="false" android:icon="@drawable/ic_widgets" android:orderInCategory="3" android:title="@string/widget_guide_title" />
-        <item android:id="@+id/drawerItemSettings" android:checkable="false" android:icon="@drawable/ic_settings" android:orderInCategory="4" android:title="@string/action_settings" />
+        <item android:id="@+id/drawerItemVip" android:checkable="false" android:icon="@drawable/ic_vip_sparkle" android:orderInCategory="3" android:title="@string/pref_vip_title" />
+        <item android:id="@+id/drawerItemWidgetGuide" android:checkable="false" android:icon="@drawable/ic_widgets" android:orderInCategory="4" android:title="@string/widget_guide_title" />
+        <item android:id="@+id/drawerItemSettings" android:checkable="false" android:icon="@drawable/ic_settings" android:orderInCategory="5" android:title="@string/action_settings" />
     </group>
 
 </menu>

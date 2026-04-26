@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorSurface"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="com.mckimquyen.notes.ui.common.AppBarLayoutWithPaddingBehavior">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="?toolbarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:contentDescription="@string/content_descrp_back"
+            app:navigationIcon="@drawable/ic_arrow_start"
+            app:title="@string/vip_screen_title"
+            app:titleTextColor="?colorControlNormal" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ============ HERO CARD ============ -->
+            <FrameLayout
+                android:id="@+id/heroContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_vip_hero"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/sparkle1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:alpha="0.7"
+                    android:src="@drawable/ic_vip_sparkle"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/sparkle2"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginEnd="28dp"
+                    android:alpha="0.55"
+                    android:src="@drawable/ic_vip_sparkle"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/sparkle3"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginBottom="20dp"
+                    android:alpha="0.5"
+                    android:src="@drawable/ic_vip_sparkle"
+                    tools:ignore="ContentDescription" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/glowRing"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/bg_vip_glow"
+                        tools:ignore="ContentDescription" />
+
+                    <ImageView
+                        android:id="@+id/crownIcon"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_vip_crown"
+                        tools:ignore="ContentDescription" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="200dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.18"
+                        android:text="@string/vip_label_premium"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:ignore="UnusedAttribute" />
+
+                    <TextView
+                        android:id="@+id/heroTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/vip_screen_hero_title"
+                        android:textColor="#FFFFFF"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/statusPill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/bg_vip_pill_inactive"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp">
+
+                        <View
+                            android:id="@+id/statusDot"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bg_vip_dot_active"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/statusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:letterSpacing="0.1"
+                            android:text="@string/vip_status_inactive"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:ignore="UnusedAttribute" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/expiryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="#EEEEEE"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        tools:text="Expires 2026-05-26"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- ============ BENEFITS CARD ============ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/benefitsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vip_benefits_title"
+                        android:textColor="?colorOnSurface"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/benefitRow1"
+                        style="@style/VipBenefitRow"
+                        android:layout_marginTop="14dp">
+
+                        <ImageView style="@style/VipBenefitCheck" />
+
+                        <TextView
+                            style="@style/VipBenefitText"
+                            android:text="@string/vip_benefit_no_banner" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/benefitRow2"
+                        style="@style/VipBenefitRow">
+
+                        <ImageView style="@style/VipBenefitCheck" />
+
+                        <TextView
+                            style="@style/VipBenefitText"
+                            android:text="@string/vip_benefit_no_interstitial" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/benefitRow3"
+                        style="@style/VipBenefitRow">
+
+                        <ImageView style="@style/VipBenefitCheck" />
+
+                        <TextView
+                            style="@style/VipBenefitText"
+                            android:text="@string/vip_benefit_no_app_open" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/benefitRow4"
+                        style="@style/VipBenefitRow">
+
+                        <ImageView style="@style/VipBenefitCheck" />
+
+                        <TextView
+                            style="@style/VipBenefitText"
+                            android:text="@string/vip_benefit_support" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ============ ACTIONS ============ -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnActivate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/vip_action_activate"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:cornerRadius="28dp"
+                app:icon="@drawable/ic_vip_sparkle"
+                app:iconGravity="textStart"
+                app:iconTint="#FFFFFF" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReset"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/vip_action_reset"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:cornerRadius="28dp"
+                tools:visibility="visible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/vip_footer_info"
+                android:textColor="?colorOnSurfaceVariant"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Confetti overlay — populated programmatically on successful activation -->
+    <FrameLayout
+        android:id="@+id/confettiOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:ignore="UnusedAttribute" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

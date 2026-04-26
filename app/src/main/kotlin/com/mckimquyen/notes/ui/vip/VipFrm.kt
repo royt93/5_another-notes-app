@@ -1,0 +1,321 @@
+package com.mckimquyen.notes.ui.vip
+
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
+import com.mckimquyen.notes.R
+import com.mckimquyen.notes.databinding.DlgVipActivateBinding
+import com.mckimquyen.notes.databinding.FVipBinding
+import com.roy.sdkadbmob.AdManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.random.Random
+
+class VipFrm : Fragment() {
+
+    private var _binding: FVipBinding? = null
+    private val binding get() = _binding!!
+
+    private val animators = mutableListOf<AnimatorSet>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward = */ true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward = */ false)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FVipBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        applyEdgeToEdgeInsets()
+
+        binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+        binding.btnActivate.setOnClickListener {
+            playButtonPress(it)
+            showActivateDialog()
+        }
+        binding.btnReset.setOnClickListener {
+            playButtonPress(it)
+            showResetConfirm()
+        }
+
+        renderState()
+        startDecorativeAnimations()
+        playEntranceAnimation()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        renderState()
+    }
+
+    override fun onDestroyView() {
+        animators.forEach { it.cancel() }
+        animators.clear()
+        super.onDestroyView()
+        _binding = null
+    }
+
+    /** Add bottom inset for navigation bar so the last button doesn't disappear behind it. */
+    private fun applyEdgeToEdgeInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { v, insets ->
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = sysBars.bottom)
+            insets
+        }
+    }
+
+    private fun renderState() {
+        val isActive = AdManager.isVipByKeyActive()
+        if (isActive) {
+            val expiryMs = AdManager.getVipByKeyExpiry()
+            val expiryFormatted = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                .format(Date(expiryMs))
+
+            binding.statusPill.setBackgroundResource(R.drawable.bg_vip_pill_active)
+            binding.statusDot.isVisible = true
+            binding.statusText.text = getString(R.string.vip_status_active)
+            binding.expiryText.isVisible = true
+            binding.expiryText.text = getString(R.string.vip_expires_until, expiryFormatted)
+            binding.btnReset.isVisible = true
+        } else {
+            binding.statusPill.setBackgroundResource(R.drawable.bg_vip_pill_inactive)
+            binding.statusDot.isVisible = false
+            binding.statusText.text = getString(R.string.vip_status_inactive)
+            binding.expiryText.isVisible = false
+            binding.btnReset.isVisible = false
+        }
+    }
+
+    private fun startDecorativeAnimations() {
+        runLoopAnim(R.animator.anim_vip_pulse, binding.crownIcon)
+        runLoopAnim(R.animator.anim_vip_glow, binding.glowRing)
+        listOf(binding.sparkle1, binding.sparkle2, binding.sparkle3).forEachIndexed { index, sparkle ->
+            runLoopAnim(R.animator.anim_vip_sparkle_drift, sparkle, startDelayMs = index * 400L)
+        }
+    }
+
+    private fun runLoopAnim(animRes: Int, target: View, startDelayMs: Long = 0L) {
+        AnimatorInflater.loadAnimator(requireContext(), animRes).apply {
+            setTarget(target)
+            startDelay = startDelayMs
+            (this as AnimatorSet).also { animators += it }
+            start()
+        }
+    }
+
+    /** Hero card slide + benefits rows staggered fade-in. */
+    private fun playEntranceAnimation() {
+        binding.heroContainer.alpha = 0f
+        binding.heroContainer.translationY = 40f
+        ObjectAnimator.ofFloat(binding.heroContainer, "alpha", 0f, 1f).apply {
+            duration = 400
+            start()
+        }
+        ObjectAnimator.ofFloat(binding.heroContainer, "translationY", 40f, 0f).apply {
+            duration = 480
+            interpolator = OvershootInterpolator(0.85f)
+            start()
+        }
+        // Benefits rows enter with stagger.
+        val rows = listOf(
+            binding.benefitRow1, binding.benefitRow2,
+            binding.benefitRow3, binding.benefitRow4,
+        )
+        rows.forEachIndexed { i, row ->
+            row.alpha = 0f
+            row.translationX = -30f
+            row.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setDuration(380)
+                .setStartDelay(180L + i * 80L)
+                .start()
+        }
+        // Buttons soft fade-in.
+        listOf(binding.btnActivate, binding.btnReset).forEach {
+            it.alpha = 0f
+            it.animate().alpha(1f).setStartDelay(560).setDuration(280).start()
+        }
+    }
+
+    private fun playButtonPress(v: View) {
+        v.animate().scaleX(0.96f).scaleY(0.96f).setDuration(80)
+            .withEndAction {
+                v.animate().scaleX(1f).scaleY(1f).setDuration(140)
+                    .setInterpolator(OvershootInterpolator(2f))
+                    .start()
+            }.start()
+    }
+
+    private fun showActivateDialog() {
+        val dialogBinding = DlgVipActivateBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.vip_dialog_title)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.vip_dialog_btn_activate, null)
+            .setNegativeButton(R.string.vip_dialog_btn_cancel, null)
+            .create()
+
+        dialog.setOnShowListener {
+            val positive = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+            positive.setOnClickListener {
+                val key = dialogBinding.keyInput.text?.toString().orEmpty().trim()
+                val ok = AdManager.activateVipByKey(requireContext(), key, days = ACTIVATION_DAYS)
+                if (ok) {
+                    dialog.dismiss()
+                    onActivationSuccess()
+                } else {
+                    dialogBinding.keyInputLayout.error = getString(R.string.vip_msg_invalid)
+                }
+            }
+            dialogBinding.keyInput.requestFocus()
+        }
+        dialog.show()
+    }
+
+    private fun onActivationSuccess() {
+        animateStatusPillToActive()
+        renderState()
+        celebrateActivation()
+        launchConfetti()
+        Snackbar.make(
+            binding.root,
+            getString(R.string.vip_msg_success, ACTIVATION_DAYS),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showResetConfirm() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.vip_reset_title)
+            .setMessage(R.string.vip_reset_message)
+            .setNegativeButton(R.string.vip_dialog_btn_cancel, null)
+            .setPositiveButton(R.string.vip_reset_confirm) { _, _ ->
+                AdManager.clearVipByKey()
+                renderState()
+                Snackbar.make(binding.root, R.string.vip_reset_title, Snackbar.LENGTH_SHORT).show()
+            }
+            .show()
+    }
+
+    /** Hero scale celebration burst on successful activation. */
+    private fun celebrateActivation() {
+        val card = binding.heroContainer
+        val scaleX = ObjectAnimator.ofFloat(card, "scaleX", 1f, 1.04f, 1f).apply { duration = 520 }
+        val scaleY = ObjectAnimator.ofFloat(card, "scaleY", 1f, 1.04f, 1f).apply { duration = 520 }
+        val crownSpin = ObjectAnimator.ofFloat(binding.crownIcon, "rotation", 0f, 360f).apply {
+            duration = 720
+        }
+        AnimatorSet().apply {
+            playTogether(scaleX, scaleY, crownSpin)
+            interpolator = OvershootInterpolator(2.5f)
+            start()
+        }
+    }
+
+    /** Status pill morph: dot pops in + label crossfade — no jarring snap. */
+    private fun animateStatusPillToActive() {
+        binding.statusDot.scaleX = 0f
+        binding.statusDot.scaleY = 0f
+        binding.statusDot.isVisible = true
+        binding.statusDot.animate()
+            .scaleX(1f).scaleY(1f)
+            .setStartDelay(120)
+            .setDuration(360)
+            .setInterpolator(OvershootInterpolator(3f))
+            .start()
+        // Pill crossfade animator (text fades to active color).
+        val pill = binding.statusPill
+        val flash = ObjectAnimator.ofFloat(pill, "alpha", 1f, 0.5f, 1f).apply {
+            duration = 480
+        }
+        flash.start()
+    }
+
+    /** Spawn N confetti sparkles flying outward from the hero center. */
+    private fun launchConfetti() {
+        val overlay: FrameLayout = binding.confettiOverlay
+        overlay.removeAllViews()
+        val centerX = binding.heroContainer.x + binding.heroContainer.width / 2f
+        val centerY = binding.heroContainer.y + binding.heroContainer.height / 2f - 40f
+
+        repeat(CONFETTI_COUNT) { i ->
+            val piece = ImageView(requireContext()).apply {
+                setImageResource(R.drawable.ic_vip_sparkle)
+                val size = (16 + Random.nextInt(12))
+                layoutParams = FrameLayout.LayoutParams(dp(size), dp(size))
+                x = centerX - dp(size) / 2f
+                y = centerY - dp(size) / 2f
+            }
+            overlay.addView(piece)
+
+            val angle = (Random.nextDouble() * 2 * Math.PI).toFloat()
+            val distance = dp(120 + Random.nextInt(80)).toFloat()
+            val targetX = piece.x + cos(angle) * distance
+            val targetY = piece.y + sin(angle) * distance + dp(40)  // bias downward (gravity)
+
+            val moveX = ObjectAnimator.ofFloat(piece, "translationX", 0f, targetX - piece.x)
+            val moveY = ObjectAnimator.ofFloat(piece, "translationY", 0f, targetY - piece.y)
+            val rotate = ObjectAnimator.ofFloat(piece, "rotation", 0f, (Random.nextFloat() * 720f - 360f))
+            val fade = ObjectAnimator.ofFloat(piece, "alpha", 1f, 0f).apply {
+                startDelay = 600
+            }
+            val scale = ValueAnimator.ofFloat(0.4f, 1.2f, 1f).apply {
+                duration = 400
+                addUpdateListener {
+                    val s = it.animatedValue as Float
+                    piece.scaleX = s
+                    piece.scaleY = s
+                }
+            }
+            AnimatorSet().apply {
+                playTogether(moveX, moveY, rotate, fade, scale)
+                duration = 1200
+                startDelay = i * 25L
+                start()
+            }
+        }
+        overlay.postDelayed({
+            overlay.removeAllViews()
+        }, 1700)
+    }
+
+    private fun dp(value: Int): Int =
+        (value * resources.displayMetrics.density).toInt()
+
+    companion object {
+        // Each successful key activation grants 30 days of Premium.
+        private const val ACTIVATION_DAYS = 30
+        private const val CONFETTI_COUNT = 22
+    }
+}

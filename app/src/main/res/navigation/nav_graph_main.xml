@@ -11,6 +11,7 @@
         <action android:id="@+id/action_home_to_label_edit" app:destination="@id/dialog_label_edit" />
         <action android:id="@+id/action_home_to_sort" app:destination="@id/dialog_sort" />
         <action android:id="@+id/action_home_to_widget_guide" app:destination="@id/fragment_widget_guide" />
+        <action android:id="@+id/action_home_to_vip" app:destination="@id/fragment_vip" />
     </fragment>
 
     <fragment android:id="@+id/fragment_widget_guide" android:name="com.mckimquyen.notes.ui.guide.WidgetGuideFrm" tools:layout="@layout/f_widget_guide" />
@@ -32,6 +33,8 @@
         <action android:id="@+id/action_about_libraries" app:destination="@id/about_libraries" />
         <action android:id="@+id/action_nested_settings" app:destination="@id/fragment_settings_nested" />
     </fragment>
+
+    <fragment android:id="@+id/fragment_vip" android:name="com.mckimquyen.notes.ui.vip.VipFrm" tools:layout="@layout/f_vip" />
 
     <fragment android:id="@+id/fragment_settings_nested" android:name="com.mckimquyen.notes.ui.setting.NestedSettingsFrm" tools:layout="@layout/f_settings">
         <argument android:name="prefsXml" app:argType="integer" />

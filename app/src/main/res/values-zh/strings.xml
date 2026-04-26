@@ -68,7 +68,7 @@
     <string name="trash_delete_selected_message">所选笔记将被永久删除。</string>
     <string name="trash_empty_message">回收站中的所有笔记将被永久删除。</string>
     <string name="search_hint">搜索笔记</string>
-    <string name="search_empty_placeholder">没有找到您查询的笔记。</string>
+    <string name="search_empty_placeholder">没有符合搜索的笔记。请尝试其他查询。</string>
     <string name="sort_title">排序选项</string>
     <string name="sort_direction">排序方向</string>
     <string name="sort_direction_ascending">升序</string>
@@ -99,7 +99,7 @@
     <string name="edit_in_trash_message">无法编辑回收站内的笔记。</string>
     <string name="edit_copy_suffix">复制</string>
     <string name="edit_copy_untitled_name">未命名</string>
-    <string name="edit_convert_keep_checked">删除选中的项目?</string>
+    <string name="edit_convert_keep_checked">文本笔记不支持复选框。要删除选中的项目吗？</string>
     <plurals name="edit_checked_items">
         <item quantity="other">%d 个已选中的项目</item>
     </plurals>
@@ -207,4 +207,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">语言</string>
+    <string name="pref_language_system">系统默认</string>
+    <string name="msg_consent_not_required">隐私设置仅在需要同意的地区可用。</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">高级版</string>
+    <string name="pref_privacy_settings">隐私设置</string>
+    <string name="pref_privacy_settings_summary">管理广告同意 (GDPR / 欧洲经济区)</string>
+    <string name="vip_screen_title">高级版</string>
+    <string name="vip_screen_hero_title">Cat Note 高级版</string>
+    <string name="vip_label_premium">高级会员</string>
+    <string name="vip_status_active">已激活</string>
+    <string name="vip_status_inactive">未激活</string>
+    <string name="vip_expires_until">已激活 · %1$s</string>
+    <string name="vip_benefits_title">您将获得</string>
+    <string name="vip_benefit_no_banner">无横幅广告</string>
+    <string name="vip_benefit_no_interstitial">无全屏广告</string>
+    <string name="vip_benefit_no_app_open">无启动 / 恢复广告</string>
+    <string name="vip_benefit_support">支持持续开发</string>
+    <string name="vip_action_activate">激活高级版</string>
+    <string name="vip_action_reset">重置高级版</string>
+    <string name="vip_footer_info">高级版使用离线激活密钥 — 应用内不进行付款处理。</string>
+    <string name="vip_dialog_title">输入您的高级版密钥</string>
+    <string name="vip_dialog_subtitle">每个密钥激活高级版 30 天。</string>
+    <string name="vip_dialog_input_hint">激活密钥</string>
+    <string name="vip_dialog_btn_activate">激活</string>
+    <string name="vip_dialog_btn_cancel">取消</string>
+    <string name="vip_msg_success">高级版已激活 · %1$d 天</string>
+    <string name="vip_msg_invalid">密钥无效，请重试。</string>
+    <string name="vip_reset_title">重置高级版？</string>
+    <string name="vip_reset_message">所有高级版权益将立即移除。</string>
+    <string name="vip_reset_confirm">重置</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">再按一次返回退出</string>
+    <string name="reminder_saved_for">提醒已设置为 %1$s</string>
+    <string name="color_default">默认</string>
 </resources>

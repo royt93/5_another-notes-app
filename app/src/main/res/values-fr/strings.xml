@@ -70,7 +70,7 @@
     <string name="trash_delete_selected_message">Les notes sélectionnées seront supprimées définitivement.</string>
     <string name="trash_empty_message">Toutes les notes dans la corbeille sont supprimées définitivement.</string>
     <string name="search_hint">Rechercher dans vos notes</string>
-    <string name="search_empty_placeholder">Aucune note trouvée pour cette recherche.</string>
+    <string name="search_empty_placeholder">Aucune note ne correspond à votre recherche. Essayez une autre requête.</string>
     <string name="sort_title">Options de tri</string>
     <string name="sort_direction">Sens du tri</string>
     <string name="sort_direction_ascending">Ordre croissant</string>
@@ -105,7 +105,7 @@
     <string name="edit_in_trash_message">Impossible de modifier une note dans la corbeille.</string>
     <string name="edit_copy_suffix">Copie</string>
     <string name="edit_copy_untitled_name">Sans titre</string>
-    <string name="edit_convert_keep_checked">Effacer les éléments cochés?</string>
+    <string name="edit_convert_keep_checked">Les notes texte ne supportent pas les cases à cocher. Supprimer les éléments cochés?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d élément coché</item>
         <item quantity="other">%d élément cochés</item>
@@ -227,4 +227,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Langue</string>
+    <string name="pref_language_system">Paramètre système</string>
+    <string name="msg_consent_not_required">Les paramètres de confidentialité ne sont disponibles que dans les régions où le consentement est requis.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Paramètres de confidentialité</string>
+    <string name="pref_privacy_settings_summary">Gérer le consentement publicitaire (RGPD / EEE)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">ABONNEMENT PREMIUM</string>
+    <string name="vip_status_active">ACTIF</string>
+    <string name="vip_status_inactive">INACTIF</string>
+    <string name="vip_expires_until">Actif · %1$s</string>
+    <string name="vip_benefits_title">Ce que vous obtenez</string>
+    <string name="vip_benefit_no_banner">Pas de bannières publicitaires</string>
+    <string name="vip_benefit_no_interstitial">Pas de publicités plein écran</string>
+    <string name="vip_benefit_no_app_open">Pas de publicités au lancement / reprise</string>
+    <string name="vip_benefit_support">Soutenez le développement continu</string>
+    <string name="vip_action_activate">Activer Premium</string>
+    <string name="vip_action_reset">Réinitialiser Premium</string>
+    <string name="vip_footer_info">Premium utilise une clé d\'activation hors ligne — aucun paiement dans l\'app.</string>
+    <string name="vip_dialog_title">Entrez votre clé Premium</string>
+    <string name="vip_dialog_subtitle">Chaque clé active Premium pour 30 jours.</string>
+    <string name="vip_dialog_input_hint">Clé d\'activation</string>
+    <string name="vip_dialog_btn_activate">Activer</string>
+    <string name="vip_dialog_btn_cancel">Annuler</string>
+    <string name="vip_msg_success">Premium activé · %1$d jours</string>
+    <string name="vip_msg_invalid">Clé invalide. Veuillez réessayer.</string>
+    <string name="vip_reset_title">Réinitialiser Premium ?</string>
+    <string name="vip_reset_message">Tous les avantages Premium seront supprimés immédiatement.</string>
+    <string name="vip_reset_confirm">Réinitialiser</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Appuyez à nouveau sur retour pour quitter</string>
+    <string name="reminder_saved_for">Rappel défini pour %1$s</string>
+    <string name="color_default">Par défaut</string>
 </resources>

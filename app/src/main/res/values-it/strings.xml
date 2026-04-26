@@ -69,7 +69,7 @@
     <string name="trash_delete_selected_message">Le note selezionate saranno eliminate permanentemente.</string>
     <string name="trash_empty_message">Tutte le note nel Cestino saranno eliminate permanentemente.</string>
     <string name="search_hint">Cerca note</string>
-    <string name="search_empty_placeholder">Nessuna nota trovata per la tua ricerca.</string>
+    <string name="search_empty_placeholder">Nessuna nota corrisponde alla ricerca. Prova un\'altra query.</string>
     <string name="sort_title">Ordinamento</string>
     <string name="sort_direction">Ordine</string>
     <string name="sort_direction_ascending">Crescente</string>
@@ -104,7 +104,7 @@
     <string name="edit_in_trash_message">Impossibile modificare le note nel cestino.</string>
     <string name="edit_copy_suffix">Copia</string>
     <string name="edit_copy_untitled_name">Senza titolo</string>
-    <string name="edit_convert_keep_checked">Rimuovere gli elementi completati?</string>
+    <string name="edit_convert_keep_checked">Le note di testo non supportano le caselle. Rimuovere gli elementi spuntati?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d elemento completato</item>
         <item quantity="other">%d elementi completati</item>
@@ -200,4 +200,41 @@ Cliccare OK per procedere.</string>
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Lingua</string>
+    <string name="pref_language_system">Predefinita di sistema</string>
+    <string name="msg_consent_not_required">Le impostazioni privacy sono disponibili solo nelle regioni in cui è richiesto il consenso.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Impostazioni privacy</string>
+    <string name="pref_privacy_settings_summary">Gestisci consenso pubblicitario (GDPR / SEE)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">ABBONAMENTO PREMIUM</string>
+    <string name="vip_status_active">ATTIVO</string>
+    <string name="vip_status_inactive">NON ATTIVO</string>
+    <string name="vip_expires_until">Attivo · %1$s</string>
+    <string name="vip_benefits_title">Cosa ottieni</string>
+    <string name="vip_benefit_no_banner">Niente banner pubblicitari</string>
+    <string name="vip_benefit_no_interstitial">Niente annunci a schermo intero</string>
+    <string name="vip_benefit_no_app_open">Niente annunci di apertura / ripresa</string>
+    <string name="vip_benefit_support">Supporta lo sviluppo continuo</string>
+    <string name="vip_action_activate">Attiva Premium</string>
+    <string name="vip_action_reset">Reimposta Premium</string>
+    <string name="vip_footer_info">Premium usa una chiave di attivazione offline — nessun pagamento nell\'app.</string>
+    <string name="vip_dialog_title">Inserisci la chiave Premium</string>
+    <string name="vip_dialog_subtitle">Ogni chiave attiva Premium per 30 giorni.</string>
+    <string name="vip_dialog_input_hint">Chiave di attivazione</string>
+    <string name="vip_dialog_btn_activate">Attiva</string>
+    <string name="vip_dialog_btn_cancel">Annulla</string>
+    <string name="vip_msg_success">Premium attivato · %1$d giorni</string>
+    <string name="vip_msg_invalid">Chiave non valida. Riprova.</string>
+    <string name="vip_reset_title">Reimpostare Premium?</string>
+    <string name="vip_reset_message">Tutti i vantaggi Premium saranno rimossi immediatamente.</string>
+    <string name="vip_reset_confirm">Reimposta</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Premi indietro di nuovo per uscire</string>
+    <string name="reminder_saved_for">Promemoria impostato per %1$s</string>
+    <string name="color_default">Predefinito</string>
 </resources>

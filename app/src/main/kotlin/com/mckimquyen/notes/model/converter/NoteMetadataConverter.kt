@@ -22,7 +22,7 @@ object NoteMetadataConverter : KSerializer<NoteMetadata> {
 
     @TypeConverter
     @JvmStatic
-    fun toMetadata(str: String) = try {
+    fun toMetadata(str: String): NoteMetadata = try {
         json.decodeFromString(NoteMetadata.serializer(), str)
     } catch (e: SerializationException) {
         throw BadDataException(cause = e)
@@ -30,7 +30,7 @@ object NoteMetadataConverter : KSerializer<NoteMetadata> {
 
     @TypeConverter
     @JvmStatic
-    fun toString(metadata: NoteMetadata) = json.encodeToString(NoteMetadata.serializer(), metadata)
+    fun toString(metadata: NoteMetadata): String = json.encodeToString(NoteMetadata.serializer(), metadata)
 
     override val descriptor = PrimitiveSerialDescriptor("NoteMetadata", PrimitiveKind.STRING)
 

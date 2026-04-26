@@ -73,7 +73,7 @@
     <string name="trash_delete_selected_message">Вибрані нотатки видаляться назавжди.</string>
     <string name="trash_empty_message">Усі нотатки в смітнику видаляться назавжди.</string>
     <string name="search_hint">Пошук нотаток</string>
-    <string name="search_empty_placeholder">За Вашим запитом нотаток не знайдено.</string>
+    <string name="search_empty_placeholder">Жодних нотаток за запитом. Спробуйте інший запит.</string>
     <string name="sort_title">Параметри сортування</string>
     <string name="sort_direction">Напрям сортування</string>
     <string name="sort_direction_ascending">Зростання</string>
@@ -116,7 +116,7 @@
     <string name="edit_in_trash_message">Не можна змінювати нотатки в смітнику.</string>
     <string name="edit_copy_suffix">Копія</string>
     <string name="edit_copy_untitled_name">Без назви</string>
-    <string name="edit_convert_keep_checked">Вилучити відмічені пункти?</string>
+    <string name="edit_convert_keep_checked">Текстові нотатки не підтримують прапорці. Вилучити відмічені пункти?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d відмічений пункт</item>
         <item quantity="few">%d відмічені пункти</item>
@@ -225,4 +225,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Мова</string>
+    <string name="pref_language_system">Стандартна системна</string>
+    <string name="msg_consent_not_required">Налаштування приватності доступні лише в регіонах, де потрібна згода.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Преміум</string>
+    <string name="pref_privacy_settings">Налаштування приватності</string>
+    <string name="pref_privacy_settings_summary">Керувати рекламною згодою (GDPR / ЄЕЗ)</string>
+    <string name="vip_screen_title">Преміум</string>
+    <string name="vip_screen_hero_title">Cat Note Преміум</string>
+    <string name="vip_label_premium">ПРЕМІУМ-ЧЛЕНСТВО</string>
+    <string name="vip_status_active">АКТИВНО</string>
+    <string name="vip_status_inactive">НЕ АКТИВНО</string>
+    <string name="vip_expires_until">Активно · %1$s</string>
+    <string name="vip_benefits_title">Що ви отримуєте</string>
+    <string name="vip_benefit_no_banner">Без банерної реклами</string>
+    <string name="vip_benefit_no_interstitial">Без повноекранної реклами</string>
+    <string name="vip_benefit_no_app_open">Без реклами при запуску / поверненні</string>
+    <string name="vip_benefit_support">Підтримай розвиток</string>
+    <string name="vip_action_activate">Активувати Преміум</string>
+    <string name="vip_action_reset">Скинути Преміум</string>
+    <string name="vip_footer_info">Преміум використовує офлайн-ключ активації — жодних платежів у додатку.</string>
+    <string name="vip_dialog_title">Введіть Преміум-ключ</string>
+    <string name="vip_dialog_subtitle">Кожен ключ активує Преміум на 30 днів.</string>
+    <string name="vip_dialog_input_hint">Ключ активації</string>
+    <string name="vip_dialog_btn_activate">Активувати</string>
+    <string name="vip_dialog_btn_cancel">Скасувати</string>
+    <string name="vip_msg_success">Преміум активовано · %1$d днів</string>
+    <string name="vip_msg_invalid">Невірний ключ. Спробуйте знову.</string>
+    <string name="vip_reset_title">Скинути Преміум?</string>
+    <string name="vip_reset_message">Усі переваги Преміум буде негайно видалено.</string>
+    <string name="vip_reset_confirm">Скинути</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Натисніть назад ще раз для виходу</string>
+    <string name="reminder_saved_for">Нагадування на %1$s</string>
+    <string name="color_default">За замовчуванням</string>
 </resources>

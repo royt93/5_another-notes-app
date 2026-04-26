@@ -8,22 +8,23 @@ import com.google.android.material.color.DynamicColors
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.model.PrefsManager
-import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.main.BaseAct
 import com.mckimquyen.notes.ui.main.MainAct
+import com.roy.sdkadbmob.AdManager
 import javax.inject.Inject
 
-class SplashAct : BaseAct() {
+// Class name kept as "SplashActivity" so AdManager ProcessLifecycle.onStart can match
+// `simpleName == "SplashActivity"` and skip showing App Open Resume here while
+// initSplashScreen flow is running its own App Open.
+class SplashActivity : BaseAct() {
 
     @Inject
     lateinit var prefs: PrefsManager
 
     private val handler = Handler(Looper.getMainLooper())
-    // Fix LOW-2: Use WeakReference so SplashAct is not held for 300ms if destroyed early
     private val finishRunnable = Runnable {
-        val act = this@SplashAct
-        if (!act.isDestroyed && !act.isFinishing) {
-            act.finish()
+        if (!isDestroyed && !isFinishing) {
+            finish()
         }
     }
 
@@ -36,18 +37,23 @@ class SplashAct : BaseAct() {
         }
         setContentView(R.layout.a_splash)
 
-        AdMobManager.initSplashScreen(activity = this, onAdLoaded = {
-            goToMain()
-        })
+        // UMP Consent (Google Play 2024+ requirement for EEA / UK / CH).
+        // Must run BEFORE loading any ad — initSplashScreen kicks off App Open load internally.
+        AdManager.requestConsentInfoUpdate(this, tagForUnderAgeOfConsent = false) { canRequestAds ->
+            if (canRequestAds) {
+                AdManager.initSplashScreen(activity = this, onAdLoaded = { goToMain() })
+            } else {
+                // User declined consent → skip ad, navigate immediately.
+                goToMain()
+            }
+        }
     }
 
     private fun goToMain() {
-        val intent = Intent(this, MainAct::class.java)
-        startActivity(intent)
-//        finish()
+        startActivity(Intent(this, MainAct::class.java))
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        // Trì hoãn finish để đợi animation hoàn tất
-        handler.postDelayed(finishRunnable, 300) // delay khoảng 300ms (hoặc đúng thời gian của animation)
+        // Delay finish so the cross-fade animation finishes before the activity goes away.
+        handler.postDelayed(finishRunnable, 300)
     }
 
     override fun onDestroy() {

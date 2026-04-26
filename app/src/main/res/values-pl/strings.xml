@@ -73,7 +73,7 @@
     <string name="trash_delete_selected_message">Wybrane notatki zostaną usunięte na zawsze.</string>
     <string name="trash_empty_message">Wszystkie notatki w koszu zostaną usunięte na zawsze.</string>
     <string name="search_hint">Szukaj notatek</string>
-    <string name="search_empty_placeholder">Nie znaleziono pasujących notatek.</string>
+    <string name="search_empty_placeholder">Brak notatek pasujących do wyszukiwania. Spróbuj innego zapytania.</string>
     <string name="sort_title">Opcje sortowania</string>
     <string name="sort_direction">Kierunek sortowania</string>
     <string name="sort_direction_ascending">Rosnąco</string>
@@ -116,7 +116,7 @@
     <string name="edit_in_trash_message">Nie możesz edytować notatki z kosza.</string>
     <string name="edit_copy_suffix">Kopiuj</string>
     <string name="edit_copy_untitled_name">Bez tytułu</string>
-    <string name="edit_convert_keep_checked">Usunąć zaznaczone elementy?</string>
+    <string name="edit_convert_keep_checked">Notatki tekstowe nie obsługują pól wyboru. Usunąć zaznaczone elementy?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d zaznaczony element</item>
         <item quantity="few">%d zaznaczone elementy</item>
@@ -225,4 +225,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Język</string>
+    <string name="pref_language_system">Domyślny systemu</string>
+    <string name="msg_consent_not_required">Ustawienia prywatności są dostępne tylko w regionach, w których wymagana jest zgoda.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Ustawienia prywatności</string>
+    <string name="pref_privacy_settings_summary">Zarządzaj zgodą na reklamy (RODO / EOG)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">CZŁONKOSTWO PREMIUM</string>
+    <string name="vip_status_active">AKTYWNE</string>
+    <string name="vip_status_inactive">NIEAKTYWNE</string>
+    <string name="vip_expires_until">Aktywne · %1$s</string>
+    <string name="vip_benefits_title">Co otrzymujesz</string>
+    <string name="vip_benefit_no_banner">Brak reklam banerowych</string>
+    <string name="vip_benefit_no_interstitial">Brak reklam pełnoekranowych</string>
+    <string name="vip_benefit_no_app_open">Brak reklam przy uruchomieniu / wznowieniu</string>
+    <string name="vip_benefit_support">Wesprzyj dalszy rozwój</string>
+    <string name="vip_action_activate">Aktywuj Premium</string>
+    <string name="vip_action_reset">Zresetuj Premium</string>
+    <string name="vip_footer_info">Premium używa klucza aktywacyjnego offline — brak płatności w aplikacji.</string>
+    <string name="vip_dialog_title">Wprowadź klucz Premium</string>
+    <string name="vip_dialog_subtitle">Każdy klucz aktywuje Premium na 30 dni.</string>
+    <string name="vip_dialog_input_hint">Klucz aktywacyjny</string>
+    <string name="vip_dialog_btn_activate">Aktywuj</string>
+    <string name="vip_dialog_btn_cancel">Anuluj</string>
+    <string name="vip_msg_success">Premium aktywowane · %1$d dni</string>
+    <string name="vip_msg_invalid">Nieprawidłowy klucz. Spróbuj ponownie.</string>
+    <string name="vip_reset_title">Zresetować Premium?</string>
+    <string name="vip_reset_message">Wszystkie korzyści Premium zostaną natychmiast usunięte.</string>
+    <string name="vip_reset_confirm">Resetuj</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Naciśnij ponownie wstecz, aby wyjść</string>
+    <string name="reminder_saved_for">Przypomnienie ustawione na %1$s</string>
+    <string name="color_default">Domyślny</string>
 </resources>

@@ -4,18 +4,15 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.gms.ads.MobileAds
 import com.mckimquyen.notes.di.DaggerAppComponent
 import com.mckimquyen.notes.model.NotesDb
 import com.mckimquyen.notes.model.PrefsManager
-import com.mckimquyen.notes.sdkadbmob.AdMobManager
 import com.mckimquyen.notes.ui.AppTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import com.roy.sdkadbmob.AdManager
+import com.roy.sdkadbmob.AdSdkConfig
 import javax.inject.Inject
 
 //done
@@ -40,9 +37,6 @@ class RApp : Application() {
         DaggerAppComponent.factory().create(applicationContext)
     }
 
-    // Fix MEDIUM-1: Named scope so it is trackable and cancellable (instead of anonymous CoroutineScope)
-    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     @Inject
     lateinit var prefs: PrefsManager
 
@@ -53,8 +47,7 @@ class RApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        this.setupApplovinAd()
-        setupAdmob()
+        setupAds()
         appComponent.inject(this)
 
         // Initialize shared preferences
@@ -90,46 +83,34 @@ class RApp : Application() {
         }
     }
 
-    private fun setupAdmob() {
-        appScope.launch {
-            MobileAds.initialize(this@RApp) {}
-            AdMobManager.init(this@RApp) { success, gaidCurrent ->
-                Log.d("roy93~", "AdMobManager init success $success, gaidCurrent $gaidCurrent")
-            }
+    // SDK orchestrates: earlyInit → MobileAds.initialize OR AppLovinSdk.initialize → init (GAID/VIP) → registerAppOpenAdLifecycle.
+    // App Open from background is auto-wired via ProcessLifecycle inside initialize().
+    private fun setupAds() {
+        AdManager.setConfig(
+            AdSdkConfig(
+                isEnableAdmob          = BuildConfig.IS_ENABLE_ADMOB,
+                isDebug                = BuildConfig.DEBUG,
+                admobAppOpenId         = BuildConfig.ADMOB_APP_OPEN_ID,
+                admobInterstitialId    = BuildConfig.ADMOB_INTERSTITIAL_ID,
+                admobBannerId          = BuildConfig.ADMOB_BANNER_ID,
+                admobRewardedId        = BuildConfig.ADMOB_REWARDED_ID,
+                applovinAppOpenId      = BuildConfig.APPLOVIN_APP_OPEN_ID,
+                applovinInterstitialId = BuildConfig.APPLOVIN_INTERSTITIAL_ID,
+                applovinBannerId       = BuildConfig.APPLOVIN_BANNER_ID,
+                applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
+                applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
+                vipKeySecret           = decodeVipKey(BuildConfig.VIP_KEY_ENCODED),
+            )
+        )
+        AdManager.initialize(this) { success, gaid ->
+            Log.d("roy93~", "AdManager init success=$success, gaid=$gaid")
         }
-//        registerActivityLifecycleCallbacks(
-//            AppLifecycleListener(
-//                { isForeground, activity ->
-//                    if (isForeground) {
-//                        Log.d("roy93~", "App moved to Foreground")
-//                        Log.d("roy93~", "activity.localClassName ${activity.localClassName}")
-//                        Log.d(
-//                            "roy93~",
-//                            "SplashAct::class.java.simpleName ${SplashAct::class.java.simpleName}"
-//                        )
-//                        if (activity.localClassName == SplashAct::class.java.simpleName) {
-//                            //do nothing
-//                        } else {
-//                            AdMobManager.showAppOpenAd(activity)
-//                        }
-//                    } else {
-//                        Log.d("roy93~", "App moved to Background")
-//                    }
-//                }, { activity ->
-//                    Log.d("roy93~", "callbackActivityCreated ${activity.localClassName}")
-//                    if (activity.localClassName == SplashAct::class.java.simpleName) {
-//                        //do nothing
-//                    } else {
-//                        AdMobManager.loadAppOpenAd(
-//                            context = this,
-//                            adUnitId = BuildConfig.ADMOB_APP_OPEN_ID,
-//                            onAdLoaded = {},
-//                        )
-//                    }
-//                }
-//            )
-//        )
     }
+
+    // Light obfuscation — Base64 hides the plain key from a casual `strings` dump on the APK.
+    // Reversible by anyone who decompiles, which is acceptable for an offline activation key.
+    private fun decodeVipKey(encoded: String): String =
+        String(Base64.decode(encoded, Base64.NO_WRAP))
 
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "reminders"

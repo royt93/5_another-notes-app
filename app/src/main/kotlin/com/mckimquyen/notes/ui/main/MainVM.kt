@@ -199,6 +199,10 @@ class MainVM @AssistedInject constructor(
             R.id.drawerItemWidgetGuide -> {
                 _navDirectionsEvent.send(HomeFrmDirections.actionHomeToWidgetGuide())
             }
+
+            R.id.drawerItemVip -> {
+                _navDirectionsEvent.send(HomeFrmDirections.actionHomeToVip())
+            }
         }
 
         // Navigate to label, if it has been selected

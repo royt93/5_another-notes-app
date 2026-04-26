@@ -15,7 +15,7 @@ import com.mckimquyen.notes.ui.setting.ExportPasswordDlg
 import com.mckimquyen.notes.ui.setting.ImportPasswordDlg
 import com.mckimquyen.notes.ui.setting.SettingsFrm
 import com.mckimquyen.notes.ui.sort.SortDialog
-import com.mckimquyen.notes.ui.splash.SplashAct
+import com.mckimquyen.notes.ui.splash.SplashActivity
 import com.mckimquyen.notes.widget.NoteCountWidget
 import dagger.BindsInstance
 import dagger.Component
@@ -29,7 +29,7 @@ interface AppComponent {
     fun inject(widget: NoteCountWidget)
     fun inject(factory: com.mckimquyen.notes.widget.RecentNotesRemoteViewsFactory)
     fun inject(activity: NotificationAct)
-    fun inject(activity: SplashAct)
+    fun inject(activity: SplashActivity)
     fun inject(fragment: HomeFrm)
     fun inject(fragment: SearchFrm)
     fun inject(fragment: EditFrm)

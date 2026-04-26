@@ -204,6 +204,22 @@ class ReminderDlg : DialogFragment(), RecurrenceListCallback, RecurrencePickerCa
 
         viewModel.reminderChangeEvent.observeEvent(this) { reminder ->
             sharedViewModel.onReminderChange(reminder)
+            // Confirm to user — without this the dialog just closes silently and the user
+            // has no idea whether the reminder was actually saved.
+            if (reminder != null) {
+                val formatted = android.text.format.DateUtils.formatDateTime(
+                    requireContext(),
+                    reminder.next.time,
+                    android.text.format.DateUtils.FORMAT_SHOW_DATE or
+                        android.text.format.DateUtils.FORMAT_SHOW_TIME or
+                        android.text.format.DateUtils.FORMAT_ABBREV_MONTH
+                )
+                android.widget.Toast.makeText(
+                    requireContext(),
+                    getString(R.string.reminder_saved_for, formatted),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         viewModel.dismissEvent.observeEvent(this) {

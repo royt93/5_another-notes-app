@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew :app:help --quiet)",
+      "Bash(./gradlew :app:compileDevDebugKotlin --quiet)",
+      "Bash(./gradlew :app:compileDevDebugKotlin)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(./gradlew :app:clean :app:compileDevDebugKotlin)",
+      "Read(//Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/**)",
+      "Read(//Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/_AdmobWrapper/**)",
+      "Bash(./gradlew :app:assembleDevDebug)",
+      "Bash(./gradlew :app:kaptDevDebugKotlin)",
+      "Bash(./gradlew :app:kaptDevDebugKotlin --stacktrace)",
+      "Bash(./gradlew :app:clean)",
+      "Bash(./gradlew :app:assembleProductionDebug)",
+      "Bash(./gradlew :app:assembleDevRelease)",
+      "Bash(./gradlew :app:clean :app:assembleDevDebug)",
+      "Bash(sed -i '' 's|<string name=\"vip_msg_success\">Premium activated</string>|<string name=\"vip_msg_success\">Premium activated · %1$d days</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_msg_success\">تم تفعيل النسخة المميزة</string>|<string name=\"vip_msg_success\">تم تفعيل النسخة المميزة · %1$d يوم</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-ar/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_msg_success\">Premium aktiviert</string>|<string name=\"vip_msg_success\">Premium aktiviert · %1$d Tage</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-de/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_msg_success\">Premium activado</string>|<string name=\"vip_msg_success\">Premium activado · %1$d días</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-es/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_msg_success\">Premium activé</string>|<string name=\"vip_msg_success\">Premium activé · %1$d jours</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-fr/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_dialog_subtitle\">Paste your activation key below.</string>|<string name=\"vip_dialog_subtitle\">Each key activates Premium for 30 days.</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_dialog_subtitle\">الصق مفتاح التفعيل أدناه.</string>|<string name=\"vip_dialog_subtitle\">كل مفتاح يُفعّل النسخة المميزة لمدة 30 يومًا.</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-ar/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_dialog_subtitle\">Füge deinen Aktivierungsschlüssel unten ein.</string>|<string name=\"vip_dialog_subtitle\">Jeder Schlüssel aktiviert Premium für 30 Tage.</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-de/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_dialog_subtitle\">Pega tu clave de activación abajo.</string>|<string name=\"vip_dialog_subtitle\">Cada clave activa Premium por 30 días.</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-es/strings.xml)",
+      "Bash(sed -i '' 's|<string name=\"vip_dialog_subtitle\">Collez votre clé d\\\\\\\\'\"'\"'activation ci-dessous.</string>|<string name=\"vip_dialog_subtitle\">Chaque clé active Premium pour 30 jours.</string>|' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values-fr/strings.xml)",
+      "Bash(cat)",
+      "Bash(bash /tmp/apply_translations.sh)",
+      "Bash(grep -n \"^import com.mckimquyen.notes.R$\\\\|import com.mckimquyen.notes.R$\" /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt)",
+      "Bash(awk 'NR>=113 && NR<=120' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values/strings.xml)",
+      "Bash(python3 *)"
+    ]
+  }
+}

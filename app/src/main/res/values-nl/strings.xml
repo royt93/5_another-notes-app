@@ -69,7 +69,7 @@
     <string name="trash_delete_selected_message">Geselecteerde notities worden defrinitief verwijderd.</string>
     <string name="trash_empty_message">Alle notities in de prullenbak worden definitief verwijderd.</string>
     <string name="search_hint">Doorzoek notities</string>
-    <string name="search_empty_placeholder">Geen zoekresultaat gevonden.</string>
+    <string name="search_empty_placeholder">Geen notities komen overeen met je zoekopdracht. Probeer een andere zoekopdracht.</string>
     <string name="sort_title">Sorteeropties</string>
     <string name="sort_direction">Sorteer richting</string>
     <string name="sort_direction_ascending">Oplopend</string>
@@ -104,7 +104,7 @@
     <string name="edit_in_trash_message">Notitie kan niet bewerkt worden in de prullenbak.</string>
     <string name="edit_copy_suffix">Kopiëren</string>
     <string name="edit_copy_untitled_name">Naamloos</string>
-    <string name="edit_convert_keep_checked">Verwijder aangevinkte items?</string>
+    <string name="edit_convert_keep_checked">Tekstnotities ondersteunen geen aanvinkvakjes. Aangevinkte items verwijderen?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d aangevinkt item</item>
         <item quantity="other">%d aangevinkte items</item>
@@ -231,4 +231,41 @@
     </plurals>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Taal</string>
+    <string name="pref_language_system">Systeemstandaard</string>
+    <string name="msg_consent_not_required">Privacy-instellingen zijn alleen beschikbaar in regio\'s waar toestemming vereist is.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Privacy-instellingen</string>
+    <string name="pref_privacy_settings_summary">Advertentietoestemming beheren (AVG / EER)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-LIDMAATSCHAP</string>
+    <string name="vip_status_active">ACTIEF</string>
+    <string name="vip_status_inactive">NIET ACTIEF</string>
+    <string name="vip_expires_until">Actief · %1$s</string>
+    <string name="vip_benefits_title">Wat je krijgt</string>
+    <string name="vip_benefit_no_banner">Geen banneradvertenties</string>
+    <string name="vip_benefit_no_interstitial">Geen schermvullende advertenties</string>
+    <string name="vip_benefit_no_app_open">Geen opstart- / hervat-advertenties</string>
+    <string name="vip_benefit_support">Ondersteun voortdurende ontwikkeling</string>
+    <string name="vip_action_activate">Premium activeren</string>
+    <string name="vip_action_reset">Premium resetten</string>
+    <string name="vip_footer_info">Premium gebruikt een offline activatiesleutel — geen betaling in de app.</string>
+    <string name="vip_dialog_title">Voer je Premium-sleutel in</string>
+    <string name="vip_dialog_subtitle">Elke sleutel activeert Premium voor 30 dagen.</string>
+    <string name="vip_dialog_input_hint">Activatiesleutel</string>
+    <string name="vip_dialog_btn_activate">Activeren</string>
+    <string name="vip_dialog_btn_cancel">Annuleren</string>
+    <string name="vip_msg_success">Premium geactiveerd · %1$d dagen</string>
+    <string name="vip_msg_invalid">Ongeldige sleutel. Probeer het opnieuw.</string>
+    <string name="vip_reset_title">Premium resetten?</string>
+    <string name="vip_reset_message">Alle Premium-voordelen worden direct verwijderd.</string>
+    <string name="vip_reset_confirm">Resetten</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Druk nogmaals op terug om af te sluiten</string>
+    <string name="reminder_saved_for">Herinnering ingesteld voor %1$s</string>
+    <string name="color_default">Standaard</string>
 </resources>

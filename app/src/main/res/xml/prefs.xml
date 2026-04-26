@@ -3,9 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <PreferenceCategory app:title="@string/pref_privacy_settings">
+
+        <Preference
+            app:icon="@drawable/ic_policy_24px"
+            app:key="privacy_settings"
+            app:summary="@string/pref_privacy_settings_summary"
+            app:title="@string/pref_privacy_settings" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/pref_group_appearance">
 
-        <DropDownPreference
+        <ListPreference
+            app:defaultValue=""
+            app:entries="@array/pref_language_entries"
+            app:entryValues="@array/pref_language_values"
+            app:icon="@drawable/ic_language_24"
+            app:key="app_language"
+            app:title="@string/pref_language"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
             app:defaultValue="system"
             app:entries="@array/pref_theme_entries"
             app:entryValues="@array/pref_theme_values"
@@ -34,7 +53,7 @@
             app:showSeekBarValue="true"
             app:title="@string/pref_preview_labels" />
 
-        <DropDownPreference
+        <ListPreference
             app:defaultValue="none"
             app:entries="@array/pref_shown_date_entries"
             app:entryValues="@array/pref_shown_date_values"
@@ -51,7 +70,7 @@
 
     <PreferenceCategory app:title="@string/pref_group_behavior">
 
-        <DropDownPreference
+        <ListPreference
             app:defaultValue="archive"
             app:entries="@array/pref_swipe_action_entries"
             app:entryValues="@array/pref_swipe_action_values"
@@ -59,7 +78,7 @@
             app:title="@string/pref_behavior_swipe_action_left"
             app:useSimpleSummaryProvider="true" />
 
-        <DropDownPreference
+        <ListPreference
             app:defaultValue="archive"
             app:entries="@array/pref_swipe_action_entries"
             app:entryValues="@array/pref_swipe_action_values"
@@ -77,11 +96,14 @@
 
     <PreferenceCategory app:title="@string/pref_group_data">
 
-        <Preference
-            app:icon="@drawable/ic_export"
-            app:key="export_data"
-            app:summary="@string/pref_data_export_summary"
-            app:title="@string/pref_data_export" />
+        <!-- Auto-export first — it's the recurring "set & forget" option,
+             so it deserves more visual weight than one-off manual operations. -->
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="auto_export"
+            app:summary="@string/pref_data_auto_export_summary"
+            app:title="@string/pref_data_auto_export"
+            app:widgetLayout="@drawable/ic_material_switch" />
 
         <SwitchPreferenceCompat
             android:title="@string/pref_data_encrypted_export"
@@ -90,12 +112,11 @@
             app:summary="@string/pref_data_encrypted_export_summary"
             app:widgetLayout="@drawable/ic_material_switch" />
 
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:key="auto_export"
-            app:summary="@string/pref_data_auto_export_summary"
-            app:title="@string/pref_data_auto_export"
-            app:widgetLayout="@drawable/ic_material_switch" />
+        <Preference
+            app:icon="@drawable/ic_export"
+            app:key="export_data"
+            app:summary="@string/pref_data_export_summary"
+            app:title="@string/pref_data_export" />
 
         <Preference
             app:icon="@drawable/ic_import"

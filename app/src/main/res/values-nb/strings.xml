@@ -69,7 +69,7 @@
     <string name="trash_delete_selected_message">Valgte notater blir slettet permanent.</string>
     <string name="trash_empty_message">Alle notater i papirkurven blir slettet permanent.</string>
     <string name="search_hint">Søk i notater</string>
-    <string name="search_empty_placeholder">Ingen notater funnet for dette søket.</string>
+    <string name="search_empty_placeholder">Ingen notater samsvarer med søket. Prøv et annet søk.</string>
     <string name="sort_title">Sorteringsalternativer</string>
     <string name="sort_direction">Sorteringsrekkefølge</string>
     <string name="sort_direction_ascending">Stigende</string>
@@ -104,7 +104,7 @@
     <string name="edit_in_trash_message">Kan ikke redigere notat i papirkurv.</string>
     <string name="edit_copy_suffix">Kopi</string>
     <string name="edit_copy_untitled_name">Uten tittel</string>
-    <string name="edit_convert_keep_checked">Fjerne avmerkede elementer?</string>
+    <string name="edit_convert_keep_checked">Tekstnotater støtter ikke avkrysningsbokser. Fjerne avmerkede elementer?</string>
     <plurals name="edit_checked_items">
         <item quantity="one">%d avmerket element</item>
         <item quantity="other">%d avmerkede elementer</item>
@@ -195,4 +195,41 @@
     <string name="date_rel_tomorrow">I morgen, %s</string>
     <!-- format values: date, time -->
     <string name="date_rel_absolute">%1$s, %2$s</string>
+
+    <string name="pref_language">Språk</string>
+    <string name="pref_language_system">Systemstandard</string>
+    <string name="msg_consent_not_required">Personverninnstillinger er kun tilgjengelig i regioner der samtykke kreves.</string>
+
+    <!-- VIP / Premium membership -->
+    <string name="pref_vip_title">Premium</string>
+    <string name="pref_privacy_settings">Personverninnstillinger</string>
+    <string name="pref_privacy_settings_summary">Administrer annonsesamtykke (GDPR / EØS)</string>
+    <string name="vip_screen_title">Premium</string>
+    <string name="vip_screen_hero_title">Cat Note Premium</string>
+    <string name="vip_label_premium">PREMIUM-MEDLEMSKAP</string>
+    <string name="vip_status_active">AKTIV</string>
+    <string name="vip_status_inactive">INAKTIV</string>
+    <string name="vip_expires_until">Aktiv · %1$s</string>
+    <string name="vip_benefits_title">Hva du får</string>
+    <string name="vip_benefit_no_banner">Ingen bannerannonser</string>
+    <string name="vip_benefit_no_interstitial">Ingen fullskjermannonser</string>
+    <string name="vip_benefit_no_app_open">Ingen oppstart- / gjenoppta-annonser</string>
+    <string name="vip_benefit_support">Støtt videreutvikling</string>
+    <string name="vip_action_activate">Aktiver Premium</string>
+    <string name="vip_action_reset">Tilbakestill Premium</string>
+    <string name="vip_footer_info">Premium bruker en offline aktiveringsnøkkel — ingen betaling i appen.</string>
+    <string name="vip_dialog_title">Skriv inn Premium-nøkkelen</string>
+    <string name="vip_dialog_subtitle">Hver nøkkel aktiverer Premium i 30 dager.</string>
+    <string name="vip_dialog_input_hint">Aktiveringsnøkkel</string>
+    <string name="vip_dialog_btn_activate">Aktiver</string>
+    <string name="vip_dialog_btn_cancel">Avbryt</string>
+    <string name="vip_msg_success">Premium aktivert · %1$d dager</string>
+    <string name="vip_msg_invalid">Ugyldig nøkkel. Prøv igjen.</string>
+    <string name="vip_reset_title">Tilbakestille Premium?</string>
+    <string name="vip_reset_message">Alle Premium-fordeler fjernes umiddelbart.</string>
+    <string name="vip_reset_confirm">Tilbakestill</string>
+    <!-- UX polish -->
+    <string name="exit_press_back_again">Trykk tilbake igjen for å avslutte</string>
+    <string name="reminder_saved_for">Påminnelse satt til %1$s</string>
+    <string name="color_default">Standard</string>
 </resources>
