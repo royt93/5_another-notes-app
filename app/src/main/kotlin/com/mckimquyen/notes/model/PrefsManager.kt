@@ -32,7 +32,7 @@ class PrefsManager @Inject constructor(
     val moveCheckedToBottom: Boolean by preference(MOVE_CHECKED_TO_BOTTOM, false)
     var listLayoutMode: NoteListLayoutMode by enumPreference(LIST_LAYOUT_MODE, NoteListLayoutMode.LIST)
     val swipeActionLeft: SwipeAction by enumPreference(SWIPE_ACTION_LEFT, SwipeAction.ARCHIVE)
-    val swipeActionRight: SwipeAction by enumPreference(SWIPE_ACTION_RIGHT, SwipeAction.ARCHIVE)
+    val swipeActionRight: SwipeAction by enumPreference(SWIPE_ACTION_RIGHT, SwipeAction.DELETE)
     val shownDateField: ShownDateField by enumPreference(SHOWN_DATE, ShownDateField.NONE)
     val maximumPreviewLabels: Int by preference(PREVIEW_LABELS, 0)
     var sortField: SortField by enumPreference(SORT_FIELD, SortField.MODIFIED_DATE)
