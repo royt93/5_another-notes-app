@@ -82,6 +82,13 @@ class SortDialog : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        // Make the BottomSheetDialog window background transparent so the
+        // rounded-corner drawable on the root view is visible.
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

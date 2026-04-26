@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,11 +53,11 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.title.text = title
 
-        // Wire close button — always visible; disabled when isCancelable=false (first-run)
+        // Wire close button — hidden entirely when isCancelable=false (first-run language)
+        binding.btnClose.isVisible = isCancelable
         binding.btnClose.setOnClickListener {
             dismissAllowingStateLoss()
         }
-        binding.btnClose.isEnabled = isCancelable
 
         binding.items.layoutManager = LinearLayoutManager(requireContext())
         binding.items.adapter = Adapter(entries, values, initialValue) { picked ->
@@ -72,6 +73,13 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
             (binding.items.layoutManager as? LinearLayoutManager)
                 ?.scrollToPositionWithOffset(currentIndex, ITEM_SCROLL_OFFSET_PX)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Make the BottomSheetDialog window background transparent so the
+        // rounded-corner drawable on the root view is visible.
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     override fun onDestroyView() {
