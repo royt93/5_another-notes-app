@@ -20,6 +20,7 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
+import com.mckimquyen.notes.ui.common.SelectorBottomSheet
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.databinding.FSettingsBinding
@@ -47,6 +48,16 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         private const val RESTART_DIALOG_TAG = "restart_dialog"
         private const val CLEAR_DATA_DIALOG_TAG = "clear_data_dialog"
         private const val AUTOMATIC_EXPORT_DIALOG_TAG = "automatic_export_dialog"
+
+        // Preference keys whose default ListPreference dialog is replaced by SelectorBottomSheet.
+        private val CUPERTINO_SELECTOR_KEYS = setOf(
+            "app_language",
+            PrefsManager.THEME,
+            PrefsManager.SHOWN_DATE,
+            PrefsManager.SWIPE_ACTION_LEFT,
+            PrefsManager.SWIPE_ACTION_RIGHT,
+        )
+        private const val SELECTOR_RESULT_PREFIX = "selector_result_"
     }
 
     @Inject
@@ -191,6 +202,17 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         val context = requireContext()
         setPreferencesFromResource(R.xml.prefs, rootKey)
 
+        // Wire 1 listener per Cupertino selector key — bottom sheet returns picked value
+        // here; we forward it to the ListPreference so onPreferenceChangeListener still fires.
+        CUPERTINO_SELECTOR_KEYS.forEach { key ->
+            childFragmentManager.setFragmentResultListener(
+                "$SELECTOR_RESULT_PREFIX$key", this
+            ) { _, bundle ->
+                val newValue = bundle.getString(SelectorBottomSheet.RESULT_KEY).orEmpty()
+                applySelectorValue(key, newValue)
+            }
+        }
+
         requirePreference<Preference>("privacy_settings").setOnPreferenceClickListener {
             openPrivacySettings()
             true
@@ -329,6 +351,34 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         super.onDestroy()
         exportDataLauncher = null
         autoExportLauncher = null
+    }
+
+    /**
+     * Intercept the default AlertDialog for ListPreference and show our Cupertino-style
+     * bottom sheet instead. Falls through to default behavior for other preferences.
+     */
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is ListPreference && preference.key in CUPERTINO_SELECTOR_KEYS) {
+            SelectorBottomSheet.newInstance(
+                requestKey = "$SELECTOR_RESULT_PREFIX${preference.key}",
+                title = preference.title?.toString().orEmpty(),
+                entries = preference.entries.map { it.toString() }.toTypedArray(),
+                values = preference.entryValues.map { it.toString() }.toTypedArray(),
+                selectedValue = preference.value.orEmpty(),
+            ).show(childFragmentManager, "selector_${preference.key}")
+            return
+        }
+        super.onDisplayPreferenceDialog(preference)
+    }
+
+    /** Apply the bottom-sheet result the same way the default dialog would (listener + persist). */
+    private fun applySelectorValue(prefKey: String, newValue: String) {
+        val pref = findPreference<ListPreference>(prefKey) ?: return
+        if (pref.value == newValue) return
+        // Mirror PreferenceFragmentCompat: if the listener vetoes (returns false), don't persist.
+        val listener = pref.onPreferenceChangeListener
+        val accepted = listener?.onPreferenceChange(pref, newValue) ?: true
+        if (accepted) pref.value = newValue
     }
 
     /**
