@@ -1,6 +1,6 @@
 # Quick Wins — Another Notes App
 
-> Updated: 2026-02-20 | Tất cả 5 tính năng đã được implement ✅
+> Updated: 2026-06-22 | Tất cả 5 tính năng đã được implement ✅
 
 | # | Feature | Files changed | Status |
 |---|---------|--------------|--------|
@@ -34,7 +34,8 @@
 ### Feature 4 — Ad After Delete
 
 - `HomeFrm.setupViewModelObservers()` — observe `sharedViewModel.statusChangeEvent`
-- Nếu `newStatus == DELETED` → `AdMobManager.showInterstitial()` (fire-and-forget)
+- Nếu `newStatus == DELETED` → `AdManager.showInterstitial()` (fire-and-forget)
+- ⚠️ **Đã migrate:** `AdMobManager` → `com.roy.sdkadbmob.AdManager` (AdmobApplovinWrapper 1.1.3, 2026-04-26)
 
 ### Feature 5 — Quick Note Widget
 
