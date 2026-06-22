@@ -1,5 +1,5 @@
 org.gradle.java.home=/Users/loitran/Library/Java/JavaVirtualMachines/openjdk-20.0.1/Contents/Home
-org.gradle.jvmargs=-XX:MaxHeapSize\=4096m -Xmx2048m
+org.gradle.jvmargs=-XX:MaxHeapSize\=4096m -Xmx4096m
 # App version
 # Must be updated manually in app/build.gradle!
 # (F-Droid only supports raw literals for auto update detection)

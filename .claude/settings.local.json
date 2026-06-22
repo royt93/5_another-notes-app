@@ -30,6 +30,8 @@
       "Bash(grep -n \"^import com.mckimquyen.notes.R$\\\\|import com.mckimquyen.notes.R$\" /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt)",
       "Bash(awk 'NR>=113 && NR<=120' /Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res/values/strings.xml)",
       "Bash(python3 *)"
-    ]
-  }
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "skipDangerousModePermissionPrompt": true
 }
