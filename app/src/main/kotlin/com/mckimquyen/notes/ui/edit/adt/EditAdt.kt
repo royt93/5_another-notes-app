@@ -38,6 +38,14 @@ class EditAdt(val context: Context, val callback: Callback) :
      */
     private var pendingFocusChange: EditVM.FocusChange? = null
 
+    var isReadingMode: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
         itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -106,11 +114,11 @@ class EditAdt(val context: Context, val callback: Callback) :
         val item = getItem(position)
         when (holder) {
             is EditDateViewHolder -> holder.bind(item as EditDateItem)
-            is EditTitleViewHolder -> holder.bind(item as EditTitleItem)
-            is EditContentViewHolder -> holder.bind(item as EditContentItem)
-            is EditItemViewHolder -> holder.bind(item as EditItemItem)
+            is EditTitleViewHolder -> holder.bind(item as EditTitleItem, isReadingMode)
+            is EditContentViewHolder -> holder.bind(item as EditContentItem, isReadingMode)
+            is EditItemViewHolder -> holder.bind(item as EditItemItem, isReadingMode)
             is EditHeaderViewHolder -> holder.bind(item as EditCheckedHeaderItem)
-            is EditItemLabelsViewHolder -> holder.bind(item as EditChipsItem)
+            is EditItemLabelsViewHolder -> holder.bind(item as EditChipsItem, isReadingMode)
         }
         if (holder is EditFocusableViewHolder && position == pendingFocusChange?.itemPos) {
             // Apply pending focus change event.

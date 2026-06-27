@@ -145,6 +145,10 @@ class EditVM @AssistedInject constructor(
     val noteMood: LiveData<Int>
         get() = _noteMood
 
+    private val _isReadingMode = MutableLiveData<Boolean>(false)
+    val isReadingMode: LiveData<Boolean>
+        get() = _isReadingMode
+
     private val _editItems = MutableLiveData<MutableList<EditListItem>>()
     val editItems: LiveData<out List<EditListItem>>
         get() = _editItems
@@ -825,7 +829,12 @@ class EditVM @AssistedInject constructor(
     }
 
     private fun updateListItems() {
-        _editItems.value = listItems.toMutableList()
+        val items = if (isReadingMode.value == true) {
+            listItems.filter { it != EditItemAddItem }.toMutableList()
+        } else {
+            listItems.toMutableList()
+        }
+        _editItems.value = items
     }
 
     override fun onNoteItemChanged(pos: Int, isPaste: Boolean) {
@@ -934,7 +943,7 @@ class EditVM @AssistedInject constructor(
     }
 
     override val isNoteDragEnabled: Boolean
-        get() = !isNoteInTrash && listItems.count { it is EditItemItem } > 1
+        get() = !isNoteInTrash && !(isReadingMode.value ?: false) && listItems.count { it is EditItemItem } > 1
 
     override fun onNoteItemSwapped(from: Int, to: Int) {
         // Swap items actual positions in list note
@@ -1021,6 +1030,11 @@ class EditVM @AssistedInject constructor(
 
     private inline fun <reified T : EditListItem> findItemPos(): Int {
         return listItems.indexOfFirst { it is T }
+    }
+
+    fun toggleReadingMode() {
+        _isReadingMode.value = !(_isReadingMode.value ?: false)
+        updateListItems()
     }
 
     data class FocusChange(val itemPos: Int, val pos: Int, val itemExists: Boolean)

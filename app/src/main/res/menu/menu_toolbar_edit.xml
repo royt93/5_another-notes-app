@@ -68,6 +68,12 @@
         tools:title="@string/action_delete" />
 
     <item
+        android:id="@+id/itemReadingMode"
+        android:icon="@drawable/ic_eye"
+        android:title="Reading Mode"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/itemFocusMode"
         android:icon="@drawable/ic_eye_off"
         android:title="Focus"

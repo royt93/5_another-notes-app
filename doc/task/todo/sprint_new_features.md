@@ -64,7 +64,7 @@
 
 ---
 
-## F-08: Note Reading Mode (Chế độ đọc ghi chú)
+## F-08: Note Reading Mode (Chế độ đọc ghi chú) [DONE]
 
 **Mô tả:** Chế độ xem ghi chú không chỉnh sửa, ẩn toàn bộ UI điều khiển và bàn phím ảo, tăng kích thước font chữ giúp người dùng dễ dàng xem lại ghi chú dài mà không vô tình chỉnh sửa.
 

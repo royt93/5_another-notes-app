@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -82,10 +83,12 @@ class EditTitleViewHolder(binding: VItemEditTitleBinding, callback: EditAdt.Call
         titleEdt.maxLines = Integer.MAX_VALUE
     }
 
-    fun bind(item: EditTitleItem) {
+    fun bind(item: EditTitleItem, isReadingMode: Boolean = false) {
         this.item = item
-        titleEdt.isFocusable = item.editable
-        titleEdt.isFocusableInTouchMode = item.editable
+        val editable = item.editable && !isReadingMode
+        titleEdt.isFocusable = editable
+        titleEdt.isFocusableInTouchMode = editable
+        titleEdt.isCursorVisible = editable
         titleEdt.setText(item.title.text)
     }
 
@@ -131,11 +134,20 @@ class EditContentViewHolder(
         contentEdt.onLinkClickListener = null
     }
 
-    fun bind(item: EditContentItem) {
+    fun bind(item: EditContentItem, isReadingMode: Boolean = false) {
         this.item = item
-        contentEdt.isFocusable = item.editable
-        contentEdt.isFocusableInTouchMode = item.editable
+        val editable = item.editable && !isReadingMode
+        contentEdt.isFocusable = editable
+        contentEdt.isFocusableInTouchMode = editable
+        contentEdt.isCursorVisible = editable
         contentEdt.setText(item.content.text)
+        if (isReadingMode) {
+            contentEdt.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 18f)
+            contentEdt.setLineSpacing(0f, 1.3f)
+        } else {
+            contentEdt.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15f)
+            contentEdt.setLineSpacing(0f, 1.0f)
+        }
     }
 
     override fun setFocus(pos: Int) {
@@ -145,7 +157,7 @@ class EditContentViewHolder(
     }
 }
 
-class EditItemViewHolder(binding: VItemEditItemBinding, callback: EditAdt.Callback) :
+class EditItemViewHolder(binding: VItemEditItemBinding, private val callback: EditAdt.Callback) :
     RecyclerView.ViewHolder(binding.root), EditFocusableViewHolder {
 
     val dragImv = binding.dragImv
@@ -231,16 +243,30 @@ class EditItemViewHolder(binding: VItemEditItemBinding, callback: EditAdt.Callba
         deleteImv.setOnClickListener(deleteClickListener)
     }
 
-    fun bind(item: EditItemItem) {
+    fun bind(item: EditItemItem, isReadingMode: Boolean = false) {
         this.item = item
 
-        itemEdt.isFocusable = item.editable
-        itemEdt.isFocusableInTouchMode = item.editable
+        val editable = item.editable && !isReadingMode
+        itemEdt.isFocusable = editable
+        itemEdt.isFocusableInTouchMode = editable
+        itemEdt.isCursorVisible = editable
         itemEdt.setText(item.content.text)
         itemEdt.isActivated = !item.checked
 
         itemCheck.isChecked = item.checked
-        itemCheck.isEnabled = item.editable
+        itemCheck.isEnabled = editable
+
+        // Hide delete and drag icons in reading mode
+        deleteImv.isInvisible = true
+        dragImv.isVisible = !isReadingMode && !item.checked && callback.isNoteDragEnabled
+
+        if (isReadingMode) {
+            itemEdt.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 17f)
+            itemEdt.setLineSpacing(0f, 1.2f)
+        } else {
+            itemEdt.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15f)
+            itemEdt.setLineSpacing(0f, 1.0f)
+        }
     }
 
     override fun setFocus(pos: Int) {
@@ -306,7 +332,7 @@ class EditItemLabelsViewHolder(binding: VItemEditLabelsBinding, callback: EditAd
         DateFormat.getDateInstance(DateFormat.SHORT).format(date)
     }
 
-    fun bind(item: EditChipsItem) {
+    fun bind(item: EditChipsItem, isReadingMode: Boolean = false) {
         val layoutInflater = LayoutInflater.from(chipGroup.context)
         // Clear listeners before removing views to prevent memory leaks
         for (i in 0 until chipGroup.childCount) {
@@ -323,7 +349,12 @@ class EditItemLabelsViewHolder(binding: VItemEditLabelsBinding, callback: EditAd
                     ) as Chip
                     chipGroup.addView(view)
                     view.text = chip.name
-                    view.setOnClickListener(labelClickListener)
+                    if (!isReadingMode) {
+                        view.setOnClickListener(labelClickListener)
+                    } else {
+                        view.isClickable = false
+                        view.isFocusable = false
+                    }
                 }
 
                 is Reminder -> {
@@ -340,7 +371,12 @@ class EditItemLabelsViewHolder(binding: VItemEditLabelsBinding, callback: EditAd
                     view.strikethroughText = chip.done
                     view.isActivated = !chip.done
                     view.setChipIconResource(if (chip.recurrence != null) R.drawable.ic_repeat else R.drawable.ic_alarm)
-                    view.setOnClickListener(reminderClickListener)
+                    if (!isReadingMode) {
+                        view.setOnClickListener(reminderClickListener)
+                    } else {
+                        view.isClickable = false
+                        view.isFocusable = false
+                    }
                 }
 
                 else -> error("Unknown chip type")

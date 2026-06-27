@@ -126,6 +126,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 toggleFocusMode()
                 return@addCallback
             }
+            if (viewModel.isReadingMode.value == true) {
+                viewModel.toggleReadingMode()
+                return@addCallback
+            }
             viewModel.saveNote()
             viewModel.exit()
         }
@@ -257,6 +261,48 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
         viewModel.focusEvent.observeEvent(viewLifecycleOwner, adapter::setItemFocus)
 
+        viewModel.isReadingMode.observe(viewLifecycleOwner) { isReadingMode ->
+            adapter.isReadingMode = isReadingMode
+            if (isReadingMode) {
+                view?.hideKeyboard()
+            }
+            androidx.transition.TransitionManager.beginDelayedTransition(binding.fragmentEditLayout)
+
+            val visibility = if (isReadingMode) View.GONE else View.VISIBLE
+            binding.colorPickerScroll.visibility = visibility
+            binding.moodPickerRow.visibility = visibility
+            binding.wordCharCountTxv.visibility = visibility
+            
+            // Hide charLimitRing in reading mode
+            if (isReadingMode) {
+                binding.charLimitRing.visibility = View.GONE
+            } else {
+                val chars = viewModel.wordCharCount.value?.second ?: 0
+                binding.charLimitRing.visibility = if (!isFocusMode && chars >= EditVM.CHAR_LIMIT_WARN) View.VISIBLE else View.GONE
+            }
+
+            if (!isReadingMode && isFocusMode) {
+                binding.colorPickerScroll.visibility = View.GONE
+                binding.wordCharCountTxv.visibility = View.GONE
+            }
+
+            val menu = binding.toolbar.menu
+            menu.findItem(R.id.itemType)?.isVisible = !isReadingMode
+            menu.findItem(R.id.itemPin)?.isVisible = !isReadingMode
+            menu.findItem(R.id.itemReminder)?.isVisible = !isReadingMode
+            menu.findItem(R.id.itemLabels)?.isVisible = !isReadingMode
+
+            val isList = viewModel.noteType.value == NoteType.LIST
+            menu.findItem(R.id.itemUncheckAll)?.isVisible = !isReadingMode && isList
+            menu.findItem(R.id.itemDeleteChecked)?.isVisible = !isReadingMode && isList
+            menu.findItem(R.id.itemFocusMode)?.isVisible = !isReadingMode
+
+            menu.findItem(R.id.itemReadingMode)?.apply {
+                setIcon(if (isReadingMode) R.drawable.ic_pencil else R.drawable.ic_eye)
+                setTitle(if (isReadingMode) "Edit Note" else "Reading Mode")
+            }
+        }
+
         viewModel.noteCreateEvent.observeEvent(viewLifecycleOwner) { noteId ->
             sharedViewModel.noteCreated(noteId)
         }
@@ -374,7 +420,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             val pct = (chars.toFloat() / charLimit * 100).toInt().coerceIn(0, 100)
             when {
                 chars >= charLimit -> {
-                    if (!isFocusMode) binding.charLimitRing.isVisible = true
+                    if (!isFocusMode && viewModel.isReadingMode.value != true) binding.charLimitRing.isVisible = true
                     binding.charLimitRing.setIndicatorColor(
                         com.google.android.material.color.MaterialColors.getColor(
                             binding.charLimitRing,
@@ -393,7 +439,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                     }
                 }
                 chars >= warnThreshold -> {
-                    if (!isFocusMode) binding.charLimitRing.isVisible = true
+                    if (!isFocusMode && viewModel.isReadingMode.value != true) binding.charLimitRing.isVisible = true
                     binding.charLimitRing.tag = null
                     binding.charLimitRing.setIndicatorColor(
                         com.google.android.material.color.MaterialColors.getColor(
@@ -487,6 +533,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     private fun updateItemsForNoteStatus(status: NoteStatus) {
         val menu = binding.toolbar.menu
+        val isReading = viewModel.isReadingMode.value == true
 
         val moveItem = menu.findItem(R.id.itemMove)
         when (status) {
@@ -509,7 +556,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         val isTrash = status == NoteStatus.DELETED
         menu.findItem(R.id.itemShare).isVisible = !isTrash
         menu.findItem(R.id.itemCopy).isVisible = !isTrash
-        menu.findItem(R.id.itemReminder).isVisible = !isTrash
+        menu.findItem(R.id.itemReminder).isVisible = !isTrash && !isReading
         menu.findItem(R.id.itemDelete).setTitle(
             if (isTrash) {
                 R.string.action_delete_forever
@@ -521,15 +568,16 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     private fun updateItemsForPinnedStatus(pinned: PinnedStatus) {
         val item = binding.toolbar.menu.findItem(R.id.itemPin)
+        val isReading = viewModel.isReadingMode.value == true
         when (pinned) {
             PinnedStatus.PINNED -> {
-                item.isVisible = true
+                item.isVisible = !isReading
                 item.setTitle(R.string.action_unpin)
                 item.setIcon(R.drawable.ic_pin_outline)
             }
 
             PinnedStatus.UNPINNED -> {
-                item.isVisible = true
+                item.isVisible = !isReading
                 item.setTitle(R.string.action_pin)
                 item.setIcon(R.drawable.ic_pin)
             }
@@ -552,8 +600,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     private fun updateItemsForNoteType(type: NoteType) {
         val menu = binding.toolbar.menu
+        val isReading = viewModel.isReadingMode.value == true
 
         val typeItem = menu.findItem(R.id.itemType)
+        typeItem.isVisible = !isReading
         when (type) {
             NoteType.TEXT -> {
                 typeItem.setIcon(R.drawable.ic_checkbox)
@@ -569,7 +619,8 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
     private fun updateItemsForStatusAndType(state: Pair<NoteStatus, NoteType>) {
         val menu = binding.toolbar.menu
-        val isEditableList = state.first != NoteStatus.DELETED && state.second == NoteType.LIST
+        val isReading = viewModel.isReadingMode.value == true
+        val isEditableList = !isReading && state.first != NoteStatus.DELETED && state.second == NoteType.LIST
         menu.findItem(R.id.itemUncheckAll).isVisible = isEditableList
         menu.findItem(R.id.itemDeleteChecked).isVisible = isEditableList
     }
@@ -625,6 +676,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
             R.id.itemDelete -> viewModel.deleteNote()
             R.id.itemFocusMode -> toggleFocusMode()
+            R.id.itemReadingMode -> viewModel.toggleReadingMode()
             else -> return false
         }
         return true
