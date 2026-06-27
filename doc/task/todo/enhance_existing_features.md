@@ -69,7 +69,7 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
 
 ---
 
-## E-05: FAB — Entrance Animation khi mở app
+## E-05: FAB — Entrance Animation khi mở app [DONE]
 
 **Tính năng gốc:** FAB xuất hiện tức thì khi HomeFrm load.
 
@@ -206,7 +206,7 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
 
 | ID | Effort | Impact | Nên làm trước |
 |---|---|---|---|
-| E-05 | XS | HIGH | ✅ Làm ngay |
+| E-05 | XS | HIGH | Done (Spring scale-in) |
 | E-10 | XS | MEDIUM | ✅ Làm ngay |
 | E-01 | S | HIGH | Tuần tới |
 | E-06 | S | MEDIUM | Tuần tới |

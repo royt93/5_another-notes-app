@@ -173,6 +173,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.2.1"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "com.google.android.material:material:1.13.0"
+    implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
     implementation "com.maltaisn:recurpicker:2.1.7"
     implementation "com.mikepenz:aboutlibraries:10.9.2"
     implementation "com.mikepenz:aboutlibraries-core:10.9.2"

@@ -10,8 +10,13 @@ import android.util.Log
 import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.OvershootInterpolator
 import androidx.appcompat.widget.Toolbar
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -90,6 +95,10 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (savedInstanceState != null) {
+            isFirstFabEntrance = false
+        }
+
         // Toolbar
         binding.toolbar.apply {
             inflateMenu(R.menu.menu_toolbar_home)
@@ -152,18 +161,26 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
 
         viewModel.fabShown.observe(viewLifecycleOwner) { shown ->
             if (shown) {
-                binding.fab.show()
-                // Spring entrance: translationY (different property from fab.show()'s internal scale → no conflict)
                 if (isFirstFabEntrance) {
                     isFirstFabEntrance = false
-                    val offsetPx = resources.displayMetrics.density * 80f
-                    binding.fab.translationY = offsetPx
-                    binding.fab.animate()
-                        .translationY(0f)
-                        .setStartDelay(150)
-                        .setDuration(500)
-                        .setInterpolator(OvershootInterpolator(2.2f))
-                        .start()
+                    binding.fab.visibility = View.VISIBLE
+                    binding.fab.scaleX = 0f
+                    binding.fab.scaleY = 0f
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        delay(150)
+                        val springX = SpringAnimation(binding.fab, DynamicAnimation.SCALE_X, 1f).apply {
+                            spring?.dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
+                            spring?.stiffness = SpringForce.STIFFNESS_MEDIUM
+                        }
+                        val springY = SpringAnimation(binding.fab, DynamicAnimation.SCALE_Y, 1f).apply {
+                            spring?.dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
+                            spring?.stiffness = SpringForce.STIFFNESS_MEDIUM
+                        }
+                        springX.start()
+                        springY.start()
+                    }
+                } else {
+                    binding.fab.show()
                 }
             } else {
                 binding.fab.hide()
