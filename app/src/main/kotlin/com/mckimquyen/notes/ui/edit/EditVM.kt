@@ -98,6 +98,9 @@ class EditVM @AssistedInject constructor(
     /** Mood tag: 0 = none, 1–5 = emoji moods. */
     private var mood: Int = note.mood
 
+    /** Whether the note is locked with biometric authentication. */
+    private var isLocked: Boolean = note.isLocked
+
     /**
      * URL of last clicked span, if any.
      */
@@ -144,6 +147,10 @@ class EditVM @AssistedInject constructor(
     private val _noteMood = MutableLiveData<Int>()
     val noteMood: LiveData<Int>
         get() = _noteMood
+
+    private val _noteLocked = MutableLiveData<Boolean>()
+    val noteLocked: LiveData<Boolean>
+        get() = _noteLocked
 
     private val _isReadingMode = MutableLiveData<Boolean>(false)
     val isReadingMode: LiveData<Boolean>
@@ -324,6 +331,7 @@ class EditVM @AssistedInject constructor(
             reminder = note.reminder
             color = note.color
             mood = note.mood
+            isLocked = note.isLocked
 
             _noteType.value = note.type
             _noteStatus.value = status
@@ -331,6 +339,7 @@ class EditVM @AssistedInject constructor(
             _noteReminder.value = reminder
             _noteColor.value = color
             _noteMood.value = mood
+            _noteLocked.value = isLocked
 
             savedStateHandle[KEY_NOTE_ID] = note.id
 
@@ -444,6 +453,12 @@ class EditVM @AssistedInject constructor(
             PinnedStatus.CANT_PIN -> error("Can't pin")
         }
         _notePinned.value = pinned
+    }
+
+    fun toggleLock() {
+        isLocked = !isLocked
+        _noteLocked.value = isLocked
+        saveNote()
     }
 
     fun changeReminder() {
@@ -676,7 +691,7 @@ class EditVM @AssistedInject constructor(
         note = note.copy(
             title = title, content = content,
             metadata = metadata, status = status, pinned = pinned, reminder = reminder,
-            color = color, mood = mood
+            color = color, mood = mood, isLocked = isLocked
         )
 
         // Feature 1+3: Update word/char count and char-limit warning

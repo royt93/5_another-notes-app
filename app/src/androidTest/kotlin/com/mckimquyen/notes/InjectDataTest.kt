@@ -26,6 +26,7 @@ class InjectDataTest {
         
         // Sử dụng database thật (trên ổ cứng máy), không dùng inMemory!
         val db = Room.databaseBuilder(targetContext, NotesDb::class.java, "notes_db")
+            .addMigrations(*NotesDb.ALL_MIGRATIONS)
             .allowMainThreadQueries()
             .build()
         val notesDao = db.notesDao()

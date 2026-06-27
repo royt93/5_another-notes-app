@@ -84,4 +84,9 @@
         android:title="Export as PDF/Image"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/itemLock"
+        android:title="Lock note"
+        app:showAsAction="never" />
+
 </menu>

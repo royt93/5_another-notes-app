@@ -26,13 +26,28 @@ class TimelineNoteViewHolder(
         binding.titleTxv.text = item.title.content
         binding.titleTxv.isVisible = item.title.content.isNotBlank()
 
-        // Content preview (only for text notes)
-        val content = when (item) {
-            is NoteItemText -> item.content.content
-            is NoteItemList -> if (item.items.isNotEmpty()) item.items.first().content else ""
+        val isLocked = note.isLocked
+        binding.lockImv.isVisible = isLocked
+
+        if (isLocked) {
+            binding.contentTxv.isVisible = false
+            binding.moodTxv.isVisible = false
+        } else {
+            // Content preview (only for text notes)
+            val content = when (item) {
+                is NoteItemText -> item.content.content
+                is NoteItemList -> if (item.items.isNotEmpty()) item.items.first().content else ""
+            }
+            binding.contentTxv.text = content
+            binding.contentTxv.isVisible = content.isNotBlank()
+
+            // Mood badge
+            val moodEmoji = when (note.mood) {
+                1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
+            }
+            binding.moodTxv.isVisible = moodEmoji != null
+            binding.moodTxv.text = moodEmoji
         }
-        binding.contentTxv.text = content
-        binding.contentTxv.isVisible = content.isNotBlank()
 
         // Card background color
         val color = note.color
@@ -59,13 +74,6 @@ class TimelineNoteViewHolder(
 
         // Selection state
         binding.cardView.isChecked = item.checked
-
-        // Mood badge
-        val moodEmoji = when (note.mood) {
-            1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
-        }
-        binding.moodTxv.isVisible = moodEmoji != null
-        binding.moodTxv.text = moodEmoji
     }
 
     fun unbind() {

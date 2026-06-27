@@ -53,8 +53,17 @@ class RecentNotesRemoteViewsFactory(
         val views = RemoteViews(context.packageName, R.layout.widget_recent_notes_item)
 
         // Set text
-        val titleText = note.title.ifEmpty { "Untitled Note" }
-        val contentText = note.content.ifEmpty { "..." }
+        val isLocked = note.isLocked
+        val titleText = if (isLocked) {
+            "🔒 " + note.title.ifEmpty { "Locked Note" }
+        } else {
+            note.title.ifEmpty { "Untitled Note" }
+        }
+        val contentText = if (isLocked) {
+            "Locked"
+        } else {
+            note.content.ifEmpty { "..." }
+        }
         views.setTextViewText(R.id.widgetItemTitle, titleText)
         views.setTextViewText(R.id.widgetItemContent, contentText)
 

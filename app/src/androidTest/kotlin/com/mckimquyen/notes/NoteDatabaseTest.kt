@@ -64,4 +64,25 @@ class NoteDatabaseTest {
         assertEquals(note.title, loaded?.title)
         assertEquals(note.content, loaded?.content)
     }
+
+    @Test
+    fun insertAndReadLockedNote() = runBlocking {
+        val note = Note(
+            type = NoteType.TEXT,
+            title = "Test Locked Note",
+            content = "This is a locked note",
+            metadata = com.mckimquyen.notes.model.entity.BlankNoteMetadata,
+            addedDate = java.util.Date(),
+            lastModifiedDate = java.util.Date(),
+            status = com.mckimquyen.notes.model.entity.NoteStatus.ACTIVE,
+            pinned = com.mckimquyen.notes.model.entity.PinnedStatus.UNPINNED,
+            reminder = null,
+            isLocked = true
+        )
+        
+        val id = notesDao.insert(note)
+        val loaded = notesDao.getById(id)
+        
+        assertEquals(true, loaded?.isLocked)
+    }
 }

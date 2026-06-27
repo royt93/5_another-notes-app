@@ -95,6 +95,12 @@ data class Note(
      */
     @ColumnInfo(name = "mood", defaultValue = "0")
     val mood: Int = 0,
+
+    /**
+     * True if the note is locked and requires biometric authentication to view/edit.
+     */
+    @ColumnInfo(name = "is_locked", defaultValue = "0")
+    val isLocked: Boolean = false,
 ) {
 
     init {

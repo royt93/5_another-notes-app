@@ -58,6 +58,19 @@
                 tools:text="3 days ago, 16:11"
                 tools:visibility="visible" />
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/lockImv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateTxv"
+                app:srcCompat="@drawable/ic_lock"
+                app:tint="?android:attr/textColorSecondary"
+                tools:visibility="visible" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/contentTxv"
                 android:layout_width="0dp"

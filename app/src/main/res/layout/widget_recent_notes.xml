@@ -16,8 +16,6 @@
             android:layout_height="match_parent"
             android:autoStart="true"
             android:flipInterval="5000"
-            android:inAnimation="@android:anim/fade_in"
-            android:outAnimation="@android:anim/fade_out"
             android:loopViews="true" />
 
         <TextView android:id="@+id/widgetEmptyText" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:text="No active notes" android:textColor="@color/widget_text_secondary" android:textSize="14sp" android:visibility="gone" />

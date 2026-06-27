@@ -316,4 +316,11 @@
     <string name="vip_ad_not_ready_message">The ad is not ready yet. Please try again later!</string>
     <string name="vip_ad_no_reward">You didn\'t finish the ad — no reward granted.</string>
 
+    <!-- Note Biometric Lock -->
+    <string name="lock_biometric_title">Unlock Note</string>
+    <string name="lock_biometric_prompt_message">Authenticate to view or edit this note</string>
+    <string name="lock_biometric_not_configured_warning">Security lock screen not configured on this device</string>
+    <string name="action_lock_note">Lock note</string>
+    <string name="action_unlock_note">Unlock note</string>
+
 </resources>

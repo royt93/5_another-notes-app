@@ -59,9 +59,21 @@ sealed class NoteViewHolder<T : NoteItem>(itemView: View) :
     open fun bind(adapter: NoteAdt, item: T) {
         bindTitle(adapter, item)
         bindDate(adapter, item)
-        bindReminder(item)
-        bindLabels(adapter, item)
-        bindActionBtn(adapter, item)
+        if (item.note.isLocked) {
+            reminderChip.isVisible = false
+            labelGroup.isVisible = false
+            actionBtn.isVisible = false
+            cardView.setContentPadding(
+                /* left = */ 0,
+                /* top = */ 0,
+                /* right = */ 0,
+                /* bottom = */ cardView.context.resources.getDimensionPixelSize(R.dimen.note_bottom_padding_no_action)
+            )
+        } else {
+            bindReminder(item)
+            bindLabels(adapter, item)
+            bindActionBtn(adapter, item)
+        }
 
         // Set transition names for shared transitions
         val noteId = item.note.id
@@ -227,20 +239,28 @@ class TextNoteViewHolder(private val binding: VItemNoteTextBinding) :
         super.bind(adapter, item)
 
         val contentTxv = binding.contentTxv
-        val maxPreviewLines = adapter.prefsManager.getMaximumPreviewLines(NoteType.TEXT)
-        contentTxv.isVisible = maxPreviewLines > 0 && item.note.content.isNotBlank()
-        contentTxv.text = getHighlightedText(
-            item.content,
-            adapter.highlightBackgroundColor, adapter.highlightForegroundColor
-        )
-        contentTxv.maxLines = maxPreviewLines
+        val lockImv = binding.lockImv
+        lockImv.isVisible = item.note.isLocked
 
-        // F-01: Mood badge
-        val moodEmoji = when (item.note.mood) {
-            1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
+        if (item.note.isLocked) {
+            contentTxv.isVisible = false
+            binding.moodTxv.isVisible = false
+        } else {
+            val maxPreviewLines = adapter.prefsManager.getMaximumPreviewLines(NoteType.TEXT)
+            contentTxv.isVisible = maxPreviewLines > 0 && item.note.content.isNotBlank()
+            contentTxv.text = getHighlightedText(
+                item.content,
+                adapter.highlightBackgroundColor, adapter.highlightForegroundColor
+            )
+            contentTxv.maxLines = maxPreviewLines
+
+            // F-01: Mood badge
+            val moodEmoji = when (item.note.mood) {
+                1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
+            }
+            binding.moodTxv.isVisible = moodEmoji != null
+            binding.moodTxv.text = moodEmoji
         }
-        binding.moodTxv.isVisible = moodEmoji != null
-        binding.moodTxv.text = moodEmoji
     }
 }
 
@@ -261,27 +281,36 @@ class ListNoteViewHolder(private val binding: VItemNoteListBinding) :
     override fun bind(adapter: NoteAdt, item: NoteItemList) {
         super.bind(adapter, item)
 
-        // Bind list note items
-        val itemsLayout = binding.itemsLayout
-        itemsLayout.isVisible = item.items.isNotEmpty()
-        for ((i, noteItem) in item.items.withIndex()) {
-            val viewHolder = adapter.obtainListNoteItemViewHolder()
-            viewHolder.bind(adapter = adapter, item = noteItem, checked = item.itemsChecked[i])
-            itemsLayout.addView(/* child = */ viewHolder.binding.root, /* index = */ itemViewHolders.size)
-            itemViewHolders += viewHolder
-        }
+        val lockImv = binding.lockImv
+        lockImv.isVisible = item.note.isLocked
 
-        // Show a label indicating the number of items not shown.
+        val itemsLayout = binding.itemsLayout
         val infoTxv = binding.infoTxv
-        infoTxv.isVisible = item.overflowCount > 0
-        if (item.overflowCount > 0) {
-            infoTxv.text = adapter.context.resources.getQuantityString(
-                if (item.onlyCheckedInOverflow) {
-                    R.plurals.note_list_item_info_checked
-                } else {
-                    R.plurals.note_list_item_info
-                }, item.overflowCount, item.overflowCount
-            )
+
+        if (item.note.isLocked) {
+            itemsLayout.isVisible = false
+            infoTxv.isVisible = false
+        } else {
+            // Bind list note items
+            itemsLayout.isVisible = item.items.isNotEmpty()
+            for ((i, noteItem) in item.items.withIndex()) {
+                val viewHolder = adapter.obtainListNoteItemViewHolder()
+                viewHolder.bind(adapter = adapter, item = noteItem, checked = item.itemsChecked[i])
+                itemsLayout.addView(/* child = */ viewHolder.binding.root, /* index = */ itemViewHolders.size)
+                itemViewHolders += viewHolder
+            }
+
+            // Show a label indicating the number of items not shown.
+            infoTxv.isVisible = item.overflowCount > 0
+            if (item.overflowCount > 0) {
+                infoTxv.text = adapter.context.resources.getQuantityString(
+                    if (item.onlyCheckedInOverflow) {
+                        R.plurals.note_list_item_info_checked
+                    } else {
+                        R.plurals.note_list_item_info
+                    }, item.overflowCount, item.overflowCount
+                )
+            }
         }
     }
 

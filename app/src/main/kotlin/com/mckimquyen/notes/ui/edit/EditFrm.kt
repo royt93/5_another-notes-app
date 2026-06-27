@@ -252,6 +252,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         viewModel.noteType.observe(viewLifecycleOwner, ::updateItemsForNoteType)
         viewModel.noteType.asFlow().combine(viewModel.noteStatus.asFlow()) { type, status -> status to type }
             .asLiveData().observe(viewLifecycleOwner, ::updateItemsForStatusAndType)
+        viewModel.noteLocked.observe(viewLifecycleOwner) { isLocked ->
+            binding.toolbar.menu.findItem(R.id.itemLock)?.apply {
+                setTitle(if (isLocked) R.string.action_unlock_note else R.string.action_lock_note)
+            }
+        }
 
         viewModel.editItems.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
@@ -678,6 +683,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             R.id.itemDelete -> viewModel.deleteNote()
             R.id.itemFocusMode -> toggleFocusMode()
             R.id.itemReadingMode -> viewModel.toggleReadingMode()
+            R.id.itemLock -> viewModel.toggleLock()
             R.id.itemExport -> {
                 android.widget.Toast.makeText(requireContext(), "Export menu clicked!", android.widget.Toast.LENGTH_SHORT).show()
                 showExportDialog()

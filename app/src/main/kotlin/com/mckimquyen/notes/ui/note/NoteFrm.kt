@@ -234,37 +234,62 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         }
 
         viewModel.editItemEvent.observeEvent(viewLifecycleOwner) { (noteId, pos) ->
-            exitTransition = Hold()
-                .apply { duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_2).toLong() }
+            val noteItem = adapter.currentList.find { it.id == noteId } as? com.mckimquyen.notes.ui.note.adt.NoteItem
+            val note = noteItem?.note
 
-            val itemView: View =
-                binding.recyclerView.findViewHolderForAdapterPosition(pos)!!.itemView.findViewById(R.id.cardView)
-
-            val extras = FragmentNavigatorExtras(
-                itemView to "noteContainer$noteId"
-            )
-
-            // If the selected note isn't completely in view, move it into view.
-            val sgLm = layoutManager as? StaggeredGridLayoutManager
-            if (sgLm != null) {
-                val firstVisibleItem = sgLm.findFirstCompletelyVisibleItemPositions(null).minOrNull()
-                val lastVisibleItem = sgLm.findLastCompletelyVisibleItemPositions(null).maxOrNull()
-                if (firstVisibleItem != null && lastVisibleItem != null &&
-                    (pos < firstVisibleItem || pos > lastVisibleItem)
-                ) {
-                    binding.recyclerView.scrollToPosition(pos)
+            fun proceedToEdit() {
+                exitTransition = Hold().apply {
+                    duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_2).toLong()
                 }
-            } else {
-                val llm = layoutManager as? LinearLayoutManager
-                if (llm != null) {
-                    val firstVisibleItem = llm.findFirstCompletelyVisibleItemPosition()
-                    val lastVisibleItem = llm.findLastCompletelyVisibleItemPosition()
-                    if (pos < firstVisibleItem || pos > lastVisibleItem) {
+
+                val viewHolder = binding.recyclerView.findViewHolderForAdapterPosition(pos)
+                val itemView: View? = viewHolder?.itemView?.findViewById(R.id.cardView)
+
+                val extras = if (itemView != null) {
+                    FragmentNavigatorExtras(itemView to "noteContainer$noteId")
+                } else {
+                    null
+                }
+
+                // If the selected note isn't completely in view, move it into view.
+                val sgLm = layoutManager as? StaggeredGridLayoutManager
+                if (sgLm != null) {
+                    val firstVisibleItem = sgLm.findFirstCompletelyVisibleItemPositions(null).minOrNull()
+                    val lastVisibleItem = sgLm.findLastCompletelyVisibleItemPositions(null).maxOrNull()
+                    if (firstVisibleItem != null && lastVisibleItem != null &&
+                        (pos < firstVisibleItem || pos > lastVisibleItem)
+                    ) {
                         binding.recyclerView.scrollToPosition(pos)
                     }
+                } else {
+                    val llm = layoutManager as? LinearLayoutManager
+                    if (llm != null) {
+                        val firstVisibleItem = llm.findFirstCompletelyVisibleItemPosition()
+                        val lastVisibleItem = llm.findLastCompletelyVisibleItemPosition()
+                        if (pos < firstVisibleItem || pos > lastVisibleItem) {
+                            binding.recyclerView.scrollToPosition(pos)
+                        }
+                    }
                 }
+                navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), extras = extras)
             }
-            navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), extras = extras)
+
+            if (note != null && note.isLocked) {
+                if (com.mckimquyen.notes.ui.common.BiometricHelper.isBiometricAvailable(requireContext())) {
+                    com.mckimquyen.notes.ui.common.BiometricHelper.showBiometricPrompt(
+                        fragment = this,
+                        title = getString(R.string.lock_biometric_title),
+                        subtitle = getString(R.string.lock_biometric_prompt_message),
+                        onSuccess = {
+                            proceedToEdit()
+                        }
+                    )
+                } else {
+                    Snackbar.make(requireView(), R.string.lock_biometric_not_configured_warning, Snackbar.LENGTH_LONG).show()
+                }
+            } else {
+                proceedToEdit()
+            }
         }
 
         viewModel.currentSelection.observe(viewLifecycleOwner) { selection ->
