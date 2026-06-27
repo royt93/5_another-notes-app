@@ -79,4 +79,9 @@
         android:title="Focus"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/itemExport"
+        android:title="Export as PDF/Image"
+        app:showAsAction="never" />
+
 </menu>

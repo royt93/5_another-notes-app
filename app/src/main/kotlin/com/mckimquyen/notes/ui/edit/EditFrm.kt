@@ -557,6 +557,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         menu.findItem(R.id.itemShare).isVisible = !isTrash
         menu.findItem(R.id.itemCopy).isVisible = !isTrash
         menu.findItem(R.id.itemReminder).isVisible = !isTrash && !isReading
+        menu.findItem(R.id.itemExport)?.isVisible = !isTrash
         menu.findItem(R.id.itemDelete).setTitle(
             if (isTrash) {
                 R.string.action_delete_forever
@@ -677,6 +678,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             R.id.itemDelete -> viewModel.deleteNote()
             R.id.itemFocusMode -> toggleFocusMode()
             R.id.itemReadingMode -> viewModel.toggleReadingMode()
+            R.id.itemExport -> {
+                android.widget.Toast.makeText(requireContext(), "Export menu clicked!", android.widget.Toast.LENGTH_SHORT).show()
+                showExportDialog()
+            }
             else -> return false
         }
         return true
@@ -736,6 +741,65 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 viewModel.setNoteColor(color)
             }
             binding.colorPickerContainer.addView(btn)
+        }
+    }
+
+    private fun showExportDialog() {
+        val options = arrayOf("Export as PDF", "Export as Image (PNG)")
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Export Note")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> exportNote(true)
+                    1 -> exportNote(false)
+                }
+            }
+            .show()
+    }
+
+    private fun exportNote(isPdf: Boolean) {
+        android.widget.Toast.makeText(requireContext(), if (isPdf) "Exporting PDF..." else "Exporting Image...", android.widget.Toast.LENGTH_SHORT).show()
+        val note = viewModel.getNoteForExport()
+        val labels = viewModel.getLabelsForExport()
+        val cleanTitle = if (note.title.isBlank()) "Untitled" else note.title.replace("[\\\\/:*?\"<>|]".toRegex(), "_")
+        val timestamp = System.currentTimeMillis()
+        val filename = if (isPdf) "${cleanTitle}_$timestamp.pdf" else "${cleanTitle}_$timestamp.png"
+
+        try {
+            val exportDir = java.io.File(requireContext().cacheDir, "exports")
+            if (!exportDir.exists()) {
+                exportDir.mkdirs()
+            }
+            // Clear previous exports to save space
+            exportDir.listFiles()?.forEach { it.delete() }
+
+            val file = java.io.File(exportDir, filename)
+            if (isPdf) {
+                ExportHelper.exportAsPdf(requireContext(), note, labels, file)
+            } else {
+                ExportHelper.exportAsImage(requireContext(), note, labels, file)
+            }
+
+            android.widget.Toast.makeText(requireContext(), "File generated! Size: ${file.length()} bytes. Sharing...", android.widget.Toast.LENGTH_LONG).show()
+
+            // Share tệp
+            val uri = androidx.core.content.FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                file
+            )
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = if (isPdf) "application/pdf" else "image/png"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, note.title)
+                clipData = android.content.ClipData.newRawUri("", uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, "Share Exported Note"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            android.widget.Toast.makeText(requireContext(), "Failed to export: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
         }
     }
 

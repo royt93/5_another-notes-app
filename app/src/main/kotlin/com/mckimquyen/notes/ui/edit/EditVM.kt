@@ -1037,6 +1037,15 @@ class EditVM @AssistedInject constructor(
         updateListItems()
     }
 
+    fun getNoteForExport(): Note {
+        updateNote()
+        return note
+    }
+
+    fun getLabelsForExport(): List<Label> {
+        return labels
+    }
+
     data class FocusChange(val itemPos: Int, val pos: Int, val itemExists: Boolean)
 
     /**
