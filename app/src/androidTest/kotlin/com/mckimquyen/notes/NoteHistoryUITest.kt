@@ -51,7 +51,7 @@ class NoteHistoryUITest {
 
                 val historyMenuItem = toolbar.menu.findItem(R.id.itemTimeTravel)
                 assertNotNull("Note history menu item should exist", historyMenuItem)
-                assertEquals("Note history", historyMenuItem.title.toString())
+                assertEquals(activity.getString(R.string.time_travel_menu_title), historyMenuItem.title.toString())
 
                 // Start time travel mode by clicking the menu item
                 toolbar.menu.performIdentifierAction(R.id.itemTimeTravel, 0)

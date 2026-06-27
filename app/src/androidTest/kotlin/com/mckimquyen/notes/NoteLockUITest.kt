@@ -24,18 +24,21 @@ class NoteLockUITest {
                 fab.performClick()
             }
 
-            // Wait for navigation
-            Thread.sleep(1500)
+            // Wait for navigation and recycler view layout binding
+            var titleEdt: EditText? = null
+            for (i in 1..5) {
+                scenario.onActivity { activity ->
+                    val rv = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
+                    titleEdt = rv?.findViewById<EditText>(R.id.titleEdt)
+                }
+                if (titleEdt != null) break
+                Thread.sleep(500)
+            }
+            assertNotNull("titleEdt should exist in EditFrm layout within timeout", titleEdt)
 
             // 2. Set title and Perform Lock in EditFrm
             scenario.onActivity { activity ->
-                val recyclerView = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
-                assertNotNull("RecyclerView should exist in EditFrm", recyclerView)
-                
-                // Find and set note title so it's not discarded as blank
-                val titleEdt = recyclerView.findViewById<EditText>(R.id.titleEdt)
-                assertNotNull("titleEdt should exist in EditFrm layout", titleEdt)
-                titleEdt.setText("Test Lock Title")
+                titleEdt!!.setText("Test Lock Title")
 
                 val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
                 assertNotNull("Toolbar should exist in EditFrm", toolbar)

@@ -19,6 +19,9 @@ class VisualGhostUITest {
 
     @Test
     fun ghostModeUITest() {
+        // Skip on Android 14+ due to old Espresso reflection constraints on InputManager
+        org.junit.Assume.assumeTrue(android.os.Build.VERSION.SDK_INT < 34)
+
         // Mở app, chờ 2 giây cho UI load xong (và để user kịp nhìn)
         Thread.sleep(2000)
 

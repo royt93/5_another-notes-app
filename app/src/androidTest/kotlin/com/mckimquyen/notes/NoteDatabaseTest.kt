@@ -12,8 +12,11 @@ import com.mckimquyen.notes.model.entity.BlankNoteMetadata
 import com.mckimquyen.notes.model.NotesDao
 import com.mckimquyen.notes.model.NotesDb
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -136,5 +139,109 @@ class NoteDatabaseTest {
         historyDao.clearHistoryForNote(noteId)
         val clearedList = historyDao.getHistoryForNote(noteId)
         assertEquals(0, clearedList.size)
+    }
+
+    @Test
+    fun testInsertAndReadChecklistNote() = runBlocking {
+        val checklistMetadata = com.mckimquyen.notes.model.entity.ListNoteMetadata(listOf(true, false, true))
+        val note = Note(
+            type = NoteType.LIST,
+            title = "Checklist Note",
+            content = "Item 1\nItem 2\nItem 3",
+            metadata = checklistMetadata,
+            addedDate = Date(),
+            lastModifiedDate = Date(),
+            status = NoteStatus.ACTIVE,
+            pinned = PinnedStatus.UNPINNED,
+            reminder = null
+        )
+
+        val id = notesDao.insert(note)
+        val loaded = notesDao.getById(id)
+
+        assertNotNull(loaded)
+        assertEquals(NoteType.LIST, loaded?.type)
+        assertEquals("Checklist Note", loaded?.title)
+        assertTrue(loaded?.metadata is com.mckimquyen.notes.model.entity.ListNoteMetadata)
+        val loadedMetadata = loaded?.metadata as com.mckimquyen.notes.model.entity.ListNoteMetadata
+        assertEquals(3, loadedMetadata.checked.size)
+        assertEquals(true, loadedMetadata.checked[0])
+        assertEquals(false, loadedMetadata.checked[1])
+        assertEquals(true, loadedMetadata.checked[2])
+    }
+
+    @Test
+    fun testCascadeDeleteLabel() = runBlocking {
+        val note = Note(
+            type = NoteType.TEXT,
+            title = "Note for Label Ref",
+            content = "Note Content",
+            metadata = BlankNoteMetadata,
+            addedDate = Date(),
+            lastModifiedDate = Date(),
+            status = NoteStatus.ACTIVE,
+            pinned = PinnedStatus.UNPINNED,
+            reminder = null
+        )
+        val noteId = notesDao.insert(note)
+
+        val labelsDao = db.labelsDao()
+        val label = com.mckimquyen.notes.model.entity.Label(name = "Personal")
+        val labelId = labelsDao.insert(label)
+
+        // Insert reference
+        labelsDao.insertRefs(listOf(com.mckimquyen.notes.model.entity.LabelRef(noteId = noteId, labelId = labelId)))
+
+        // Verify reference count is 1
+        assertEquals(1L, labelsDao.countRefs(labelId))
+
+        // Delete label and verify cascade delete on LabelRef
+        val labelToDelete = labelsDao.getById(labelId)
+        assertNotNull(labelToDelete)
+        labelsDao.delete(labelToDelete!!)
+
+        // Reference count should be 0 because LabelRef is cascade deleted
+        assertEquals(0L, labelsDao.countRefs(labelId))
+    }
+
+    @Test
+    fun testVietnameseUnicodeFTSSearch() = runBlocking {
+        val note1 = Note(
+            type = NoteType.TEXT,
+            title = "Học lập trình Android",
+            content = "Tiếng Việt có dấu và các ký tự đặc biệt.",
+            metadata = BlankNoteMetadata,
+            addedDate = Date(),
+            lastModifiedDate = Date(),
+            status = NoteStatus.ACTIVE,
+            pinned = PinnedStatus.UNPINNED,
+            reminder = null
+        )
+        val note2 = Note(
+            type = NoteType.TEXT,
+            title = "English Note",
+            content = "This is a simple english text.",
+            metadata = BlankNoteMetadata,
+            addedDate = Date(),
+            lastModifiedDate = Date(),
+            status = NoteStatus.ACTIVE,
+            pinned = PinnedStatus.UNPINNED,
+            reminder = null
+        )
+        notesDao.insert(note1)
+        notesDao.insert(note2)
+
+        val query = com.mckimquyen.notes.ui.search.SearchQueryCleaner.clean("tiếng việt")
+        
+        val sortSettings = com.mckimquyen.notes.model.SortSettings(
+            com.mckimquyen.notes.model.SortField.MODIFIED_DATE,
+            com.mckimquyen.notes.model.SortDirection.DESCENDING
+        )
+        
+        val flow = notesDao.search(query, sortSettings)
+        val results = flow.first()
+        
+        assertEquals(1, results.size)
+        assertEquals("Học lập trình Android", results[0].note.title)
     }
 }

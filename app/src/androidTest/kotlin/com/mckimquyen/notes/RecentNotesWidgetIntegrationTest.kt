@@ -29,4 +29,11 @@ class RecentNotesWidgetIntegrationTest {
         val itemViews = RemoteViews(packageName, R.layout.widget_recent_notes_item)
         assertNotNull(itemViews)
     }
+
+    @Test
+    fun testUpdateAllWidgetsExecutesSuccessfully() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        // Call the static broadcast update trigger to verify it runs without crashing
+        RecentNotesWidget.updateAllWidgets(context)
+    }
 }
