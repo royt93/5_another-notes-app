@@ -67,4 +67,10 @@
         app:showAsAction="ifRoom"
         tools:title="@string/action_delete" />
 
+    <item
+        android:id="@+id/itemFocusMode"
+        android:icon="@drawable/ic_eye_off"
+        android:title="Focus"
+        app:showAsAction="ifRoom" />
+
 </menu>

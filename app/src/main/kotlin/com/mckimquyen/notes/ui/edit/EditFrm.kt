@@ -1,5 +1,6 @@
 package com.mckimquyen.notes.ui.edit
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.activity.addCallback
@@ -18,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.OneShotPreDrawListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asFlow
@@ -61,6 +64,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     @Inject
     lateinit var viewModelFactory: EditVM.Factory
     val viewModel by viewModel { viewModelFactory.create(it) }
+
+    private var wordCountAnimator: ValueAnimator? = null
+    private var lastDisplayedWords = 0
+    private var lastDisplayedChars = 0
+    private var isFocusMode = false
 
     @Inject
     lateinit var sharedViewModelProvider: Provider<SharedViewModel>
@@ -114,6 +122,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         (sharedElementReturnTransition as? MaterialContainerTransform)?.addListener(transitionListener)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (isFocusMode) {
+                toggleFocusMode()
+                return@addCallback
+            }
             viewModel.saveNote()
             viewModel.exit()
         }
@@ -333,10 +345,90 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
         // Feature 1: Update word/char count footer
         viewModel.wordCharCount.observe(viewLifecycleOwner) { (words, chars) ->
-            binding.wordCharCountTxv.text = "$words words · $chars chars"
+            val wordDelta = kotlin.math.abs(words - lastDisplayedWords)
+            if (wordDelta > 5 && lastDisplayedWords > 0) {
+                if (wordCountAnimator == null) {
+                    wordCountAnimator = ValueAnimator.ofFloat(0f, 1f).apply { duration = 200 }
+                }
+                wordCountAnimator?.cancel()
+                wordCountAnimator?.removeAllUpdateListeners()
+                val fromW = lastDisplayedWords
+                val fromC = lastDisplayedChars
+                wordCountAnimator?.addUpdateListener { va ->
+                    val f = va.animatedFraction
+                    val w = (fromW + (words - fromW) * f).toInt()
+                    val c = (fromC + (chars - fromC) * f).toInt()
+                    binding.wordCharCountTxv.text = "$w words · $c chars"
+                }
+                wordCountAnimator?.start()
+            } else {
+                wordCountAnimator?.cancel()
+                binding.wordCharCountTxv.text = "$words words · $chars chars"
+            }
+            lastDisplayedWords = words
+            lastDisplayedChars = chars
+
+            // E-07: Char limit progress ring
+            val charLimit = EditVM.CHAR_LIMIT
+            val warnThreshold = EditVM.CHAR_LIMIT_WARN
+            val pct = (chars.toFloat() / charLimit * 100).toInt().coerceIn(0, 100)
+            when {
+                chars >= charLimit -> {
+                    if (!isFocusMode) binding.charLimitRing.isVisible = true
+                    binding.charLimitRing.setIndicatorColor(
+                        com.google.android.material.color.MaterialColors.getColor(
+                            binding.charLimitRing,
+                            android.R.attr.colorError,
+                            0
+                        )
+                    )
+                    binding.charLimitRing.setProgress(100, true)
+                    if (binding.charLimitRing.tag != "pulse") {
+                        binding.charLimitRing.tag = "pulse"
+                        binding.charLimitRing.animate()
+                            .scaleX(1.2f).scaleY(1.2f).setDuration(200)
+                            .withEndAction {
+                                binding.charLimitRing.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+                            }.start()
+                    }
+                }
+                chars >= warnThreshold -> {
+                    if (!isFocusMode) binding.charLimitRing.isVisible = true
+                    binding.charLimitRing.tag = null
+                    binding.charLimitRing.setIndicatorColor(
+                        com.google.android.material.color.MaterialColors.getColor(
+                            binding.charLimitRing,
+                            android.R.attr.colorPrimary,
+                            0
+                        )
+                    )
+                    binding.charLimitRing.setProgress(pct, true)
+                }
+                else -> {
+                    binding.charLimitRing.isVisible = false
+                    binding.charLimitRing.tag = null
+                }
+            }
         }
 
         // Feature 3: Character limit warnings
+        viewModel.wordMilestoneEvent.observeEvent(viewLifecycleOwner) { milestone ->
+            val label = when {
+                milestone >= 1_000 -> "${milestone / 1_000}k"
+                else -> "$milestone"
+            }
+            binding.wordCharCountTxv.animate()
+                .scaleX(1.4f).scaleY(1.4f).setDuration(120).setInterpolator(OvershootInterpolator(1.5f))
+                .withEndAction {
+                    binding.wordCharCountTxv.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+                }.start()
+            com.google.android.material.snackbar.Snackbar.make(
+                binding.fragmentEditLayout,
+                "🎉 $label words written!",
+                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+            ).show()
+        }
+
         viewModel.charLimitWarningEvent.observeEvent(viewLifecycleOwner) { charCount ->
             val limit = EditVM.CHAR_LIMIT
             val isAtLimit = charCount >= limit
@@ -355,6 +447,23 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 )
                 .setGestureInsetBottomIgnored(true)
                 .show()
+        }
+
+        // F-01: Mood picker
+        val moodButtons = listOf(
+            binding.moodBtn0, binding.moodBtn1, binding.moodBtn2,
+            binding.moodBtn3, binding.moodBtn4, binding.moodBtn5
+        )
+        moodButtons.forEachIndexed { index, btn ->
+            btn.setOnClickListener { viewModel.setMood(index) }
+        }
+        viewModel.noteMood.observe(viewLifecycleOwner) { mood ->
+            moodButtons.forEachIndexed { index, btn ->
+                val selected = index == mood && mood != 0
+                btn.alpha = if (selected) 1f else 0.45f
+                btn.scaleX = if (selected) 1.25f else 1f
+                btn.scaleY = if (selected) 1.25f else 1f
+            }
         }
 
         // Feature 10: Color Notes Observer
@@ -465,8 +574,25 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         menu.findItem(R.id.itemDeleteChecked).isVisible = isEditableList
     }
 
+    private fun toggleFocusMode() {
+        isFocusMode = !isFocusMode
+        val alpha = if (isFocusMode) 0f else 1f
+        // Toolbar fades to 0.15 (not 0) so the Focus button stays tappable as an exit hint.
+        // Back press also exits focus mode (intercepted in onBackPressedDispatcher callback).
+        binding.toolbarLayout.animate().alpha(if (isFocusMode) 0.15f else 1f).setDuration(250).start()
+        binding.colorPickerScroll.animate().alpha(alpha).setDuration(250)
+            .withEndAction { binding.colorPickerScroll.isVisible = !isFocusMode }.start()
+        binding.wordCharCountTxv.animate().alpha(alpha).setDuration(250).start()
+        if (!isFocusMode) {
+            binding.colorPickerScroll.isVisible = true
+            binding.charLimitRing.alpha = 1f
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        wordCountAnimator?.cancel()
+        wordCountAnimator = null
         // Fix MEDIUM-2: Remove TouchListener to release the lambda that captures binding.viewBackground
         binding.recyclerView.setOnTouchListener(null)
         // Remove transition listener to prevent memory leaks
@@ -498,6 +624,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             )
 
             R.id.itemDelete -> viewModel.deleteNote()
+            R.id.itemFocusMode -> toggleFocusMode()
             else -> return false
         }
         return true

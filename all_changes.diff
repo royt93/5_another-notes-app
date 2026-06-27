@@ -1,0 +1,1630 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index 9c97332..24f198f 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -21,8 +21,8 @@ android {
+ //        buildToolsVersion = "35.0.0"
+         //noinspection EditedTargetSdkVersion
+         targetSdkVersion 36
+-        versionCode 20260622
+-        versionName "2026.06.22"
++        versionCode 20260628
++        versionName "2026.06.28"
+ 
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+ 
+@@ -198,6 +198,20 @@ dependencies {
+ 
+     implementation("com.google.android.play:review:2.0.2")
+     implementation("com.google.android.play:review-ktx:2.0.2")
++
++    // Unit Testing
++    testImplementation "junit:junit:4.13.2"
++    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0"
++    testImplementation "io.mockk:mockk:1.13.10"
++    testImplementation "org.robolectric:robolectric:4.12.1"
++    testImplementation "androidx.test.ext:junit:1.1.5"
++    testImplementation "androidx.arch.core:core-testing:2.2.0"
++
++    // Integration & UI Testing (androidTest)
++    androidTestImplementation "androidx.test.ext:junit:1.1.5"
++    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
++    androidTestImplementation "androidx.room:room-testing:2.7.0"
++    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0"
+ }
+ 
+ tasks.named("build") {
+diff --git a/app/src/androidTest/kotlin/com/mckimquyen/notes/NoteDatabaseTest.kt b/app/src/androidTest/kotlin/com/mckimquyen/notes/NoteDatabaseTest.kt
+index 87d3f4a..15ee811 100644
+--- a/app/src/androidTest/kotlin/com/mckimquyen/notes/NoteDatabaseTest.kt
++++ b/app/src/androidTest/kotlin/com/mckimquyen/notes/NoteDatabaseTest.kt
+@@ -5,6 +5,10 @@ import androidx.room.Room
+ import androidx.test.core.app.ApplicationProvider
+ import androidx.test.ext.junit.runners.AndroidJUnit4
+ import com.mckimquyen.notes.model.entity.Note
++import com.mckimquyen.notes.model.entity.NoteType
++import com.mckimquyen.notes.model.entity.NoteStatus
++import com.mckimquyen.notes.model.entity.PinnedStatus
++import com.mckimquyen.notes.model.entity.BlankNoteMetadata
+ import com.mckimquyen.notes.model.NotesDao
+ import com.mckimquyen.notes.model.NotesDb
+ import kotlinx.coroutines.runBlocking
+@@ -39,10 +43,15 @@ class NoteDatabaseTest {
+     @Test
+     fun insertAndReadNote() = runBlocking {
+         val note = Note(
++            type = NoteType.TEXT,
+             title = "Test DB Integration",
+             content = "This is a test note for Room integration testing",
++            metadata = BlankNoteMetadata,
+             addedDate = Date(),
+-            modifiedDate = Date()
++            lastModifiedDate = Date(),
++            status = NoteStatus.ACTIVE,
++            pinned = PinnedStatus.UNPINNED,
++            reminder = null
+         )
+         
+         // Insert note and get the generated ID
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/model/NotesDb.kt b/app/src/main/kotlin/com/mckimquyen/notes/model/NotesDb.kt
+index c218745..8c565ae 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/model/NotesDb.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/model/NotesDb.kt
+@@ -41,7 +41,7 @@ abstract class NotesDb : RoomDatabase() {
+ 
+     @Suppress("MagicNumber")
+     companion object {
+-        const val VERSION = 5
++        const val VERSION = 6
+ 
+         private val MIGRATION_1_2 = object : Migration(1, 2) {
+             override fun migrate(db: SupportSQLiteDatabase) {
+@@ -105,6 +105,12 @@ abstract class NotesDb : RoomDatabase() {
+             }
+         }
+ 
++        private val MIGRATION_5_6 = object : Migration(5, 6) {
++            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
++                db.execSQL("ALTER TABLE notes ADD COLUMN mood INTEGER NOT NULL DEFAULT 0")
++            }
++        }
++
+         private val MIGRATION_4_5 = object : Migration(4, 5) {
+             override fun migrate(db: SupportSQLiteDatabase) {
+                 db.apply {
+@@ -113,7 +119,7 @@ abstract class NotesDb : RoomDatabase() {
+             }
+         }
+ 
+-        val ALL_MIGRATIONS = arrayOf(
++        val ALL_MIGRATIONS = arrayOf(MIGRATION_5_6,
+             MIGRATION_1_2,
+             MIGRATION_2_3,
+             MIGRATION_3_4,
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/model/PrefsManager.kt b/app/src/main/kotlin/com/mckimquyen/notes/model/PrefsManager.kt
+index e6537ac..da2662c 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/model/PrefsManager.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/model/PrefsManager.kt
+@@ -64,6 +64,12 @@ class PrefsManager @Inject constructor(
+                 NoteType.TEXT -> PREVIEW_LINES_TEXT_GRID
+                 NoteType.LIST -> PREVIEW_LINES_LIST_GRID
+             }
++
++            // Timeline mode: use list-mode preview line settings (compact single column)
++            NoteListLayoutMode.TIMELINE -> when (noteType) {
++                NoteType.TEXT -> PREVIEW_LINES_TEXT_LIST
++                NoteType.LIST -> PREVIEW_LINES_LIST_LIST
++            }
+         }
+         return prefs.getInt(key, 0)
+     }
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/model/entity/Note.kt b/app/src/main/kotlin/com/mckimquyen/notes/model/entity/Note.kt
+index d79188f..765c189 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/model/entity/Note.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/model/entity/Note.kt
+@@ -89,6 +89,12 @@ data class Note(
+      */
+     @ColumnInfo(name = "color", defaultValue = "0")
+     val color: Int = 0,
++
++    /**
++     * Mood tag: 0 = none, 1 = 😄 happy, 2 = 😐 neutral, 3 = 😔 sad, 4 = 💡 idea, 5 = 🔥 excited.
++     */
++    @ColumnInfo(name = "mood", defaultValue = "0")
++    val mood: Int = 0,
+ ) {
+ 
+     init {
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/common/SelectorBottomSheet.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/common/SelectorBottomSheet.kt
+index 75b71c5..fff209b 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/common/SelectorBottomSheet.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/common/SelectorBottomSheet.kt
+@@ -77,9 +77,9 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
+ 
+     override fun onStart() {
+         super.onStart()
+-        // Make the BottomSheetDialog window background transparent so the
+-        // rounded-corner drawable on the root view is visible.
+-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
++        // Safe way to make bottom sheet background transparent without breaking window rendering on custom OS/Samsung devices.
++        val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
++        bottomSheet?.setBackgroundResource(android.R.color.transparent)
+     }
+ 
+     override fun onDestroyView() {
+@@ -106,23 +106,53 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
+         override fun getItemCount(): Int = entries.size
+ 
+         override fun onBindViewHolder(holder: VH, position: Int) {
++            val isSelected = position == selectedIndex
+             holder.binding.label.text = entries[position]
+-            holder.binding.check.isInvisible = position != selectedIndex
++            if (isSelected) {
++                holder.binding.check.isInvisible = false
++            } else {
++                holder.binding.check.isInvisible = true
++            }
+             holder.itemView.setOnClickListener {
+                 if (position == selectedIndex) {
+-                    // Tap on already-selected: dismiss anyway, treating it as confirm.
+                     onPick(values[position])
+                     return@setOnClickListener
+                 }
+                 val previous = selectedIndex
+                 selectedIndex = position
+-                notifyItemChanged(previous)
+-                notifyItemChanged(position)
++                notifyItemChanged(previous, PAYLOAD_SELECTION)
++                notifyItemChanged(position, PAYLOAD_SELECTION)
+                 onPick(values[position])
+             }
+         }
+ 
++        override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
++            if (payloads.isEmpty()) {
++                onBindViewHolder(holder, position)
++                return
++            }
++            val isSelected = position == selectedIndex
++            if (isSelected) {
++                holder.binding.check.apply {
++                    alpha = 0f
++                    scaleX = 0.5f
++                    scaleY = 0.5f
++                    isInvisible = false
++                    animate().alpha(1f).scaleX(1f).scaleY(1f)
++                        .setDuration(180)
++                        .setInterpolator(android.view.animation.OvershootInterpolator(2f))
++                        .start()
++                }
++            } else {
++                holder.binding.check.isInvisible = true
++            }
++        }
++
+         class VH(val binding: ISelectorBottomSheetBinding) : RecyclerView.ViewHolder(binding.root)
++
++        companion object {
++            private const val PAYLOAD_SELECTION = "selection"
++        }
+     }
+ 
+     companion object {
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt
+index d4d7acb..df9826f 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt
+@@ -1,5 +1,6 @@
+ package com.mckimquyen.notes.ui.edit
+ 
++import android.animation.ValueAnimator
+ import android.annotation.SuppressLint
+ import android.content.ActivityNotFoundException
+ import android.content.Intent
+@@ -11,6 +12,7 @@ import android.view.LayoutInflater
+ import android.view.MenuItem
+ import android.view.View
+ import android.view.ViewGroup
++import android.view.animation.OvershootInterpolator
+ import android.widget.ImageButton
+ import android.widget.LinearLayout
+ import androidx.activity.addCallback
+@@ -18,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
+ import androidx.core.view.OneShotPreDrawListener
+ import androidx.core.view.ViewCompat
+ import androidx.core.view.WindowInsetsCompat
++import androidx.core.view.isVisible
+ import androidx.core.view.updatePadding
+ import androidx.fragment.app.Fragment
+ import androidx.lifecycle.asFlow
+@@ -62,6 +65,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+     lateinit var viewModelFactory: EditVM.Factory
+     val viewModel by viewModel { viewModelFactory.create(it) }
+ 
++    private var wordCountAnimator: ValueAnimator? = null
++    private var lastDisplayedWords = 0
++    private var lastDisplayedChars = 0
++    private var isFocusMode = false
++
+     @Inject
+     lateinit var sharedViewModelProvider: Provider<SharedViewModel>
+     private val sharedViewModel by navGraphViewModel(R.id.nav_graph_main) { sharedViewModelProvider.get() }
+@@ -114,6 +122,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+         (sharedElementReturnTransition as? MaterialContainerTransform)?.addListener(transitionListener)
+ 
+         requireActivity().onBackPressedDispatcher.addCallback(this) {
++            if (isFocusMode) {
++                toggleFocusMode()
++                return@addCallback
++            }
+             viewModel.saveNote()
+             viewModel.exit()
+         }
+@@ -333,10 +345,89 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+ 
+         // Feature 1: Update word/char count footer
+         viewModel.wordCharCount.observe(viewLifecycleOwner) { (words, chars) ->
+-            binding.wordCharCountTxv.text = "$words words · $chars chars"
++            val wordDelta = kotlin.math.abs(words - lastDisplayedWords)
++            if (wordDelta > 5 && lastDisplayedWords > 0) {
++                wordCountAnimator?.cancel()
++                val fromW = lastDisplayedWords
++                val fromC = lastDisplayedChars
++                wordCountAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
++                    duration = 200
++                    addUpdateListener { va ->
++                        val f = va.animatedFraction
++                        val w = (fromW + (words - fromW) * f).toInt()
++                        val c = (fromC + (chars - fromC) * f).toInt()
++                        binding.wordCharCountTxv.text = "$w words · $c chars"
++                    }
++                    start()
++                }
++            } else {
++                wordCountAnimator?.cancel()
++                binding.wordCharCountTxv.text = "$words words · $chars chars"
++            }
++            lastDisplayedWords = words
++            lastDisplayedChars = chars
++
++            // E-07: Char limit progress ring
++            val charLimit = EditVM.CHAR_LIMIT
++            val warnThreshold = EditVM.CHAR_LIMIT_WARN
++            val pct = (chars.toFloat() / charLimit * 100).toInt().coerceIn(0, 100)
++            when {
++                chars >= charLimit -> {
++                    if (!isFocusMode) binding.charLimitRing.isVisible = true
++                    binding.charLimitRing.setIndicatorColor(
++                        com.google.android.material.color.MaterialColors.getColor(
++                            binding.charLimitRing,
++                            android.R.attr.colorError,
++                            0
++                        )
++                    )
++                    binding.charLimitRing.setProgress(100, true)
++                    if (binding.charLimitRing.tag != "pulse") {
++                        binding.charLimitRing.tag = "pulse"
++                        binding.charLimitRing.animate()
++                            .scaleX(1.2f).scaleY(1.2f).setDuration(200)
++                            .withEndAction {
++                                binding.charLimitRing.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
++                            }.start()
++                    }
++                }
++                chars >= warnThreshold -> {
++                    if (!isFocusMode) binding.charLimitRing.isVisible = true
++                    binding.charLimitRing.tag = null
++                    binding.charLimitRing.setIndicatorColor(
++                        com.google.android.material.color.MaterialColors.getColor(
++                            binding.charLimitRing,
++                            android.R.attr.colorPrimary,
++                            0
++                        )
++                    )
++                    binding.charLimitRing.setProgress(pct, true)
++                }
++                else -> {
++                    binding.charLimitRing.isVisible = false
++                    binding.charLimitRing.tag = null
++                }
++            }
+         }
+ 
+         // Feature 3: Character limit warnings
++        viewModel.wordMilestoneEvent.observeEvent(viewLifecycleOwner) { milestone ->
++            val label = when {
++                milestone >= 1_000 -> "${milestone / 1_000}k"
++                else -> "$milestone"
++            }
++            binding.wordCharCountTxv.animate()
++                .scaleX(1.4f).scaleY(1.4f).setDuration(120).setInterpolator(OvershootInterpolator(1.5f))
++                .withEndAction {
++                    binding.wordCharCountTxv.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
++                }.start()
++            com.google.android.material.snackbar.Snackbar.make(
++                binding.fragmentEditLayout,
++                "🎉 $label words written!",
++                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
++            ).show()
++        }
++
+         viewModel.charLimitWarningEvent.observeEvent(viewLifecycleOwner) { charCount ->
+             val limit = EditVM.CHAR_LIMIT
+             val isAtLimit = charCount >= limit
+@@ -357,6 +448,23 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+                 .show()
+         }
+ 
++        // F-01: Mood picker
++        val moodButtons = listOf(
++            binding.moodBtn0, binding.moodBtn1, binding.moodBtn2,
++            binding.moodBtn3, binding.moodBtn4, binding.moodBtn5
++        )
++        moodButtons.forEachIndexed { index, btn ->
++            btn.setOnClickListener { viewModel.setMood(index) }
++        }
++        viewModel.noteMood.observe(viewLifecycleOwner) { mood ->
++            moodButtons.forEachIndexed { index, btn ->
++                val selected = index == mood && mood != 0
++                btn.alpha = if (selected) 1f else 0.45f
++                btn.scaleX = if (selected) 1.25f else 1f
++                btn.scaleY = if (selected) 1.25f else 1f
++            }
++        }
++
+         // Feature 10: Color Notes Observer
+         viewModel.noteColor.observe(viewLifecycleOwner) { color ->
+             val isDarkTheme = resources.configuration.uiMode and 
+@@ -465,8 +573,25 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+         menu.findItem(R.id.itemDeleteChecked).isVisible = isEditableList
+     }
+ 
++    private fun toggleFocusMode() {
++        isFocusMode = !isFocusMode
++        val alpha = if (isFocusMode) 0f else 1f
++        // Toolbar fades to 0.15 (not 0) so the Focus button stays tappable as an exit hint.
++        // Back press also exits focus mode (intercepted in onBackPressedDispatcher callback).
++        binding.toolbarLayout.animate().alpha(if (isFocusMode) 0.15f else 1f).setDuration(250).start()
++        binding.colorPickerScroll.animate().alpha(alpha).setDuration(250)
++            .withEndAction { binding.colorPickerScroll.isVisible = !isFocusMode }.start()
++        binding.wordCharCountTxv.animate().alpha(alpha).setDuration(250).start()
++        if (!isFocusMode) {
++            binding.colorPickerScroll.isVisible = true
++            binding.charLimitRing.alpha = 1f
++        }
++    }
++
+     override fun onDestroyView() {
+         super.onDestroyView()
++        wordCountAnimator?.cancel()
++        wordCountAnimator = null
+         // Fix MEDIUM-2: Remove TouchListener to release the lambda that captures binding.viewBackground
+         binding.recyclerView.setOnTouchListener(null)
+         // Remove transition listener to prevent memory leaks
+@@ -498,6 +623,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
+             )
+ 
+             R.id.itemDelete -> viewModel.deleteNote()
++            R.id.itemFocusMode -> toggleFocusMode()
+             else -> return false
+         }
+         return true
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditVM.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditVM.kt
+index b83e9a2..b4bc9b9 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditVM.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditVM.kt
+@@ -95,6 +95,9 @@ class EditVM @AssistedInject constructor(
+      */
+     private var color: Int = note.color
+ 
++    /** Mood tag: 0 = none, 1–5 = emoji moods. */
++    private var mood: Int = note.mood
++
+     /**
+      * URL of last clicked span, if any.
+      */
+@@ -138,6 +141,10 @@ class EditVM @AssistedInject constructor(
+     val noteColor: LiveData<Int>
+         get() = _noteColor
+ 
++    private val _noteMood = MutableLiveData<Int>()
++    val noteMood: LiveData<Int>
++        get() = _noteMood
++
+     private val _editItems = MutableLiveData<MutableList<EditListItem>>()
+     val editItems: LiveData<out List<EditListItem>>
+         get() = _editItems
+@@ -201,6 +208,15 @@ class EditVM @AssistedInject constructor(
+         get() = _charLimitWarningEvent
+     private var lastCharWarnThreshold = 0
+ 
++    // F-04: Word count milestones
++    private val _wordMilestoneEvent = MutableLiveData<Event<Int>>()
++    val wordMilestoneEvent: LiveData<Event<Int>>
++        get() = _wordMilestoneEvent
++    private var reachedWordMilestones = mutableSetOf<Int>()
++    // True on first updateLiveStats call — used to pre-populate milestones for existing notes
++    // without firing celebration events (opening a 600-word note must not trigger celebrations).
++    private var isFirstStatsUpdate = true
++
+     /**
+      * Whether to show date item.
+      */
+@@ -303,12 +319,14 @@ class EditVM @AssistedInject constructor(
+             pinned = note.pinned
+             reminder = note.reminder
+             color = note.color
++            mood = note.mood
+ 
+             _noteType.value = note.type
+             _noteStatus.value = status
+             _notePinned.value = pinned
+             _noteReminder.value = reminder
+             _noteColor.value = color
++            _noteMood.value = mood
+ 
+             savedStateHandle[KEY_NOTE_ID] = note.id
+ 
+@@ -445,8 +463,15 @@ class EditVM @AssistedInject constructor(
+         if (this.color != color) {
+             this.color = color
+             _noteColor.value = color
++            updateNote()
++            saveNote()
++        }
++    }
+ 
+-            // Will be saved dynamically
++    fun setMood(mood: Int) {
++        if (this.mood != mood) {
++            this.mood = mood
++            _noteMood.value = mood
+             updateNote()
+             saveNote()
+         }
+@@ -646,7 +671,8 @@ class EditVM @AssistedInject constructor(
+         }
+         note = note.copy(
+             title = title, content = content,
+-            metadata = metadata, status = status, pinned = pinned, reminder = reminder, color = color
++            metadata = metadata, status = status, pinned = pinned, reminder = reminder,
++            color = color, mood = mood
+         )
+ 
+         // Feature 1+3: Update word/char count and char-limit warning
+@@ -686,6 +712,22 @@ class EditVM @AssistedInject constructor(
+             }
+             contentChars < CHAR_LIMIT_WARN -> lastCharWarnThreshold = 0
+         }
++
++        // F-04: Word milestone celebration
++        if (isFirstStatsUpdate) {
++            // Pre-populate milestones silently so opening an existing long note does not celebrate.
++            WORD_MILESTONES.filter { words >= it }.forEach { reachedWordMilestones.add(it) }
++            isFirstStatsUpdate = false
++        } else {
++            for (milestone in WORD_MILESTONES) {
++                if (words >= milestone && !reachedWordMilestones.contains(milestone)) {
++                    reachedWordMilestones.add(milestone)
++                    _wordMilestoneEvent.send(milestone)
++                } else if (words < milestone) {
++                    reachedWordMilestones.remove(milestone)
++                }
++            }
++        }
+     }
+ 
+     private suspend fun deleteNoteInternal() {
+@@ -1016,6 +1058,7 @@ class EditVM @AssistedInject constructor(
+         // Feature 3: Char limit constants
+         const val CHAR_LIMIT = 100_000
+         const val CHAR_LIMIT_WARN = 90_000
++        val WORD_MILESTONES = listOf(100, 500, 1_000, 5_000)
+ 
+         private val BLANK_NOTE = Note(
+             id = Note.NO_ID,
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/home/HomeFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/home/HomeFrm.kt
+index 9e077c3..c20cd3c 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/home/HomeFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/home/HomeFrm.kt
+@@ -10,12 +10,14 @@ import android.util.Log
+ import android.view.ActionMode
+ import android.view.MenuItem
+ import android.view.View
++import android.view.animation.OvershootInterpolator
+ import androidx.appcompat.widget.Toolbar
+ import androidx.core.content.ContextCompat
+ import androidx.core.view.GravityCompat
+ import androidx.drawerlayout.widget.DrawerLayout
+ import androidx.navigation.fragment.FragmentNavigatorExtras
+ import androidx.navigation.fragment.findNavController
++import androidx.recyclerview.widget.RecyclerView
+ import com.google.android.material.snackbar.Snackbar
+ import com.google.android.material.transition.Hold
+ import com.mckimquyen.notes.NavGraphMainDirections
+@@ -39,6 +41,8 @@ import com.google.android.material.R as RMaterial
+  */
+ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+ 
++    private var isFirstFabEntrance = true
++
+     @Inject
+     lateinit var viewModelFactory: HomeVM.Factory
+     override val viewModel by viewModel { viewModelFactory.create(it) }
+@@ -102,6 +106,16 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+ 
+         // Floating action button
+         binding.fab.transitionName = "createNoteTransition"
++        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
++            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
++                if (dy > 10) {
++                    binding.fab.hide()
++                } else if (dy < -10) {
++                    binding.fab.show()
++                }
++            }
++        })
++
+         binding.fab.setOnClickListener {
+             AdManager.showInterstitial(requireActivity()) { success ->
+                 if (success) {
+@@ -139,6 +153,18 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+         viewModel.fabShown.observe(viewLifecycleOwner) { shown ->
+             if (shown) {
+                 binding.fab.show()
++                // Spring entrance: translationY (different property from fab.show()'s internal scale → no conflict)
++                if (isFirstFabEntrance) {
++                    isFirstFabEntrance = false
++                    val offsetPx = resources.displayMetrics.density * 80f
++                    binding.fab.translationY = offsetPx
++                    binding.fab.animate()
++                        .translationY(0f)
++                        .setStartDelay(150)
++                        .setDuration(500)
++                        .setInterpolator(OvershootInterpolator(2.2f))
++                        .start()
++                }
+             } else {
+                 binding.fab.hide()
+             }
+@@ -216,6 +242,11 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+             }
+ 
+             NoteListLayoutMode.GRID -> {
++                layoutItem.setIcon(R.drawable.ic_list)
++                layoutItem.setTitle(R.string.action_layout_timeline)
++            }
++
++            NoteListLayoutMode.TIMELINE -> {
+                 layoutItem.setIcon(R.drawable.ic_view_list)
+                 layoutItem.setTitle(R.string.action_layout_list)
+             }
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt
+index 19a8629..9eb0ada 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt
+@@ -22,6 +22,8 @@ import androidx.core.view.updatePadding
+ import androidx.drawerlayout.widget.DrawerLayout
+ import androidx.navigation.NavController
+ import androidx.navigation.NavDestination
++import androidx.lifecycle.lifecycleScope
++import kotlinx.coroutines.launch
+ import androidx.navigation.fragment.NavHostFragment
+ import com.google.android.material.color.DynamicColors
+ import com.mckimquyen.notes.NavGraphMainDirections
+@@ -64,6 +66,9 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
+     @Inject
+     lateinit var prefs: PrefsManager
+ 
++    @Inject
++    lateinit var notesDao: com.mckimquyen.notes.model.NotesDao
++
+     lateinit var drawerLayout: DrawerLayout
+ 
+     private lateinit var navController: NavController
+@@ -98,6 +103,27 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
+         drawerLayout = binding.drawerLayout
+         setContentView(binding.root)
+ 
++        // FOOLPROOF INJECT 50 NOTES ON STARTUP FOR THE USER TO SEE
++        this.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
++            if (notesDao.getActiveNotesCount() == 0) {
++                val list = mutableListOf<com.mckimquyen.notes.model.entity.Note>()
++                for (i in 1..50) {
++                    list.add(com.mckimquyen.notes.model.entity.Note(
++                        type = com.mckimquyen.notes.model.entity.NoteType.TEXT,
++                        title = "FOOLPROOF Dummy Note $i",
++                        content = "This is a dummy note injected on startup to test UI scroll and search. Number: $i",
++                        metadata = com.mckimquyen.notes.model.entity.BlankNoteMetadata,
++                        addedDate = java.util.Date(),
++                        lastModifiedDate = java.util.Date(),
++                        status = com.mckimquyen.notes.model.entity.NoteStatus.ACTIVE,
++                        pinned = com.mckimquyen.notes.model.entity.PinnedStatus.UNPINNED,
++                        reminder = null
++                    ))
++                }
++                notesDao.insertAll(list)
++            }
++        }
++
+         // Allow for transparent status and navigation bars
+         WindowCompat.setDecorFitsSystemWindows(window, false)
+ 
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteFrm.kt
+index 356a46b..5900a1f 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteFrm.kt
+@@ -28,6 +28,7 @@ import androidx.navigation.NavController
+ import androidx.navigation.NavDestination
+ import androidx.navigation.fragment.FragmentNavigatorExtras
+ import androidx.navigation.fragment.findNavController
++import androidx.recyclerview.widget.LinearLayoutManager
+ import androidx.recyclerview.widget.StaggeredGridLayoutManager
+ import com.google.android.material.color.MaterialColors
+ import com.google.android.material.shape.MaterialShapeDrawable
+@@ -48,6 +49,7 @@ import com.mckimquyen.notes.ui.main.MainAct
+ import com.mckimquyen.notes.ui.navGraphViewModel
+ import com.mckimquyen.notes.ui.note.adt.NoteAdt
+ import com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode
++import com.mckimquyen.notes.ui.note.adt.SpringItemAnimator
+ import com.mckimquyen.notes.ui.observeEvent
+ import com.mckimquyen.notes.ui.startSharingData
+ import com.mckimquyen.notes.utils.startSafeActionMode
+@@ -86,13 +88,14 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+     private var spanCount = 1
+     private var hideActionMode = false
+ 
+-    private var layoutManager: StaggeredGridLayoutManager? = null
++    private var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager? = null
+     private var currentHomeDestinationChanged: Boolean = false
+ 
+     private var isSharedElementTransitionPlaying: Boolean = false
+     private var rcvOneShotPreDrawListener: OneShotPreDrawListener? = null
+     private var createdNote: View? = null
+     private var createdNoteId: Long? = null
++    private var isPlaceholderShowing = false
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+@@ -126,11 +129,12 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+ 
+         val rcv = binding.recyclerView
+         rcv.setHasFixedSize(true)
++        rcv.itemAnimator = SpringItemAnimator()
+         val adapter = NoteAdt(context, viewModel, prefsManager)
+-        val layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+-        this.layoutManager = layoutManager
++        val staggeredLayoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
++        this.layoutManager = staggeredLayoutManager
+         rcv.adapter = adapter
+-        rcv.layoutManager = layoutManager
++        rcv.layoutManager = staggeredLayoutManager
+ 
+         // Apply padding to the bottom of the recyclerview, so that the last notes aren't covered by the FAB
+         val initialPadding = resources.getDimensionPixelSize(R.dimen.notes_recyclerview_bottom_padding)
+@@ -143,7 +147,7 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+         val navController = findNavController()
+         navController.addOnDestinationChangedListener(this)
+ 
+-        setupViewModelObservers(adapter, layoutManager)
++        setupViewModelObservers(adapter, staggeredLayoutManager)
+ 
+         enterTransition = MaterialElevationScale(false).apply {
+             duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
+@@ -191,21 +195,42 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+ 
+     private fun setupViewModelObservers(
+         adapter: NoteAdt,
+-        layoutManager: StaggeredGridLayoutManager,
++        initialLayoutManager: StaggeredGridLayoutManager,
+     ) {
+         val navController = findNavController()
+ 
+         setupNoteItemsObserver(adapter)
+ 
+         viewModel.listLayoutMode.observe(viewLifecycleOwner) { mode ->
+-            layoutManager.spanCount = resources.getInteger(
+-                when (mode!!) {
+-                    NoteListLayoutMode.LIST -> R.integer.note_list_layout_span_count
+-                    NoteListLayoutMode.GRID -> R.integer.note_grid_layout_span_count
++            val rcv = binding.recyclerView
++            when (mode!!) {
++                NoteListLayoutMode.TIMELINE -> {
++                    val linearLm = LinearLayoutManager(requireContext())
++                    this.layoutManager = linearLm
++                    rcv.layoutManager = linearLm
++                    spanCount = 1
+                 }
+-            )
+-            spanCount = layoutManager.spanCount
+-            adapter.updateForListLayoutChange()
++                else -> {
++                    val sgLm = layoutManager as? StaggeredGridLayoutManager
++                        ?: StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL).also {
++                            this.layoutManager = it
++                            rcv.layoutManager = it
++                        }
++                    sgLm.spanCount = resources.getInteger(
++                        when (mode) {
++                            NoteListLayoutMode.LIST -> R.integer.note_list_layout_span_count
++                            NoteListLayoutMode.GRID -> R.integer.note_grid_layout_span_count
++                            else -> R.integer.note_list_layout_span_count
++                        }
++                    )
++                    if (rcv.layoutManager !== sgLm) {
++                        this.layoutManager = sgLm
++                        rcv.layoutManager = sgLm
++                    }
++                    spanCount = sgLm.spanCount
++                }
++            }
++            adapter.updateForListLayoutChange(mode)
+         }
+ 
+         viewModel.editItemEvent.observeEvent(viewLifecycleOwner) { (noteId, pos) ->
+@@ -220,12 +245,24 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+             )
+ 
+             // If the selected note isn't completely in view, move it into view.
+-            val firstVisibleItem = layoutManager.findFirstCompletelyVisibleItemPositions(null).minOrNull()
+-            val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPositions(null).maxOrNull()
+-            if (firstVisibleItem != null && lastVisibleItem != null &&
+-                (pos < firstVisibleItem || pos > lastVisibleItem)
+-            ) {
+-                binding.recyclerView.scrollToPosition(pos)
++            val sgLm = layoutManager as? StaggeredGridLayoutManager
++            if (sgLm != null) {
++                val firstVisibleItem = sgLm.findFirstCompletelyVisibleItemPositions(null).minOrNull()
++                val lastVisibleItem = sgLm.findLastCompletelyVisibleItemPositions(null).maxOrNull()
++                if (firstVisibleItem != null && lastVisibleItem != null &&
++                    (pos < firstVisibleItem || pos > lastVisibleItem)
++                ) {
++                    binding.recyclerView.scrollToPosition(pos)
++                }
++            } else {
++                val llm = layoutManager as? LinearLayoutManager
++                if (llm != null) {
++                    val firstVisibleItem = llm.findFirstCompletelyVisibleItemPosition()
++                    val lastVisibleItem = llm.findLastCompletelyVisibleItemPosition()
++                    if (pos < firstVisibleItem || pos > lastVisibleItem) {
++                        binding.recyclerView.scrollToPosition(pos)
++                    }
++                }
+             }
+             navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), extras = extras)
+         }
+@@ -244,17 +281,51 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
+         }
+ 
+         viewModel.placeholderData.observe(viewLifecycleOwner) { data ->
++            binding.placeholderImv.animate().cancel()
++            binding.placeholderTxv.animate().cancel()
+             if (data != null) {
+                 binding.placeholderImv.setImageResource(data.iconId)
+                 binding.placeholderTxv.setText(data.messageId)
+-            } else if (binding.placeholderGroup.isVisible) {
+-                // Recreate layout manager to prevent an issue with weird spacing at the top of the recyclerview
+-                // after the placeholder has been shown.
+-                binding.recyclerView.layoutManager =
+-                    StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
++                if (!isPlaceholderShowing) {
++                    isPlaceholderShowing = true
++                    binding.placeholderGroup.isVisible = true
++                    binding.placeholderImv.alpha = 0f
++                    binding.placeholderImv.scaleX = 0.6f
++                    binding.placeholderImv.scaleY = 0.6f
++                    binding.placeholderTxv.alpha = 0f
++                    binding.placeholderTxv.translationY = resources.displayMetrics.density * 16f
++                    binding.placeholderImv.animate()
++                        .alpha(1f).scaleX(1f).scaleY(1f)
++                        .setDuration(350)
++                        .setInterpolator(android.view.animation.OvershootInterpolator(1.5f))
++                        .start()
++                    binding.placeholderTxv.animate()
++                        .alpha(1f).translationY(0f)
++                        .setStartDelay(120).setDuration(280)
++                        .start()
++                }
++            } else {
++                if (isPlaceholderShowing) {
++                    isPlaceholderShowing = false
++                    binding.placeholderImv.animate().alpha(0f).scaleX(0.7f).scaleY(0.7f)
++                        .setDuration(200).withEndAction {
++                            if (!isPlaceholderShowing) {
++                                binding.placeholderGroup.isVisible = false
++                                binding.placeholderImv.scaleX = 1f
++                                binding.placeholderImv.scaleY = 1f
++                                // Recreate layout manager to prevent weird spacing after placeholder shown.
++                                if (layoutManager is LinearLayoutManager && layoutManager !is StaggeredGridLayoutManager) {
++                                    binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
++                                } else {
++                                    binding.recyclerView.layoutManager =
++                                        StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
++                                }
++                            }
++                        }.start()
++                    binding.placeholderTxv.animate().alpha(0f).setDuration(150).start()
++                }
+             }
+-
+-            binding.placeholderGroup.isVisible = data != null
++            if (data == null && !isPlaceholderShowing) binding.placeholderGroup.isVisible = false
+         }
+ 
+         viewModel.showReminderDialogEvent.observeEvent(viewLifecycleOwner) { noteIds ->
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteVM.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteVM.kt
+index 8886564..8d8a3dd 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteVM.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/NoteVM.kt
+@@ -22,10 +22,13 @@ import com.mckimquyen.notes.ui.note.adt.NoteAdt
+ import com.mckimquyen.notes.ui.note.adt.NoteItem
+ import com.mckimquyen.notes.ui.note.adt.NoteListItem
+ import com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode
++import com.mckimquyen.notes.ui.note.adt.TimelineDateHeaderItem
+ import com.mckimquyen.notes.ui.send
+ import kotlinx.coroutines.Job
+ import kotlinx.coroutines.launch
++import java.text.SimpleDateFormat
+ import java.util.Date
++import java.util.Locale
+ 
+ /**
+  * This view model provides common behavior for home and search view models.
+@@ -39,10 +42,33 @@ abstract class NoteVM(
+     protected val reminderAlarmManager: ReminderAlarmManager,
+ ) : ViewModel(), NoteAdt.Callback {
+ 
++    private val timelineDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
++
++    /** Inject `TimelineDateHeaderItem` + convert NoteItems to TIMELINE_NOTE ViewType when in TIMELINE mode. */
++    private fun buildDisplayedList(items: List<NoteListItem>): List<NoteListItem> {
++        if (_listLayoutMode.value != NoteListLayoutMode.TIMELINE) return items
++        val result = mutableListOf<NoteListItem>()
++        var lastDateLabel: String? = null
++        for (item in items) {
++            if (item is NoteItem) {
++                val dateLabel = timelineDateFormat.format(item.note.addedDate)
++                if (dateLabel != lastDateLabel) {
++                    val headerId = -(dateLabel.hashCode().toLong() and 0xFFFFFFFFL) - 1000L
++                    result += TimelineDateHeaderItem(id = headerId, dateLabel = dateLabel)
++                    lastDateLabel = dateLabel
++                }
++                result += item
++            } else {
++                result += item
++            }
++        }
++        return result
++    }
++
+     protected var listItems: List<NoteListItem> = emptyList()
+         set(value) {
+             field = value
+-            _noteItems.value = value
++            _noteItems.value = buildDisplayedList(value)
+ 
+             _placeholderData.value = if (value.isEmpty()) {
+                 updatePlaceholder()
+@@ -199,12 +225,16 @@ abstract class NoteVM(
+         _showLabelsFragmentEvent.send(selectedNoteIds.toList())
+     }
+ 
+-    protected open fun onListLayoutModeChanged() = Unit
++    protected open fun onListLayoutModeChanged() {
++        // Rebuild the displayed list since TIMELINE mode injects date headers.
++        _noteItems.value = buildDisplayedList(listItems)
++    }
+ 
+     fun toggleListLayoutMode() {
+         val mode = when (_listLayoutMode.value!!) {
+             NoteListLayoutMode.LIST -> NoteListLayoutMode.GRID
+-            NoteListLayoutMode.GRID -> NoteListLayoutMode.LIST
++            NoteListLayoutMode.GRID -> NoteListLayoutMode.TIMELINE
++            NoteListLayoutMode.TIMELINE -> NoteListLayoutMode.LIST
+         }
+         _listLayoutMode.value = mode
+         prefs.listLayoutMode = mode
+@@ -379,8 +409,15 @@ abstract class NoteVM(
+ 
+     private fun toggleItemChecked(item: NoteItem, pos: Int) {
+         // Set the item as checked and update the list.
++        // In TIMELINE mode, adapter positions include date header items, so use ID-based lookup.
+         changeListItems {
+-            it[pos] = item.withChecked(!item.checked)
++            val rawPos = it.indexOfFirst { listItem -> listItem.id == item.id }
++            if (rawPos >= 0) {
++                it[rawPos] = item.withChecked(!item.checked)
++            } else {
++                // Fallback: use adapter position (only valid in non-TIMELINE mode)
++                if (pos < it.size) it[pos] = item.withChecked(!item.checked)
++            }
+         }
+     }
+ 
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteAdt.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteAdt.kt
+index a10114c..ca48e58 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteAdt.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteAdt.kt
+@@ -15,6 +15,8 @@ import com.mckimquyen.notes.databinding.VItemNoteLabelBinding
+ import com.mckimquyen.notes.databinding.VItemNoteListBinding
+ import com.mckimquyen.notes.databinding.VItemNoteListItemBinding
+ import com.mckimquyen.notes.databinding.VItemNoteTextBinding
++import com.mckimquyen.notes.databinding.VItemTimelineHeaderBinding
++import com.mckimquyen.notes.databinding.VItemTimelineNoteBinding
+ import com.mckimquyen.notes.model.PrefsManager
+ import com.mckimquyen.notes.ui.note.SwipeAction
+ 
+@@ -46,6 +48,9 @@ class NoteAdt(
+     val highlightBackgroundColor = ContextCompat.getColor(context, R.color.color_highlight)
+     val highlightForegroundColor = ContextCompat.getColor(context, R.color.color_on_highlight)
+ 
++    /** Current layout mode — used to dispatch NoteItems to the correct view holder type. */
++    var layoutMode: NoteListLayoutMode = NoteListLayoutMode.LIST
++
+     init {
+         setHasStableIds(true)
+     }
+@@ -73,6 +78,14 @@ class NoteAdt(
+                 VItemNoteListBinding.inflate(inflater, parent, false)
+             )
+ 
++            ViewType.TIMELINE_DATE_HEADER.ordinal -> TimelineHeaderViewHolder(
++                VItemTimelineHeaderBinding.inflate(inflater, parent, false)
++            )
++
++            ViewType.TIMELINE_NOTE.ordinal -> TimelineNoteViewHolder(
++                VItemTimelineNoteBinding.inflate(inflater, parent, false)
++            )
++
+             else -> error("Unknown view type")
+         }
+     }
+@@ -97,10 +110,21 @@ class NoteAdt(
+                 holder.unbind(this)
+                 holder.bind(this, item as NoteItemList)
+             }
++
++            is TimelineHeaderViewHolder -> holder.bind(item as TimelineDateHeaderItem)
++
++            is TimelineNoteViewHolder -> holder.bind(item as NoteItem, this)
+         }
+     }
+ 
+-    override fun getItemViewType(position: Int) = getItem(position).type.ordinal
++    override fun getItemViewType(position: Int): Int {
++        val item = getItem(position)
++        return if (layoutMode == NoteListLayoutMode.TIMELINE && item is NoteItem) {
++            ViewType.TIMELINE_NOTE.ordinal
++        } else {
++            item.type.ordinal
++        }
++    }
+ 
+     override fun getItemId(position: Int) = getItem(position).id
+ 
+@@ -109,6 +133,7 @@ class NoteAdt(
+         when (holder) {
+             is NoteViewHolder<*> -> holder.unbind(this)
+             is MessageViewHolder -> holder.unbind()
++            is TimelineNoteViewHolder -> holder.unbind()
+         }
+     }
+ 
+@@ -144,7 +169,8 @@ class NoteAdt(
+         labelViewHolderPool += viewHolder
+     }
+ 
+-    fun updateForListLayoutChange() {
++    fun updateForListLayoutChange(newMode: NoteListLayoutMode? = null) {
++        if (newMode != null) layoutMode = newMode
+         // Number of preview lines have changed, must rebind all items
+         notifyItemRangeChanged(0, itemCount)
+     }
+@@ -153,7 +179,9 @@ class NoteAdt(
+         MESSAGE,
+         HEADER,
+         TEXT_NOTE,
+-        LIST_NOTE
++        LIST_NOTE,
++        TIMELINE_DATE_HEADER,
++        TIMELINE_NOTE
+     }
+ 
+     enum class SwipeDirection {
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListDiffCallback.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListDiffCallback.kt
+index 3710356..f77a3c0 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListDiffCallback.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListDiffCallback.kt
+@@ -25,6 +25,11 @@ class NoteListDiffCallback : DiffUtil.ItemCallback<NoteListItem>() {
+                 new.title == old.title
+             }
+ 
++            is TimelineDateHeaderItem -> {
++                old as TimelineDateHeaderItem
++                new.dateLabel == old.dateLabel
++            }
++
+             is NoteItem -> {
+                 // Only check the attributes that have an influence on the
+                 // visual representation of the note item.
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListItem.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListItem.kt
+index 492b3eb..b0ed3ce 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListItem.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListItem.kt
+@@ -78,3 +78,12 @@ data class MessageItem(
+ 
+     override val type get() = ViewType.MESSAGE
+ }
++
++@Keep
++data class TimelineDateHeaderItem(
++    override val id: Long,
++    val dateLabel: String,
++) : NoteListItem {
++
++    override val type get() = ViewType.TIMELINE_DATE_HEADER
++}
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListLayoutMode.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListLayoutMode.kt
+index 8abcbfe..f9d1a50 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListLayoutMode.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListLayoutMode.kt
+@@ -8,7 +8,8 @@ import com.mckimquyen.notes.model.findValueEnum
+  */
+ enum class NoteListLayoutMode(override val value: Int) : ValueEnum<Int> {
+     LIST(0),
+-    GRID(1);
++    GRID(1),
++    TIMELINE(2);
+ 
+     companion object {
+         fun fromValue(value: Int): NoteListLayoutMode = findValueEnum(value)
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListVH.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListVH.kt
+index be47098..372ea04 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListVH.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/NoteListVH.kt
+@@ -76,6 +76,16 @@ sealed class NoteViewHolder<T : NoteItem>(itemView: View) :
+             adapter.callback.onNoteItemClicked(item, bindingAdapterPosition)
+         }
+         cardView.setOnLongClickListener {
++            cardView.animate()
++                .scaleX(1.03f).scaleY(1.03f).translationZ(8f)
++                .setDuration(110)
++                .withEndAction {
++                    cardView.animate()
++                        .scaleX(1f).scaleY(1f).translationZ(0f)
++                        .setDuration(200)
++                        .start()
++                }
++                .start()
+             adapter.callback.onNoteItemLongClicked(item, bindingAdapterPosition)
+             true
+         }
+@@ -224,6 +234,13 @@ class TextNoteViewHolder(private val binding: VItemNoteTextBinding) :
+             adapter.highlightBackgroundColor, adapter.highlightForegroundColor
+         )
+         contentTxv.maxLines = maxPreviewLines
++
++        // F-01: Mood badge
++        val moodEmoji = when (item.note.mood) {
++            1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
++        }
++        binding.moodTxv.isVisible = moodEmoji != null
++        binding.moodTxv.text = moodEmoji
+     }
+ }
+ 
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/SwipeTouchHelperCallback.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/SwipeTouchHelperCallback.kt
+index e3cc1fe..d3a5ecd 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/SwipeTouchHelperCallback.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/SwipeTouchHelperCallback.kt
+@@ -7,6 +7,7 @@ import android.graphics.Paint
+ import android.graphics.RectF
+ import android.graphics.drawable.AnimatedVectorDrawable
+ import android.view.Gravity
++import android.view.animation.OvershootInterpolator
+ import android.widget.FrameLayout
+ import androidx.core.view.isInvisible
+ import androidx.recyclerview.widget.ItemTouchHelper
+@@ -23,6 +24,8 @@ import kotlin.math.sign
+  */
+ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTouchHelper.Callback() {
+ 
++    private var releaseTranslationX = 0f
++
+     override fun isLongPressDragEnabled() = false
+     override fun isItemViewSwipeEnabled() = true
+ 
+@@ -44,6 +47,12 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
+         }
+     )
+ 
++    override fun getAnimationDuration(recyclerView: RecyclerView, animationType: Int, animateDx: Float, animateDy: Float): Long {
++        // Make snap-back instant so the spring animation in clearView can take over
++        if (animationType == ItemTouchHelper.ANIMATION_TYPE_SWIPE_CANCEL) return 0L
++        return super.getAnimationDuration(recyclerView, animationType, animateDx, animateDy)
++    }
++
+     override fun onChildDraw(
+         c: Canvas,
+         recyclerView: RecyclerView,
+@@ -53,6 +62,9 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
+         actionState: Int,
+         isCurrentlyActive: Boolean,
+     ) {
++        if (isCurrentlyActive) {
++            releaseTranslationX = dX
++        }
+         viewHolder as NoteViewHolder<*>
+         val cardView = viewHolder.cardView
+ 
+@@ -71,6 +83,7 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
+                 else                -> Color.TRANSPARENT
+             }
+             swipeBgPaint.color = bgColor
++            swipeBgPaint.alpha = 200
+             val itemView = viewHolder.itemView
+             val rect = if (dX > 0) {
+                 // Swiping right: paint left portion
+@@ -135,8 +148,24 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
+         viewHolder as NoteViewHolder<*>
+         val cardView = viewHolder.cardView
+         cardView.alpha = 1f
+-        cardView.translationX = 0f
+         viewHolder.swipeImv.isInvisible = true
++
++        val startX = releaseTranslationX
++        releaseTranslationX = 0f
++
++        // Spring bounce-back only for partial swipes (not completed swipes)
++        if (startX.absoluteValue > cardView.width * ITEM_SWIPE_LOCK &&
++            startX.absoluteValue < cardView.width * ITEM_SWIPE_THRESHOLD
++        ) {
++            cardView.translationX = startX * 0.45f
++            cardView.animate()
++                .translationX(0f)
++                .setDuration(380)
++                .setInterpolator(OvershootInterpolator(1.8f))
++                .start()
++        } else {
++            cardView.translationX = 0f
++        }
+     }
+ 
+     override fun onMove(
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt
+index 19873ea..cce5456 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/reminder/ReminderDlg.kt
+@@ -86,6 +86,46 @@ class ReminderDlg : DialogFragment(), RecurrenceListCallback, RecurrencePickerCa
+             viewModel.onRecurrenceClicked()
+         }
+ 
++        // E-09: Quick pick chips
++        binding.chipInOneHour.setOnClickListener {
++            val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.HOUR_OF_DAY, 1) }
++            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
++            viewModel.changeTime(cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
++        }
++        binding.chipTomorrow.setOnClickListener {
++            val cal = java.util.Calendar.getInstance().apply {
++                add(java.util.Calendar.DAY_OF_YEAR, 1)
++                set(java.util.Calendar.HOUR_OF_DAY, 9)
++                set(java.util.Calendar.MINUTE, 0)
++            }
++            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
++            viewModel.changeTime(9, 0)
++        }
++        binding.chipNextWeek.setOnClickListener {
++            // Go back to Monday of this week, then forward 7 days → Monday of next week.
++            // Avoids the Calendar.WEEK_OF_YEAR + DAY_OF_WEEK trap where setting day-of-week
++            // after adding a week can land on a day within the *current* week.
++            val cal = java.util.Calendar.getInstance().apply {
++                val dow = get(java.util.Calendar.DAY_OF_WEEK)
++                val daysFromMonday = when (dow) {
++                    java.util.Calendar.MONDAY    -> 0
++                    java.util.Calendar.TUESDAY   -> 1
++                    java.util.Calendar.WEDNESDAY -> 2
++                    java.util.Calendar.THURSDAY  -> 3
++                    java.util.Calendar.FRIDAY    -> 4
++                    java.util.Calendar.SATURDAY  -> 5
++                    else                         -> 6  // SUNDAY
++                }
++                add(java.util.Calendar.DAY_OF_YEAR, -daysFromMonday + 7)
++                set(java.util.Calendar.HOUR_OF_DAY, 9)
++                set(java.util.Calendar.MINUTE, 0)
++                set(java.util.Calendar.SECOND, 0)
++                set(java.util.Calendar.MILLISECOND, 0)
++            }
++            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
++            viewModel.changeTime(9, 0)
++        }
++
+         // Create dialog
+         val dialog = MaterialAlertDialogBuilder(context)
+             .setView(binding.root)
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/search/SearchFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/search/SearchFrm.kt
+index 85796eb..737cf2b 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/search/SearchFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/search/SearchFrm.kt
+@@ -5,7 +5,7 @@ import android.view.View
+ import androidx.appcompat.widget.SearchView
+ import androidx.core.view.isVisible
+ import androidx.navigation.fragment.findNavController
+-import androidx.recyclerview.widget.SimpleItemAnimator
++import androidx.recyclerview.widget.DefaultItemAnimator
+ import com.google.android.material.transition.MaterialElevationScale
+ import com.mckimquyen.notes.RApp
+ import com.mckimquyen.notes.R
+@@ -58,7 +58,10 @@ class SearchFrm : NoteFrm() {
+ 
+         // Recycler view
+         val rcv = binding.recyclerView
+-        (rcv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
++        rcv.itemAnimator = DefaultItemAnimator().apply {
++            // Short crossfade so highlight changes animate smoothly without jarring blink.
++            changeDuration = 120
++        }
+ 
+         // Search view
+         val searchView = toolbar.menu.findItem(R.id.itemSearchEdt).actionView as SearchView
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/NestedSettingsFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/NestedSettingsFrm.kt
+index 60a8e16..2357595 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/NestedSettingsFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/NestedSettingsFrm.kt
+@@ -5,7 +5,7 @@ import android.view.View
+ import androidx.navigation.fragment.findNavController
+ import androidx.navigation.fragment.navArgs
+ import androidx.preference.PreferenceFragmentCompat
+-import com.google.android.material.transition.MaterialElevationScale
++import com.google.android.material.transition.MaterialSharedAxis
+ import com.mckimquyen.notes.databinding.FSettingsBinding
+ import com.google.android.material.R as RMaterial
+ 
+@@ -23,11 +23,11 @@ class NestedSettingsFrm : PreferenceFragmentCompat() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+ 
+-        enterTransition = MaterialElevationScale(false).apply {
+-            duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
++        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ true).apply {
++            duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
+         }
+-        exitTransition = MaterialElevationScale(true).apply {
+-            duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
++        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ false).apply {
++            duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
+         }
+     }
+ 
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/SettingsFrm.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/SettingsFrm.kt
+index a135d99..6d46822 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/SettingsFrm.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/setting/SettingsFrm.kt
+@@ -20,6 +20,7 @@ import androidx.preference.SwitchPreferenceCompat
+ import com.google.android.material.color.DynamicColors
+ import com.google.android.material.snackbar.Snackbar
+ import com.google.android.material.transition.MaterialElevationScale
++import com.google.android.material.transition.MaterialSharedAxis
+ import com.mckimquyen.notes.ui.common.SelectorBottomSheet
+ import com.mckimquyen.notes.R
+ import com.mckimquyen.notes.RApp
+@@ -252,6 +253,12 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
+         }
+ 
+         requirePreference<Preference>(PrefsManager.PREVIEW_LINES).setOnPreferenceClickListener {
++            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ true).apply {
++                duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
++            }
++            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ false).apply {
++                duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
++            }
+             findNavController().navigateSafe(
+                 SettingsFrmDirections.actionNestedSettings(
+                     R.xml.prefs_preview_lines, R.string.pref_preview_lines
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/sort/SortDialog.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/sort/SortDialog.kt
+index f4a8246..afe37c3 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/sort/SortDialog.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/sort/SortDialog.kt
+@@ -84,9 +84,9 @@ class SortDialog : BottomSheetDialogFragment() {
+ 
+     override fun onStart() {
+         super.onStart()
+-        // Make the BottomSheetDialog window background transparent so the
+-        // rounded-corner drawable on the root view is visible.
+-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
++        // Safe way to make bottom sheet background transparent without breaking window rendering on custom OS/Samsung devices.
++        val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
++        bottomSheet?.setBackgroundResource(android.R.color.transparent)
+     }
+ 
+     override fun onDestroyView() {
+diff --git a/app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashActivity.kt b/app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashActivity.kt
+index ffd7da3..a5d8234 100644
+--- a/app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashActivity.kt
++++ b/app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashActivity.kt
+@@ -1,6 +1,7 @@
+ package com.mckimquyen.notes.ui.splash
+ 
+ import android.content.Intent
++import android.util.Log
+ import android.os.Bundle
+ import android.os.Handler
+ import android.os.Looper
+@@ -25,6 +26,13 @@ class SplashActivity : BaseAct() {
+     lateinit var prefs: PrefsManager
+ 
+     private val handler = Handler(Looper.getMainLooper())
++    private var isTransitioningToMain = false
++
++    private val safetyTimeoutRunnable = Runnable {
++        Log.w("SplashActivity", "Safety timeout reached! Forcing transition to MainAct.")
++        goToMain()
++    }
++
+     private val finishRunnable = Runnable {
+         if (!isDestroyed && !isFinishing) {
+             finish()
+@@ -90,6 +98,9 @@ class SplashActivity : BaseAct() {
+     }
+ 
+     private fun startAdFlow() {
++        // Start a 5-second safety timeout in case UMP Consent or AdManager gets stuck
++        handler.postDelayed(safetyTimeoutRunnable, 5000)
++
+         // UMP Consent (Google Play 2024+ requirement for EEA / UK / CH).
+         // Must run BEFORE loading any ad — initSplashScreen kicks off App Open load internally.
+         AdManager.requestConsentInfoUpdate(this, tagForUnderAgeOfConsent = false) { canRequestAds ->
+@@ -102,6 +113,10 @@ class SplashActivity : BaseAct() {
+     }
+ 
+     private fun goToMain() {
++        if (isTransitioningToMain) return
++        isTransitioningToMain = true
++        handler.removeCallbacks(safetyTimeoutRunnable)
++
+         startActivity(Intent(this, MainAct::class.java))
+         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+         // Delay finish so the cross-fade animation finishes before the activity goes away.
+@@ -110,6 +125,7 @@ class SplashActivity : BaseAct() {
+ 
+     override fun onDestroy() {
+         super.onDestroy()
++        handler.removeCallbacks(safetyTimeoutRunnable)
+         handler.removeCallbacks(finishRunnable)
+     }
+ }
+diff --git a/app/src/main/res/layout/dlg_reminder.xml b/app/src/main/res/layout/dlg_reminder.xml
+index b1fd90d..5871034 100644
+--- a/app/src/main/res/layout/dlg_reminder.xml
++++ b/app/src/main/res/layout/dlg_reminder.xml
+@@ -190,4 +190,41 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="@id/recurrenceTxv" />
+ 
++    <com.google.android.material.chip.ChipGroup
++        android:id="@+id/quickPickChipGroup"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="56dp"
++        android:layout_marginTop="12dp"
++        android:layout_marginEnd="16dp"
++        android:layout_marginBottom="8dp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@id/recurrenceForegroundView"
++        app:singleLine="true">
++
++        <com.google.android.material.chip.Chip
++            android:id="@+id/chipInOneHour"
++            style="@style/Widget.Material3.Chip.Assist"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="@string/reminder_quick_in_one_hour" />
++
++        <com.google.android.material.chip.Chip
++            android:id="@+id/chipTomorrow"
++            style="@style/Widget.Material3.Chip.Assist"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="@string/reminder_quick_tomorrow" />
++
++        <com.google.android.material.chip.Chip
++            android:id="@+id/chipNextWeek"
++            style="@style/Widget.Material3.Chip.Assist"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="@string/reminder_quick_next_week" />
++
++    </com.google.android.material.chip.ChipGroup>
++
+ </androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/app/src/main/res/layout/f_edit.xml b/app/src/main/res/layout/f_edit.xml
+index f8df85c..485cbec 100644
+--- a/app/src/main/res/layout/f_edit.xml
++++ b/app/src/main/res/layout/f_edit.xml
+@@ -16,7 +16,45 @@
+         <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerView" android:layout_width="0dp" android:layout_height="0dp" android:clipToPadding="false" android:fitsSystemWindows="true" android:paddingTop="8dp" android:paddingBottom="28dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" tools:itemCount="4" tools:listitem="@layout/v_item_edit_item" />
+ 
+         <!-- Feature 1: Word count & char count footer -->
+-        <TextView android:id="@+id/wordCharCountTxv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_marginBottom="8dp" android:alpha="0.55" android:textAppearance="?textAppearanceLabelSmall" android:textSize="11sp" app:layout_constraintBottom_toTopOf="@id/colorPickerScroll" app:layout_constraintEnd_toEndOf="parent" tools:text="0 words · 0 chars" />
++        <com.google.android.material.progressindicator.CircularProgressIndicator
++            android:id="@+id/charLimitRing"
++            android:layout_width="20dp"
++            android:layout_height="20dp"
++            android:layout_marginEnd="4dp"
++            android:layout_marginBottom="10dp"
++            android:visibility="gone"
++            app:indicatorSize="20dp"
++            app:trackThickness="2dp"
++            app:trackCornerRadius="2dp"
++            app:indicatorColor="?colorPrimary"
++            app:layout_constraintBottom_toTopOf="@id/moodPickerRow"
++            app:layout_constraintEnd_toStartOf="@id/wordCharCountTxv"
++            tools:visibility="visible"
++            tools:progress="75" />
++
++        <TextView android:id="@+id/wordCharCountTxv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_marginBottom="8dp" android:alpha="0.55" android:textAppearance="?textAppearanceLabelSmall" android:textSize="11sp" app:layout_constraintBottom_toTopOf="@id/moodPickerRow" app:layout_constraintEnd_toEndOf="parent" tools:text="0 words · 0 chars" />
++
++        <!-- F-01: Mood picker row -->
++        <LinearLayout
++            android:id="@+id/moodPickerRow"
++            android:layout_width="0dp"
++            android:layout_height="40dp"
++            android:layout_marginBottom="2dp"
++            android:gravity="center_vertical"
++            android:orientation="horizontal"
++            android:paddingHorizontal="16dp"
++            app:layout_constraintBottom_toTopOf="@id/colorPickerScroll"
++            app:layout_constraintEnd_toEndOf="parent"
++            app:layout_constraintStart_toStartOf="parent">
++
++            <TextView android:id="@+id/moodBtn0" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="○" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++            <TextView android:id="@+id/moodBtn1" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😄" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++            <TextView android:id="@+id/moodBtn2" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😐" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++            <TextView android:id="@+id/moodBtn3" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😔" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++            <TextView android:id="@+id/moodBtn4" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="💡" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++            <TextView android:id="@+id/moodBtn5" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="🔥" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
++
++        </LinearLayout>
+ 
+         <!-- Feature 10: Color Picker Tray -->
+         <HorizontalScrollView android:id="@+id/colorPickerScroll" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="60dp" android:background="?colorSurface" android:clipToPadding="false" android:elevation="8dp" android:paddingStart="16dp" android:paddingEnd="16dp" android:scrollbars="none" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
+diff --git a/app/src/main/res/layout/v_item_note_text.xml b/app/src/main/res/layout/v_item_note_text.xml
+index 378b1f2..2bcdd9b 100644
+--- a/app/src/main/res/layout/v_item_note_text.xml
++++ b/app/src/main/res/layout/v_item_note_text.xml
+@@ -139,4 +139,18 @@
+ 
+     </com.google.android.material.card.MaterialCardView>
+ 
++    <!-- F-01: Mood badge, top-end corner of card -->
++    <TextView
++        android:id="@+id/moodTxv"
++        android:layout_width="24dp"
++        android:layout_height="24dp"
++        android:layout_gravity="top|end"
++        android:layout_marginTop="4dp"
++        android:layout_marginEnd="4dp"
++        android:gravity="center"
++        android:textSize="14sp"
++        android:visibility="gone"
++        tools:text="😄"
++        tools:visibility="visible" />
++
+ </FrameLayout>
+diff --git a/app/src/main/res/menu/menu_toolbar_edit.xml b/app/src/main/res/menu/menu_toolbar_edit.xml
+index e9876b0..7bcd246 100644
+--- a/app/src/main/res/menu/menu_toolbar_edit.xml
++++ b/app/src/main/res/menu/menu_toolbar_edit.xml
+@@ -67,4 +67,10 @@
+         app:showAsAction="ifRoom"
+         tools:title="@string/action_delete" />
+ 
++    <item
++        android:id="@+id/itemFocusMode"
++        android:icon="@drawable/ic_eye_off"
++        android:title="Focus"
++        app:showAsAction="ifRoom" />
++
+ </menu>
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 040bf1d..ac5ac83 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -17,6 +17,7 @@
+     <string name="action_labels">Change labels</string>
+     <string name="action_layout_grid">View as grid</string>
+     <string name="action_layout_list">View as list</string>
++    <string name="action_layout_timeline">View as timeline</string>
+     <string name="action_manage">Manage</string>
+     <string name="action_mark_as_done">Mark as done</string>
+     <string name="action_none">None</string>
+@@ -130,6 +131,9 @@
+     <string name="reminder_date">Date</string>
+     <string name="reminder_time">Time</string>
+     <string name="reminder_invalid_time">This time has already passed.</string>
++    <string name="reminder_quick_in_one_hour">In 1 hour</string>
++    <string name="reminder_quick_tomorrow">Tomorrow 9am</string>
++    <string name="reminder_quick_next_week">Next week</string>
+     <string name="reminder_notif_channel_title">Reminders</string>
+     <string name="reminder_notif_channel_descr">Reminders set on notes</string>
+     <string name="reminder_empty_placeholder">No reminders set</string>
+diff --git a/doc/init.md b/doc/init.md
+index 6255847..126536d 100644
+--- a/doc/init.md
++++ b/doc/init.md
+@@ -35,7 +35,8 @@
+ | `EditFrm` | `MaterialContainerTransform` (shared) | `MaterialContainerTransform` (shared) | Shared element từ card → edit screen |
+ | `SearchFrm` | `MaterialElevationScale(false)` | `MaterialElevationScale(true)` | |
+ | `LabelFrm` | `MaterialElevationScale(false)` | `MaterialElevationScale(true)` | + StatusBar ValueAnimator |
+-| `SettingsFrm` | `MaterialElevationScale(false)` | `MaterialElevationScale(true)` | |
++| `SettingsFrm` | `MaterialElevationScale(false)` | `MaterialSharedAxis(Z, true)` khi → Nested | Chỉ override khi navigate to NestedSettingsFrm |
++| `NestedSettingsFrm` | `MaterialSharedAxis(Z, true)` | `MaterialSharedAxis(Z, false)` (return) | Đồng bộ với VipFrm pattern |
+ | `VipFrm` | `MaterialSharedAxis(X, true)` | `MaterialSharedAxis(X, false)` | + Entrance ObjectAnimator + looping AnimatorSet |
+ 
+ ---
+@@ -62,4 +63,25 @@ Xem chi tiết trong `doc/AD.MD`. Tóm tắt:
+ - `doc/AD.MD` — migration AdMob → AdmobApplovinWrapper 1.1.3
+ - `doc/multi_language.md` — hỗ trợ ngôn ngữ
+ - `doc/test/animation_test.md` — bộ test case animation
+-- `doc/task/` — backlog tính năng (todo / inprogress / done)
++- `doc/task/todo/` — backlog chưa làm
++- `doc/task/done/sprint_2026_06_22.md` — sprint 2026-06-22: 9 animation enhancements + 3 new features, build PASS
++
++## Features nổi bật đã implement (sprint 2026-06-22)
++
++| Feature | Mô tả | File |
++|---|---|---|
++| FAB Spring Entrance | Scale-in OvershootInterpolator khi mở app | `HomeFrm.kt` |
++| FAB Scroll Hide/Show | `fab.hide/show()` khi scroll RecyclerView | `HomeFrm.kt` |
++| Swipe Spring Bounce | Card bounces back với OvershootInterpolator(1.8) | `SwipeTouchHelperCallback.kt` |
++| Card Lift Long-press | Scale + translationZ lift trước selection mode | `NoteListVH.kt` |
++| Word Count Roll | ValueAnimator counter khi delta >5 | `EditFrm.kt` |
++| Char Progress Ring | CircularProgressIndicator 20dp (primary→error) | `EditFrm.kt`, `f_edit.xml` |
++| Word Milestone Celebration | Snackbar + bounce tại 100/500/1k/5k words | `EditVM.kt`, `EditFrm.kt` |
++| Focus Mode | Toolbar mờ 0.15, ẩn bottom UI, Back để thoát | `EditFrm.kt` |
++| Reminder Quick Pick | 3 chips in 1h / tomorrow / next week | `ReminderDlg.kt`, `dlg_reminder.xml` |
++| Empty State Animation | Placeholder scale-in + text fade khi list trống | `NoteFrm.kt` |
++| Bottom Sheet Checkmark | Checkmark scale+fade khi chọn sort/language | `SelectorBottomSheet.kt` |
++| Search Highlight Crossfade | `DefaultItemAnimator(changeDuration=120)` | `SearchFrm.kt` |
++| Pin Spring Jump | `SpringItemAnimator` overshoot khi pin note | `SpringItemAnimator.kt` |
++| Note Mood Tag | 5 emoji moods, Room migration 5→6, picker + badge trên card | `Note.kt`, `NotesDb.kt`, `EditVM.kt`, `EditFrm.kt` |
++| Timeline View | Layout thứ 3 — nhóm theo ngày, đường timeline trái | `NoteListLayoutMode.kt`, `NoteVM.kt`, `NoteAdt.kt` |
+diff --git a/doc/quick_win.md b/doc/quick_win.md
+index 7123f8a..eb719b0 100644
+--- a/doc/quick_win.md
++++ b/doc/quick_win.md
+@@ -6,7 +6,7 @@
+ |---|---------|--------------|--------|
+ | 1 | **Word/Char Count** — Footer hiển thị số từ và ký tự trong Edit screen | `EditVM`, `EditFrm`, `f_edit.xml` | ✅ DONE |
+ | 2 | **Swipe Color Feedback** — Nền xanh (archive) / đỏ (delete) khi swipe note | `SwipeTouchHelperCallback` | ✅ DONE |
+-| 3 | **Char Limit Warning** — Snackbar cảnh báo khi content ≥9000 hoặc ≥10000 ký tự | `EditVM`, `EditFrm` | ✅ DONE |
++| 3 | **Char Limit Warning** — Snackbar cảnh báo khi content ≥90000 hoặc ≥100000 ký tự | `EditVM`, `EditFrm` | ✅ DONE |
+ | 4 | **Ad After Delete** — Interstitial ad khi user xóa (move to trash) note | `HomeFrm` | ✅ DONE |
+ | 5 | **Quick Note Widget** — Home screen widget tap để tạo note ngay | `QuickNoteWidget`, `AndroidManifest`, layouts | ✅ DONE |
+ 
+@@ -27,8 +27,8 @@
+ 
+ ### Feature 3 — Character Limit Warning
+ 
+-- `EditVM.CHAR_LIMIT = 10_000`, `CHAR_LIMIT_WARN = 9_000`
+-- Chỉ fire 1 lần mỗi threshold (reset khi user xóa bớt về dưới 9000)
++- `EditVM.CHAR_LIMIT = 100_000`, `CHAR_LIMIT_WARN = 90_000`
++- Chỉ fire 1 lần mỗi threshold (reset khi user xóa bớt về dưới 90_000)
+ - `EditFrm` — Snackbar cam (90%) và đỏ (100%)
+ 
+ ### Feature 4 — Ad After Delete
+diff --git a/doc/task/todo/enhance_existing_features.md b/doc/task/todo/enhance_existing_features.md
+index fac8aa7..772fcb1 100644
+--- a/doc/task/todo/enhance_existing_features.md
++++ b/doc/task/todo/enhance_existing_features.md
+@@ -106,7 +106,7 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
+ 
+ ## E-07: Char Limit Warning — Thêm Progress Ring
+ 
+-**Tính năng gốc:** Snackbar cảnh báo khi ≥9000 ký tự.
++**Tính năng gốc:** Snackbar cảnh báo khi ≥90_000 ký tự (CHAR_LIMIT_WARN = 90_000, CHAR_LIMIT = 100_000).
+ 
+ **Enhancement:** Thêm circular progress indicator nhỏ ở góc `wordCharCountTxv`: 
+ - 0-89%: invisible

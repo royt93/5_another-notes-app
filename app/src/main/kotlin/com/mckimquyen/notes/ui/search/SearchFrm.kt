@@ -5,7 +5,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.google.android.material.transition.MaterialElevationScale
 import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.R
@@ -58,7 +58,10 @@ class SearchFrm : NoteFrm() {
 
         // Recycler view
         val rcv = binding.recyclerView
-        (rcv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        rcv.itemAnimator = DefaultItemAnimator().apply {
+            // Short crossfade so highlight changes animate smoothly without jarring blink.
+            changeDuration = 120
+        }
 
         // Search view
         val searchView = toolbar.menu.findItem(R.id.itemSearchEdt).actionView as SearchView

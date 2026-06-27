@@ -1,6 +1,7 @@
 package com.mckimquyen.notes.ui.splash
 
 import android.content.Intent
+import android.util.Log
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,6 +26,13 @@ class SplashActivity : BaseAct() {
     lateinit var prefs: PrefsManager
 
     private val handler = Handler(Looper.getMainLooper())
+    private var isTransitioningToMain = false
+
+    private val safetyTimeoutRunnable = Runnable {
+        Log.w("SplashActivity", "Safety timeout reached! Forcing transition to MainAct.")
+        goToMain()
+    }
+
     private val finishRunnable = Runnable {
         if (!isDestroyed && !isFinishing) {
             finish()
@@ -90,6 +98,9 @@ class SplashActivity : BaseAct() {
     }
 
     private fun startAdFlow() {
+        // Start a 5-second safety timeout in case UMP Consent or AdManager gets stuck
+        handler.postDelayed(safetyTimeoutRunnable, 5000)
+
         // UMP Consent (Google Play 2024+ requirement for EEA / UK / CH).
         // Must run BEFORE loading any ad — initSplashScreen kicks off App Open load internally.
         AdManager.requestConsentInfoUpdate(this, tagForUnderAgeOfConsent = false) { canRequestAds ->
@@ -102,6 +113,10 @@ class SplashActivity : BaseAct() {
     }
 
     private fun goToMain() {
+        if (isTransitioningToMain) return
+        isTransitioningToMain = true
+        handler.removeCallbacks(safetyTimeoutRunnable)
+
         startActivity(Intent(this, MainAct::class.java))
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         // Delay finish so the cross-fade animation finishes before the activity goes away.
@@ -110,6 +125,7 @@ class SplashActivity : BaseAct() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacks(safetyTimeoutRunnable)
         handler.removeCallbacks(finishRunnable)
     }
 }

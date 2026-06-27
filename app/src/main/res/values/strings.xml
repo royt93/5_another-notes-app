@@ -17,6 +17,7 @@
     <string name="action_labels">Change labels</string>
     <string name="action_layout_grid">View as grid</string>
     <string name="action_layout_list">View as list</string>
+    <string name="action_layout_timeline">View as timeline</string>
     <string name="action_manage">Manage</string>
     <string name="action_mark_as_done">Mark as done</string>
     <string name="action_none">None</string>
@@ -130,6 +131,9 @@
     <string name="reminder_date">Date</string>
     <string name="reminder_time">Time</string>
     <string name="reminder_invalid_time">This time has already passed.</string>
+    <string name="reminder_quick_in_one_hour">In 1 hour</string>
+    <string name="reminder_quick_tomorrow">Tomorrow 9am</string>
+    <string name="reminder_quick_next_week">Next week</string>
     <string name="reminder_notif_channel_title">Reminders</string>
     <string name="reminder_notif_channel_descr">Reminders set on notes</string>
     <string name="reminder_empty_placeholder">No reminders set</string>

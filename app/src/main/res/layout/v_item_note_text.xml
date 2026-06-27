@@ -139,4 +139,18 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- F-01: Mood badge, top-end corner of card -->
+    <TextView
+        android:id="@+id/moodTxv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="😄"
+        tools:visibility="visible" />
+
 </FrameLayout>

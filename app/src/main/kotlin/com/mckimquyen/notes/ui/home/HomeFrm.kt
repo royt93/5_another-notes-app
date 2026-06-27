@@ -10,12 +10,14 @@ import android.util.Log
 import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.OvershootInterpolator
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.Hold
 import com.mckimquyen.notes.NavGraphMainDirections
@@ -38,6 +40,8 @@ import com.google.android.material.R as RMaterial
  * by label, or with a reminder.
  */
 class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
+
+    private var isFirstFabEntrance = true
 
     @Inject
     lateinit var viewModelFactory: HomeVM.Factory
@@ -102,6 +106,16 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
 
         // Floating action button
         binding.fab.transitionName = "createNoteTransition"
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 10) {
+                    binding.fab.hide()
+                } else if (dy < -10) {
+                    binding.fab.show()
+                }
+            }
+        })
+
         binding.fab.setOnClickListener {
             AdManager.showInterstitial(requireActivity()) { success ->
                 if (success) {
@@ -139,6 +153,18 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
         viewModel.fabShown.observe(viewLifecycleOwner) { shown ->
             if (shown) {
                 binding.fab.show()
+                // Spring entrance: translationY (different property from fab.show()'s internal scale → no conflict)
+                if (isFirstFabEntrance) {
+                    isFirstFabEntrance = false
+                    val offsetPx = resources.displayMetrics.density * 80f
+                    binding.fab.translationY = offsetPx
+                    binding.fab.animate()
+                        .translationY(0f)
+                        .setStartDelay(150)
+                        .setDuration(500)
+                        .setInterpolator(OvershootInterpolator(2.2f))
+                        .start()
+                }
             } else {
                 binding.fab.hide()
             }
@@ -216,6 +242,11 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
             }
 
             NoteListLayoutMode.GRID -> {
+                layoutItem.setIcon(R.drawable.ic_list)
+                layoutItem.setTitle(R.string.action_layout_timeline)
+            }
+
+            NoteListLayoutMode.TIMELINE -> {
                 layoutItem.setIcon(R.drawable.ic_view_list)
                 layoutItem.setTitle(R.string.action_layout_list)
             }

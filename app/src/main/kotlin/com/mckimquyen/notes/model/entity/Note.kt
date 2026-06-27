@@ -89,6 +89,12 @@ data class Note(
      */
     @ColumnInfo(name = "color", defaultValue = "0")
     val color: Int = 0,
+
+    /**
+     * Mood tag: 0 = none, 1 = 😄 happy, 2 = 😐 neutral, 3 = 😔 sad, 4 = 💡 idea, 5 = 🔥 excited.
+     */
+    @ColumnInfo(name = "mood", defaultValue = "0")
+    val mood: Int = 0,
 ) {
 
     init {

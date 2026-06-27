@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.view.Gravity
+import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,6 +23,8 @@ import kotlin.math.sign
  * Item touch helper callback for swiping items.
  */
 class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTouchHelper.Callback() {
+
+    private var releaseTranslationX = 0f
 
     override fun isLongPressDragEnabled() = false
     override fun isItemViewSwipeEnabled() = true
@@ -44,6 +47,12 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
         }
     )
 
+    override fun getAnimationDuration(recyclerView: RecyclerView, animationType: Int, animateDx: Float, animateDy: Float): Long {
+        // Make snap-back instant so the spring animation in clearView can take over
+        if (animationType == ItemTouchHelper.ANIMATION_TYPE_SWIPE_CANCEL) return 0L
+        return super.getAnimationDuration(recyclerView, animationType, animateDx, animateDy)
+    }
+
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -53,6 +62,9 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
         actionState: Int,
         isCurrentlyActive: Boolean,
     ) {
+        if (isCurrentlyActive) {
+            releaseTranslationX = dX
+        }
         viewHolder as NoteViewHolder<*>
         val cardView = viewHolder.cardView
 
@@ -71,6 +83,7 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
                 else                -> Color.TRANSPARENT
             }
             swipeBgPaint.color = bgColor
+            swipeBgPaint.alpha = 200
             val itemView = viewHolder.itemView
             val rect = if (dX > 0) {
                 // Swiping right: paint left portion
@@ -135,8 +148,24 @@ class SwipeTouchHelperCallback(private val callback: NoteAdt.Callback) : ItemTou
         viewHolder as NoteViewHolder<*>
         val cardView = viewHolder.cardView
         cardView.alpha = 1f
-        cardView.translationX = 0f
         viewHolder.swipeImv.isInvisible = true
+
+        val startX = releaseTranslationX
+        releaseTranslationX = 0f
+
+        // Spring bounce-back only for partial swipes (not completed swipes)
+        if (startX.absoluteValue > cardView.width * ITEM_SWIPE_LOCK &&
+            startX.absoluteValue < cardView.width * ITEM_SWIPE_THRESHOLD
+        ) {
+            cardView.translationX = startX * 0.45f
+            cardView.animate()
+                .translationX(0f)
+                .setDuration(380)
+                .setInterpolator(OvershootInterpolator(1.8f))
+                .start()
+        } else {
+            cardView.translationX = 0f
+        }
     }
 
     override fun onMove(

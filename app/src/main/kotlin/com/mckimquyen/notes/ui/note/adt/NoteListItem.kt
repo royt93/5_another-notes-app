@@ -78,3 +78,12 @@ data class MessageItem(
 
     override val type get() = ViewType.MESSAGE
 }
+
+@Keep
+data class TimelineDateHeaderItem(
+    override val id: Long,
+    val dateLabel: String,
+) : NoteListItem {
+
+    override val type get() = ViewType.TIMELINE_DATE_HEADER
+}

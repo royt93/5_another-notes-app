@@ -64,6 +64,12 @@ class PrefsManager @Inject constructor(
                 NoteType.TEXT -> PREVIEW_LINES_TEXT_GRID
                 NoteType.LIST -> PREVIEW_LINES_LIST_GRID
             }
+
+            // Timeline mode: use list-mode preview line settings (compact single column)
+            NoteListLayoutMode.TIMELINE -> when (noteType) {
+                NoteType.TEXT -> PREVIEW_LINES_TEXT_LIST
+                NoteType.LIST -> PREVIEW_LINES_LIST_LIST
+            }
         }
         return prefs.getInt(key, 0)
     }
@@ -144,6 +150,11 @@ class PrefsManager @Inject constructor(
             editor.remove(SWIPE_ACTION)
                 .putString(SWIPE_ACTION_LEFT, swipeAction)
                 .putString(SWIPE_ACTION_RIGHT, swipeAction)
+        }
+
+        // Migrate first run language preference for existing users
+        if (prefs.contains(THEME) && !prefs.contains(FIRST_RUN_LANGUAGE_PICKED)) {
+            editor.putBoolean(FIRST_RUN_LANGUAGE_PICKED, true)
         }
 
         if (editorDelegate.isInitialized()) {

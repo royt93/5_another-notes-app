@@ -95,6 +95,9 @@ class EditVM @AssistedInject constructor(
      */
     private var color: Int = note.color
 
+    /** Mood tag: 0 = none, 1–5 = emoji moods. */
+    private var mood: Int = note.mood
+
     /**
      * URL of last clicked span, if any.
      */
@@ -137,6 +140,10 @@ class EditVM @AssistedInject constructor(
     private val _noteColor = MutableLiveData<Int>()
     val noteColor: LiveData<Int>
         get() = _noteColor
+
+    private val _noteMood = MutableLiveData<Int>()
+    val noteMood: LiveData<Int>
+        get() = _noteMood
 
     private val _editItems = MutableLiveData<MutableList<EditListItem>>()
     val editItems: LiveData<out List<EditListItem>>
@@ -200,6 +207,15 @@ class EditVM @AssistedInject constructor(
     val charLimitWarningEvent: LiveData<Event<Int>>
         get() = _charLimitWarningEvent
     private var lastCharWarnThreshold = 0
+
+    // F-04: Word count milestones
+    private val _wordMilestoneEvent = MutableLiveData<Event<Int>>()
+    val wordMilestoneEvent: LiveData<Event<Int>>
+        get() = _wordMilestoneEvent
+    private var reachedWordMilestones = mutableSetOf<Int>()
+    // True on first updateLiveStats call — used to pre-populate milestones for existing notes
+    // without firing celebration events (opening a 600-word note must not trigger celebrations).
+    private var isFirstStatsUpdate = true
 
     /**
      * Whether to show date item.
@@ -303,12 +319,14 @@ class EditVM @AssistedInject constructor(
             pinned = note.pinned
             reminder = note.reminder
             color = note.color
+            mood = note.mood
 
             _noteType.value = note.type
             _noteStatus.value = status
             _notePinned.value = pinned
             _noteReminder.value = reminder
             _noteColor.value = color
+            _noteMood.value = mood
 
             savedStateHandle[KEY_NOTE_ID] = note.id
 
@@ -445,8 +463,15 @@ class EditVM @AssistedInject constructor(
         if (this.color != color) {
             this.color = color
             _noteColor.value = color
+            updateNote()
+            saveNote()
+        }
+    }
 
-            // Will be saved dynamically
+    fun setMood(mood: Int) {
+        if (this.mood != mood) {
+            this.mood = mood
+            _noteMood.value = mood
             updateNote()
             saveNote()
         }
@@ -646,7 +671,8 @@ class EditVM @AssistedInject constructor(
         }
         note = note.copy(
             title = title, content = content,
-            metadata = metadata, status = status, pinned = pinned, reminder = reminder, color = color
+            metadata = metadata, status = status, pinned = pinned, reminder = reminder,
+            color = color, mood = mood
         )
 
         // Feature 1+3: Update word/char count and char-limit warning
@@ -685,6 +711,22 @@ class EditVM @AssistedInject constructor(
                 _charLimitWarningEvent.send(contentChars)
             }
             contentChars < CHAR_LIMIT_WARN -> lastCharWarnThreshold = 0
+        }
+
+        // F-04: Word milestone celebration
+        if (isFirstStatsUpdate) {
+            // Pre-populate milestones silently so opening an existing long note does not celebrate.
+            WORD_MILESTONES.filter { words >= it }.forEach { reachedWordMilestones.add(it) }
+            isFirstStatsUpdate = false
+        } else {
+            for (milestone in WORD_MILESTONES) {
+                if (words >= milestone && !reachedWordMilestones.contains(milestone)) {
+                    reachedWordMilestones.add(milestone)
+                    _wordMilestoneEvent.send(milestone)
+                } else if (words < milestone) {
+                    reachedWordMilestones.remove(milestone)
+                }
+            }
         }
     }
 
@@ -1016,6 +1058,7 @@ class EditVM @AssistedInject constructor(
         // Feature 3: Char limit constants
         const val CHAR_LIMIT = 100_000
         const val CHAR_LIMIT_WARN = 90_000
+        val WORD_MILESTONES = listOf(100, 500, 1_000, 5_000)
 
         private val BLANK_NOTE = Note(
             id = Note.NO_ID,

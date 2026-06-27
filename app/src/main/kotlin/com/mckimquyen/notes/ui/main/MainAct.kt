@@ -22,6 +22,8 @@ import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.color.DynamicColors
 import com.mckimquyen.notes.NavGraphMainDirections
@@ -64,6 +66,9 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     @Inject
     lateinit var prefs: PrefsManager
 
+    @Inject
+    lateinit var notesDao: com.mckimquyen.notes.model.NotesDao
+
     lateinit var drawerLayout: DrawerLayout
 
     private lateinit var navController: NavController
@@ -97,6 +102,29 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
         binding = AMainBinding.inflate(layoutInflater)
         drawerLayout = binding.drawerLayout
         setContentView(binding.root)
+
+        // FOOLPROOF INJECT 50 NOTES ON STARTUP FOR THE USER TO SEE
+        if (com.mckimquyen.notes.BuildConfig.DEBUG) {
+            this.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                if (notesDao.getActiveNotesCount() == 0) {
+                val list = mutableListOf<com.mckimquyen.notes.model.entity.Note>()
+                for (i in 1..50) {
+                    list.add(com.mckimquyen.notes.model.entity.Note(
+                        type = com.mckimquyen.notes.model.entity.NoteType.TEXT,
+                        title = "FOOLPROOF Dummy Note $i",
+                        content = "This is a dummy note injected on startup to test UI scroll and search. Number: $i",
+                        metadata = com.mckimquyen.notes.model.entity.BlankNoteMetadata,
+                        addedDate = java.util.Date(),
+                        lastModifiedDate = java.util.Date(),
+                        status = com.mckimquyen.notes.model.entity.NoteStatus.ACTIVE,
+                        pinned = com.mckimquyen.notes.model.entity.PinnedStatus.UNPINNED,
+                        reminder = null
+                    ))
+                }
+                notesDao.insertAll(list)
+            }
+        }
+        }
 
         // Allow for transparent status and navigation bars
         WindowCompat.setDecorFitsSystemWindows(window, false)

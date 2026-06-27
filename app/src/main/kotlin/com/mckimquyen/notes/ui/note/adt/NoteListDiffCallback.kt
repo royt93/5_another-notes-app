@@ -25,6 +25,11 @@ class NoteListDiffCallback : DiffUtil.ItemCallback<NoteListItem>() {
                 new.title == old.title
             }
 
+            is TimelineDateHeaderItem -> {
+                old as TimelineDateHeaderItem
+                new.dateLabel == old.dateLabel
+            }
+
             is NoteItem -> {
                 // Only check the attributes that have an influence on the
                 // visual representation of the note item.

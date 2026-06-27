@@ -5,7 +5,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceFragmentCompat
-import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialSharedAxis
 import com.mckimquyen.notes.databinding.FSettingsBinding
 import com.google.android.material.R as RMaterial
 
@@ -23,11 +23,11 @@ class NestedSettingsFrm : PreferenceFragmentCompat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialElevationScale(false).apply {
-            duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ true).apply {
+            duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
         }
-        exitTransition = MaterialElevationScale(true).apply {
-            duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ false).apply {
+            duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
         }
     }
 

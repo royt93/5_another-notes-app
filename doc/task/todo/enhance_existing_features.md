@@ -106,7 +106,7 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
 
 ## E-07: Char Limit Warning — Thêm Progress Ring
 
-**Tính năng gốc:** Snackbar cảnh báo khi ≥9000 ký tự.
+**Tính năng gốc:** Snackbar cảnh báo khi ≥90_000 ký tự (CHAR_LIMIT_WARN = 90_000, CHAR_LIMIT = 100_000).
 
 **Enhancement:** Thêm circular progress indicator nhỏ ở góc `wordCharCountTxv`: 
 - 0-89%: invisible

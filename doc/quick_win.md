@@ -6,7 +6,7 @@
 |---|---------|--------------|--------|
 | 1 | **Word/Char Count** — Footer hiển thị số từ và ký tự trong Edit screen | `EditVM`, `EditFrm`, `f_edit.xml` | ✅ DONE |
 | 2 | **Swipe Color Feedback** — Nền xanh (archive) / đỏ (delete) khi swipe note | `SwipeTouchHelperCallback` | ✅ DONE |
-| 3 | **Char Limit Warning** — Snackbar cảnh báo khi content ≥9000 hoặc ≥10000 ký tự | `EditVM`, `EditFrm` | ✅ DONE |
+| 3 | **Char Limit Warning** — Snackbar cảnh báo khi content ≥90000 hoặc ≥100000 ký tự | `EditVM`, `EditFrm` | ✅ DONE |
 | 4 | **Ad After Delete** — Interstitial ad khi user xóa (move to trash) note | `HomeFrm` | ✅ DONE |
 | 5 | **Quick Note Widget** — Home screen widget tap để tạo note ngay | `QuickNoteWidget`, `AndroidManifest`, layouts | ✅ DONE |
 
@@ -27,8 +27,8 @@
 
 ### Feature 3 — Character Limit Warning
 
-- `EditVM.CHAR_LIMIT = 10_000`, `CHAR_LIMIT_WARN = 9_000`
-- Chỉ fire 1 lần mỗi threshold (reset khi user xóa bớt về dưới 9000)
+- `EditVM.CHAR_LIMIT = 100_000`, `CHAR_LIMIT_WARN = 90_000`
+- Chỉ fire 1 lần mỗi threshold (reset khi user xóa bớt về dưới 90_000)
 - `EditFrm` — Snackbar cam (90%) và đỏ (100%)
 
 ### Feature 4 — Ad After Delete

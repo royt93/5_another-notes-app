@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -48,6 +49,7 @@ import com.mckimquyen.notes.ui.main.MainAct
 import com.mckimquyen.notes.ui.navGraphViewModel
 import com.mckimquyen.notes.ui.note.adt.NoteAdt
 import com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode
+import com.mckimquyen.notes.ui.note.adt.SpringItemAnimator
 import com.mckimquyen.notes.ui.observeEvent
 import com.mckimquyen.notes.ui.startSharingData
 import com.mckimquyen.notes.utils.startSafeActionMode
@@ -86,13 +88,14 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
     private var spanCount = 1
     private var hideActionMode = false
 
-    private var layoutManager: StaggeredGridLayoutManager? = null
+    private var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager? = null
     private var currentHomeDestinationChanged: Boolean = false
 
     private var isSharedElementTransitionPlaying: Boolean = false
     private var rcvOneShotPreDrawListener: OneShotPreDrawListener? = null
     private var createdNote: View? = null
     private var createdNoteId: Long? = null
+    private var isPlaceholderShowing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,11 +129,12 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
 
         val rcv = binding.recyclerView
         rcv.setHasFixedSize(true)
+        rcv.itemAnimator = SpringItemAnimator()
         val adapter = NoteAdt(context, viewModel, prefsManager)
-        val layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
-        this.layoutManager = layoutManager
+        val staggeredLayoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        this.layoutManager = staggeredLayoutManager
         rcv.adapter = adapter
-        rcv.layoutManager = layoutManager
+        rcv.layoutManager = staggeredLayoutManager
 
         // Apply padding to the bottom of the recyclerview, so that the last notes aren't covered by the FAB
         val initialPadding = resources.getDimensionPixelSize(R.dimen.notes_recyclerview_bottom_padding)
@@ -143,7 +147,7 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         val navController = findNavController()
         navController.addOnDestinationChangedListener(this)
 
-        setupViewModelObservers(adapter, layoutManager)
+        setupViewModelObservers(adapter, staggeredLayoutManager)
 
         enterTransition = MaterialElevationScale(false).apply {
             duration = resources.getInteger(RMaterial.integer.material_motion_duration_short_2).toLong()
@@ -191,21 +195,42 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
 
     private fun setupViewModelObservers(
         adapter: NoteAdt,
-        layoutManager: StaggeredGridLayoutManager,
+        initialLayoutManager: StaggeredGridLayoutManager,
     ) {
         val navController = findNavController()
 
         setupNoteItemsObserver(adapter)
 
         viewModel.listLayoutMode.observe(viewLifecycleOwner) { mode ->
-            layoutManager.spanCount = resources.getInteger(
-                when (mode!!) {
-                    NoteListLayoutMode.LIST -> R.integer.note_list_layout_span_count
-                    NoteListLayoutMode.GRID -> R.integer.note_grid_layout_span_count
+            val rcv = binding.recyclerView
+            when (mode!!) {
+                NoteListLayoutMode.TIMELINE -> {
+                    val linearLm = LinearLayoutManager(requireContext())
+                    this.layoutManager = linearLm
+                    rcv.layoutManager = linearLm
+                    spanCount = 1
                 }
-            )
-            spanCount = layoutManager.spanCount
-            adapter.updateForListLayoutChange()
+                else -> {
+                    val sgLm = layoutManager as? StaggeredGridLayoutManager
+                        ?: StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL).also {
+                            this.layoutManager = it
+                            rcv.layoutManager = it
+                        }
+                    sgLm.spanCount = resources.getInteger(
+                        when (mode) {
+                            NoteListLayoutMode.LIST -> R.integer.note_list_layout_span_count
+                            NoteListLayoutMode.GRID -> R.integer.note_grid_layout_span_count
+                            else -> R.integer.note_list_layout_span_count
+                        }
+                    )
+                    if (rcv.layoutManager !== sgLm) {
+                        this.layoutManager = sgLm
+                        rcv.layoutManager = sgLm
+                    }
+                    spanCount = sgLm.spanCount
+                }
+            }
+            adapter.updateForListLayoutChange(mode)
         }
 
         viewModel.editItemEvent.observeEvent(viewLifecycleOwner) { (noteId, pos) ->
@@ -220,12 +245,24 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
             )
 
             // If the selected note isn't completely in view, move it into view.
-            val firstVisibleItem = layoutManager.findFirstCompletelyVisibleItemPositions(null).minOrNull()
-            val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPositions(null).maxOrNull()
-            if (firstVisibleItem != null && lastVisibleItem != null &&
-                (pos < firstVisibleItem || pos > lastVisibleItem)
-            ) {
-                binding.recyclerView.scrollToPosition(pos)
+            val sgLm = layoutManager as? StaggeredGridLayoutManager
+            if (sgLm != null) {
+                val firstVisibleItem = sgLm.findFirstCompletelyVisibleItemPositions(null).minOrNull()
+                val lastVisibleItem = sgLm.findLastCompletelyVisibleItemPositions(null).maxOrNull()
+                if (firstVisibleItem != null && lastVisibleItem != null &&
+                    (pos < firstVisibleItem || pos > lastVisibleItem)
+                ) {
+                    binding.recyclerView.scrollToPosition(pos)
+                }
+            } else {
+                val llm = layoutManager as? LinearLayoutManager
+                if (llm != null) {
+                    val firstVisibleItem = llm.findFirstCompletelyVisibleItemPosition()
+                    val lastVisibleItem = llm.findLastCompletelyVisibleItemPosition()
+                    if (pos < firstVisibleItem || pos > lastVisibleItem) {
+                        binding.recyclerView.scrollToPosition(pos)
+                    }
+                }
             }
             navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), extras = extras)
         }
@@ -244,17 +281,51 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         }
 
         viewModel.placeholderData.observe(viewLifecycleOwner) { data ->
+            binding.placeholderImv.animate().cancel()
+            binding.placeholderTxv.animate().cancel()
             if (data != null) {
                 binding.placeholderImv.setImageResource(data.iconId)
                 binding.placeholderTxv.setText(data.messageId)
-            } else if (binding.placeholderGroup.isVisible) {
-                // Recreate layout manager to prevent an issue with weird spacing at the top of the recyclerview
-                // after the placeholder has been shown.
-                binding.recyclerView.layoutManager =
-                    StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+                if (!isPlaceholderShowing) {
+                    isPlaceholderShowing = true
+                    binding.placeholderGroup.isVisible = true
+                    binding.placeholderImv.alpha = 0f
+                    binding.placeholderImv.scaleX = 0.6f
+                    binding.placeholderImv.scaleY = 0.6f
+                    binding.placeholderTxv.alpha = 0f
+                    binding.placeholderTxv.translationY = resources.displayMetrics.density * 16f
+                    binding.placeholderImv.animate()
+                        .alpha(1f).scaleX(1f).scaleY(1f)
+                        .setDuration(350)
+                        .setInterpolator(android.view.animation.OvershootInterpolator(1.5f))
+                        .start()
+                    binding.placeholderTxv.animate()
+                        .alpha(1f).translationY(0f)
+                        .setStartDelay(120).setDuration(280)
+                        .start()
+                }
+            } else {
+                if (isPlaceholderShowing) {
+                    isPlaceholderShowing = false
+                    binding.placeholderImv.animate().alpha(0f).scaleX(0.7f).scaleY(0.7f)
+                        .setDuration(200).withEndAction {
+                            if (!isPlaceholderShowing) {
+                                binding.placeholderGroup.isVisible = false
+                                binding.placeholderImv.scaleX = 1f
+                                binding.placeholderImv.scaleY = 1f
+                                // Recreate layout manager to prevent weird spacing after placeholder shown.
+                                if (layoutManager is LinearLayoutManager && layoutManager !is StaggeredGridLayoutManager) {
+                                    binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                                } else {
+                                    binding.recyclerView.layoutManager =
+                                        StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+                                }
+                            }
+                        }.start()
+                    binding.placeholderTxv.animate().alpha(0f).setDuration(150).start()
+                }
             }
-
-            binding.placeholderGroup.isVisible = data != null
+            if (data == null && !isPlaceholderShowing) binding.placeholderGroup.isVisible = false
         }
 
         viewModel.showReminderDialogEvent.observeEvent(viewLifecycleOwner) { noteIds ->

@@ -15,6 +15,8 @@ import com.mckimquyen.notes.databinding.VItemNoteLabelBinding
 import com.mckimquyen.notes.databinding.VItemNoteListBinding
 import com.mckimquyen.notes.databinding.VItemNoteListItemBinding
 import com.mckimquyen.notes.databinding.VItemNoteTextBinding
+import com.mckimquyen.notes.databinding.VItemTimelineHeaderBinding
+import com.mckimquyen.notes.databinding.VItemTimelineNoteBinding
 import com.mckimquyen.notes.model.PrefsManager
 import com.mckimquyen.notes.ui.note.SwipeAction
 
@@ -46,6 +48,9 @@ class NoteAdt(
     val highlightBackgroundColor = ContextCompat.getColor(context, R.color.color_highlight)
     val highlightForegroundColor = ContextCompat.getColor(context, R.color.color_on_highlight)
 
+    /** Current layout mode — used to dispatch NoteItems to the correct view holder type. */
+    var layoutMode: NoteListLayoutMode = NoteListLayoutMode.LIST
+
     init {
         setHasStableIds(true)
     }
@@ -73,6 +78,14 @@ class NoteAdt(
                 VItemNoteListBinding.inflate(inflater, parent, false)
             )
 
+            ViewType.TIMELINE_DATE_HEADER.ordinal -> TimelineHeaderViewHolder(
+                VItemTimelineHeaderBinding.inflate(inflater, parent, false)
+            )
+
+            ViewType.TIMELINE_NOTE.ordinal -> TimelineNoteViewHolder(
+                VItemTimelineNoteBinding.inflate(inflater, parent, false)
+            )
+
             else -> error("Unknown view type")
         }
     }
@@ -97,10 +110,21 @@ class NoteAdt(
                 holder.unbind(this)
                 holder.bind(this, item as NoteItemList)
             }
+
+            is TimelineHeaderViewHolder -> holder.bind(item as TimelineDateHeaderItem)
+
+            is TimelineNoteViewHolder -> holder.bind(item as NoteItem, this)
         }
     }
 
-    override fun getItemViewType(position: Int) = getItem(position).type.ordinal
+    override fun getItemViewType(position: Int): Int {
+        val item = getItem(position)
+        return if (layoutMode == NoteListLayoutMode.TIMELINE && item is NoteItem) {
+            ViewType.TIMELINE_NOTE.ordinal
+        } else {
+            item.type.ordinal
+        }
+    }
 
     override fun getItemId(position: Int) = getItem(position).id
 
@@ -109,6 +133,7 @@ class NoteAdt(
         when (holder) {
             is NoteViewHolder<*> -> holder.unbind(this)
             is MessageViewHolder -> holder.unbind()
+            is TimelineNoteViewHolder -> holder.unbind()
         }
     }
 
@@ -144,7 +169,8 @@ class NoteAdt(
         labelViewHolderPool += viewHolder
     }
 
-    fun updateForListLayoutChange() {
+    fun updateForListLayoutChange(newMode: NoteListLayoutMode? = null) {
+        if (newMode != null) layoutMode = newMode
         // Number of preview lines have changed, must rebind all items
         notifyItemRangeChanged(0, itemCount)
     }
@@ -153,7 +179,9 @@ class NoteAdt(
         MESSAGE,
         HEADER,
         TEXT_NOTE,
-        LIST_NOTE
+        LIST_NOTE,
+        TIMELINE_DATE_HEADER,
+        TIMELINE_NOTE
     }
 
     enum class SwipeDirection {

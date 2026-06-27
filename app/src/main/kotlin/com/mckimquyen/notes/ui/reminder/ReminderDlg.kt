@@ -86,6 +86,46 @@ class ReminderDlg : DialogFragment(), RecurrenceListCallback, RecurrencePickerCa
             viewModel.onRecurrenceClicked()
         }
 
+        // E-09: Quick pick chips
+        binding.chipInOneHour.setOnClickListener {
+            val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.HOUR_OF_DAY, 1) }
+            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
+            viewModel.changeTime(cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
+        }
+        binding.chipTomorrow.setOnClickListener {
+            val cal = java.util.Calendar.getInstance().apply {
+                add(java.util.Calendar.DAY_OF_YEAR, 1)
+                set(java.util.Calendar.HOUR_OF_DAY, 9)
+                set(java.util.Calendar.MINUTE, 0)
+            }
+            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
+            viewModel.changeTime(9, 0)
+        }
+        binding.chipNextWeek.setOnClickListener {
+            // Go back to Monday of this week, then forward 7 days → Monday of next week.
+            // Avoids the Calendar.WEEK_OF_YEAR + DAY_OF_WEEK trap where setting day-of-week
+            // after adding a week can land on a day within the *current* week.
+            val cal = java.util.Calendar.getInstance().apply {
+                val dow = get(java.util.Calendar.DAY_OF_WEEK)
+                val daysFromMonday = when (dow) {
+                    java.util.Calendar.MONDAY    -> 0
+                    java.util.Calendar.TUESDAY   -> 1
+                    java.util.Calendar.WEDNESDAY -> 2
+                    java.util.Calendar.THURSDAY  -> 3
+                    java.util.Calendar.FRIDAY    -> 4
+                    java.util.Calendar.SATURDAY  -> 5
+                    else                         -> 6  // SUNDAY
+                }
+                add(java.util.Calendar.DAY_OF_YEAR, -daysFromMonday + 7)
+                set(java.util.Calendar.HOUR_OF_DAY, 9)
+                set(java.util.Calendar.MINUTE, 0)
+                set(java.util.Calendar.SECOND, 0)
+                set(java.util.Calendar.MILLISECOND, 0)
+            }
+            viewModel.changeDate(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH), cal.get(java.util.Calendar.DAY_OF_MONTH))
+            viewModel.changeTime(9, 0)
+        }
+
         // Create dialog
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(binding.root)

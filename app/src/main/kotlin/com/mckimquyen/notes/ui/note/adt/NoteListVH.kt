@@ -76,6 +76,16 @@ sealed class NoteViewHolder<T : NoteItem>(itemView: View) :
             adapter.callback.onNoteItemClicked(item, bindingAdapterPosition)
         }
         cardView.setOnLongClickListener {
+            cardView.animate()
+                .scaleX(1.03f).scaleY(1.03f).translationZ(8f)
+                .setDuration(110)
+                .withEndAction {
+                    cardView.animate()
+                        .scaleX(1f).scaleY(1f).translationZ(0f)
+                        .setDuration(200)
+                        .start()
+                }
+                .start()
             adapter.callback.onNoteItemLongClicked(item, bindingAdapterPosition)
             true
         }
@@ -224,6 +234,13 @@ class TextNoteViewHolder(private val binding: VItemNoteTextBinding) :
             adapter.highlightBackgroundColor, adapter.highlightForegroundColor
         )
         contentTxv.maxLines = maxPreviewLines
+
+        // F-01: Mood badge
+        val moodEmoji = when (item.note.mood) {
+            1 -> "😄"; 2 -> "😐"; 3 -> "😔"; 4 -> "💡"; 5 -> "🔥"; else -> null
+        }
+        binding.moodTxv.isVisible = moodEmoji != null
+        binding.moodTxv.text = moodEmoji
     }
 }
 

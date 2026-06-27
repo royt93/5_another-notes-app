@@ -41,7 +41,7 @@ abstract class NotesDb : RoomDatabase() {
 
     @Suppress("MagicNumber")
     companion object {
-        const val VERSION = 5
+        const val VERSION = 6
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -105,6 +105,12 @@ abstract class NotesDb : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE notes ADD COLUMN mood INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         private val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.apply {
@@ -118,6 +124,7 @@ abstract class NotesDb : RoomDatabase() {
             MIGRATION_2_3,
             MIGRATION_3_4,
             MIGRATION_4_5,
+            MIGRATION_5_6,
         )
     }
 }

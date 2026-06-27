@@ -16,7 +16,45 @@
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerView" android:layout_width="0dp" android:layout_height="0dp" android:clipToPadding="false" android:fitsSystemWindows="true" android:paddingTop="8dp" android:paddingBottom="28dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" tools:itemCount="4" tools:listitem="@layout/v_item_edit_item" />
 
         <!-- Feature 1: Word count & char count footer -->
-        <TextView android:id="@+id/wordCharCountTxv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_marginBottom="8dp" android:alpha="0.55" android:textAppearance="?textAppearanceLabelSmall" android:textSize="11sp" app:layout_constraintBottom_toTopOf="@id/colorPickerScroll" app:layout_constraintEnd_toEndOf="parent" tools:text="0 words · 0 chars" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/charLimitRing"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            app:indicatorSize="20dp"
+            app:trackThickness="2dp"
+            app:trackCornerRadius="2dp"
+            app:indicatorColor="?colorPrimary"
+            app:layout_constraintBottom_toTopOf="@id/moodPickerRow"
+            app:layout_constraintEnd_toStartOf="@id/wordCharCountTxv"
+            tools:visibility="visible"
+            tools:progress="75" />
+
+        <TextView android:id="@+id/wordCharCountTxv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_marginBottom="8dp" android:alpha="0.55" android:textAppearance="?textAppearanceLabelSmall" android:textSize="11sp" app:layout_constraintBottom_toTopOf="@id/moodPickerRow" app:layout_constraintEnd_toEndOf="parent" tools:text="0 words · 0 chars" />
+
+        <!-- F-01: Mood picker row -->
+        <LinearLayout
+            android:id="@+id/moodPickerRow"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintBottom_toTopOf="@id/colorPickerScroll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView android:id="@+id/moodBtn0" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="○" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+            <TextView android:id="@+id/moodBtn1" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😄" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+            <TextView android:id="@+id/moodBtn2" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😐" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+            <TextView android:id="@+id/moodBtn3" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="😔" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+            <TextView android:id="@+id/moodBtn4" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="💡" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+            <TextView android:id="@+id/moodBtn5" android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="🔥" android:textSize="20sp" android:background="?selectableItemBackgroundBorderless" />
+
+        </LinearLayout>
 
         <!-- Feature 10: Color Picker Tray -->
         <HorizontalScrollView android:id="@+id/colorPickerScroll" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="60dp" android:background="?colorSurface" android:clipToPadding="false" android:elevation="8dp" android:paddingStart="16dp" android:paddingEnd="16dp" android:scrollbars="none" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">

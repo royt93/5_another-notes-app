@@ -77,9 +77,9 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        // Make the BottomSheetDialog window background transparent so the
-        // rounded-corner drawable on the root view is visible.
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        // Safe way to make bottom sheet background transparent without breaking window rendering on custom OS/Samsung devices.
+        val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.setBackgroundResource(android.R.color.transparent)
     }
 
     override fun onDestroyView() {
@@ -106,23 +106,53 @@ class SelectorBottomSheet : BottomSheetDialogFragment() {
         override fun getItemCount(): Int = entries.size
 
         override fun onBindViewHolder(holder: VH, position: Int) {
+            val isSelected = position == selectedIndex
             holder.binding.label.text = entries[position]
-            holder.binding.check.isInvisible = position != selectedIndex
+            if (isSelected) {
+                holder.binding.check.isInvisible = false
+            } else {
+                holder.binding.check.isInvisible = true
+            }
             holder.itemView.setOnClickListener {
                 if (position == selectedIndex) {
-                    // Tap on already-selected: dismiss anyway, treating it as confirm.
                     onPick(values[position])
                     return@setOnClickListener
                 }
                 val previous = selectedIndex
                 selectedIndex = position
-                notifyItemChanged(previous)
-                notifyItemChanged(position)
+                notifyItemChanged(previous, PAYLOAD_SELECTION)
+                notifyItemChanged(position, PAYLOAD_SELECTION)
                 onPick(values[position])
             }
         }
 
+        override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
+            if (payloads.isEmpty()) {
+                onBindViewHolder(holder, position)
+                return
+            }
+            val isSelected = position == selectedIndex
+            if (isSelected) {
+                holder.binding.check.apply {
+                    alpha = 0f
+                    scaleX = 0.5f
+                    scaleY = 0.5f
+                    isInvisible = false
+                    animate().alpha(1f).scaleX(1f).scaleY(1f)
+                        .setDuration(180)
+                        .setInterpolator(android.view.animation.OvershootInterpolator(2f))
+                        .start()
+                }
+            } else {
+                holder.binding.check.isInvisible = true
+            }
+        }
+
         class VH(val binding: ISelectorBottomSheetBinding) : RecyclerView.ViewHolder(binding.root)
+
+        companion object {
+            private const val PAYLOAD_SELECTION = "selection"
+        }
     }
 
     companion object {

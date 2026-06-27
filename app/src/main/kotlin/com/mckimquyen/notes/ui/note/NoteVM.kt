@@ -22,10 +22,13 @@ import com.mckimquyen.notes.ui.note.adt.NoteAdt
 import com.mckimquyen.notes.ui.note.adt.NoteItem
 import com.mckimquyen.notes.ui.note.adt.NoteListItem
 import com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode
+import com.mckimquyen.notes.ui.note.adt.TimelineDateHeaderItem
 import com.mckimquyen.notes.ui.send
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 /**
  * This view model provides common behavior for home and search view models.
@@ -39,10 +42,33 @@ abstract class NoteVM(
     protected val reminderAlarmManager: ReminderAlarmManager,
 ) : ViewModel(), NoteAdt.Callback {
 
+    private val timelineDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+    /** Inject `TimelineDateHeaderItem` + convert NoteItems to TIMELINE_NOTE ViewType when in TIMELINE mode. */
+    private fun buildDisplayedList(items: List<NoteListItem>): List<NoteListItem> {
+        if (_listLayoutMode.value != NoteListLayoutMode.TIMELINE) return items
+        val result = mutableListOf<NoteListItem>()
+        var lastDateLabel: String? = null
+        for (item in items) {
+            if (item is NoteItem) {
+                val dateLabel = timelineDateFormat.format(item.note.addedDate)
+                if (dateLabel != lastDateLabel) {
+                    val headerId = -(dateLabel.hashCode().toLong() and 0xFFFFFFFFL) - 1000L
+                    result += TimelineDateHeaderItem(id = headerId, dateLabel = dateLabel)
+                    lastDateLabel = dateLabel
+                }
+                result += item
+            } else {
+                result += item
+            }
+        }
+        return result
+    }
+
     protected var listItems: List<NoteListItem> = emptyList()
         set(value) {
             field = value
-            _noteItems.value = value
+            _noteItems.value = buildDisplayedList(value)
 
             _placeholderData.value = if (value.isEmpty()) {
                 updatePlaceholder()
@@ -199,12 +225,16 @@ abstract class NoteVM(
         _showLabelsFragmentEvent.send(selectedNoteIds.toList())
     }
 
-    protected open fun onListLayoutModeChanged() = Unit
+    protected open fun onListLayoutModeChanged() {
+        // Rebuild the displayed list since TIMELINE mode injects date headers.
+        _noteItems.value = buildDisplayedList(listItems)
+    }
 
     fun toggleListLayoutMode() {
         val mode = when (_listLayoutMode.value!!) {
             NoteListLayoutMode.LIST -> NoteListLayoutMode.GRID
-            NoteListLayoutMode.GRID -> NoteListLayoutMode.LIST
+            NoteListLayoutMode.GRID -> NoteListLayoutMode.TIMELINE
+            NoteListLayoutMode.TIMELINE -> NoteListLayoutMode.LIST
         }
         _listLayoutMode.value = mode
         prefs.listLayoutMode = mode
@@ -379,8 +409,15 @@ abstract class NoteVM(
 
     private fun toggleItemChecked(item: NoteItem, pos: Int) {
         // Set the item as checked and update the list.
+        // In TIMELINE mode, adapter positions include date header items, so use ID-based lookup.
         changeListItems {
-            it[pos] = item.withChecked(!item.checked)
+            val rawPos = it.indexOfFirst { listItem -> listItem.id == item.id }
+            if (rawPos >= 0) {
+                it[rawPos] = item.withChecked(!item.checked)
+            } else {
+                // Fallback: use adapter position (only valid in non-TIMELINE mode)
+                if (pos < it.size) it[pos] = item.withChecked(!item.checked)
+            }
         }
     }
 

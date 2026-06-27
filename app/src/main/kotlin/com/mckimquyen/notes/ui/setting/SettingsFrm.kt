@@ -20,6 +20,7 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialSharedAxis
 import com.mckimquyen.notes.ui.common.SelectorBottomSheet
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
@@ -252,6 +253,12 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
         }
 
         requirePreference<Preference>(PrefsManager.PREVIEW_LINES).setOnPreferenceClickListener {
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ true).apply {
+                duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
+            }
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward = */ false).apply {
+                duration = resources.getInteger(RMaterial.integer.material_motion_duration_medium_1).toLong()
+            }
             findNavController().navigateSafe(
                 SettingsFrmDirections.actionNestedSettings(
                     R.xml.prefs_preview_lines, R.string.pref_preview_lines
