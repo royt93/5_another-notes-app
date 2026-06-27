@@ -170,7 +170,7 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
 
 ---
 
-## E-11: Widget — Note Preview Animation
+## E-11: Widget — Note Preview Animation [DONE]
 
 **Tính năng gốc:** Widget hiển thị static note content.
 
@@ -216,5 +216,5 @@ Các enhancement cho tính năng **đã có sẵn** — làm tốt hơn, mượt
 | E-03 | M | MEDIUM | Backlog |
 | E-04 | M | MEDIUM | Backlog |
 | E-09 | M | HIGH | Backlog |
-| E-11 | M | MEDIUM | Backlog |
+| E-11 | M | MEDIUM | Done (Slideshow Flipper) |
 | E-12 | M | MEDIUM | Backlog |
