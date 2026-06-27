@@ -245,4 +245,29 @@ Cliccare OK per procedere.</string>
     <string name="vip_ad_not_ready_title">Aspetta un secondo</string>
     <string name="vip_ad_not_ready_message">L\'annuncio non è ancora pronto. Riprova più tardi!</string>
     <string name="vip_ad_no_reward">Non hai guardato l\'annuncio per intero — nessuna ricompensa concessa.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Sblocca nota</string>
+    <string name="lock_biometric_prompt_message">Autenticati per visualizzare o modificare questa nota</string>
+    <string name="lock_biometric_not_configured_warning">Schermo di blocco di sicurezza non configurato su questo dispositivo</string>
+    <string name="action_lock_note">Blocca nota</string>
+    <string name="action_unlock_note">Sblocca nota</string>
+    <string name="time_travel_menu_title">Cronologia modifiche</string>
+    <string name="time_travel_title_no_versions">Cronologia (Nessuna versione precedente)</string>
+    <string name="time_travel_title_version_format">Cronologia (Versione %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Nessuna cronologia disponibile per questa nota</string>
+    <string name="time_travel_btn_cancel">Annulla</string>
+    <string name="time_travel_btn_restore">Ripristina</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Menu esportazione cliccato!</string>
+    <string name="export_dialog_title">Esporta nota</string>
+    <string name="export_as_pdf">Esporta come PDF</string>
+    <string name="export_as_image">Esporta come immagine (PNG)</string>
+    <string name="exporting_pdf">Esportazione in PDF...</string>
+    <string name="exporting_image">Esportazione dell\'immagine...</string>
+    <string name="export_untitled">Senza titolo</string>
+    <string name="export_success_format">File generato! Dimensione: %1$d byte. Condivisione...</string>
+    <string name="export_share_title">Condividi nota esportata</string>
+    <string name="export_failed_format">Esportazione non riuscita: %1$s</string>
 </resources>

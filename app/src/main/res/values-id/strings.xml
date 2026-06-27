@@ -274,4 +274,29 @@
     <string name="vip_ad_not_ready_title">Tunggu sebentar</string>
     <string name="vip_ad_not_ready_message">Iklan belum siap. Silakan coba lagi nanti!</string>
     <string name="vip_ad_no_reward">Anda tidak menyelesaikan iklan — hadiah tidak diberikan.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Buka kunci catatan</string>
+    <string name="lock_biometric_prompt_message">Lakukan autentikasi untuk melihat atau mengedit catatan ini</string>
+    <string name="lock_biometric_not_configured_warning">Layar kunci keamanan tidak dikonfigurasi pada perangkat ini</string>
+    <string name="action_lock_note">Kunci catatan</string>
+    <string name="action_unlock_note">Buka kunci catatan</string>
+    <string name="time_travel_menu_title">Riwayat catatan</string>
+    <string name="time_travel_title_no_versions">Riwayat (Tidak ada versi sebelumnya)</string>
+    <string name="time_travel_title_version_format">Riwayat (Versi %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Tidak ada riwayat untuk catatan ini</string>
+    <string name="time_travel_btn_cancel">Batal</string>
+    <string name="time_travel_btn_restore">Pulihkan</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Menu ekspor diklik!</string>
+    <string name="export_dialog_title">Ekspor Catatan</string>
+    <string name="export_as_pdf">Ekspor sebagai PDF</string>
+    <string name="export_as_image">Ekspor sebagai Gambar (PNG)</string>
+    <string name="exporting_pdf">Mengekspor PDF...</string>
+    <string name="exporting_image">Mengekspor Gambar...</string>
+    <string name="export_untitled">Tanpa judul</string>
+    <string name="export_success_format">File dibuat! Ukuran: %1$d byte. Membagikan...</string>
+    <string name="export_share_title">Bagikan Catatan yang Diekspor</string>
+    <string name="export_failed_format">Gagal mengekspor: %1$s</string>
 </resources>

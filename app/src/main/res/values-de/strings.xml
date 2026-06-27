@@ -260,4 +260,29 @@
     <string name="vip_ad_not_ready_title">Warten Sie eine Sekunde</string>
     <string name="vip_ad_not_ready_message">Die Werbung ist noch nicht bereit. Bitte versuchen Sie es später erneut!</string>
     <string name="vip_ad_no_reward">Du hast die Anzeige nicht zu Ende gesehen — keine Belohnung erhalten.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Notiz entsperren</string>
+    <string name="lock_biometric_prompt_message">Authentifizieren Sie sich, um diese Notiz anzuzeigen oder zu bearbeiten</string>
+    <string name="lock_biometric_not_configured_warning">Sicherheitssperrbildschirm auf diesem Gerät nicht konfiguriert</string>
+    <string name="action_lock_note">Notiz sperren</string>
+    <string name="action_unlock_note">Notiz entsperren</string>
+    <string name="time_travel_menu_title">Versionsverlauf</string>
+    <string name="time_travel_title_no_versions">Verlauf (Keine früheren Versionen)</string>
+    <string name="time_travel_title_version_format">Verlauf (Version %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Kein Verlauf für diese Notiz verfügbar</string>
+    <string name="time_travel_btn_cancel">Abbrechen</string>
+    <string name="time_travel_btn_restore">Wiederherstellen</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Export-Menü geklickt!</string>
+    <string name="export_dialog_title">Notiz exportieren</string>
+    <string name="export_as_pdf">Als PDF exportieren</string>
+    <string name="export_as_image">Als Bild (PNG) exportieren</string>
+    <string name="exporting_pdf">Exportiere PDF...</string>
+    <string name="exporting_image">Exportiere Bild...</string>
+    <string name="export_untitled">Unbenannt</string>
+    <string name="export_success_format">Datei erstellt! Größe: %1$d Bytes. Teilen...</string>
+    <string name="export_share_title">Exportierte Notiz teilen</string>
+    <string name="export_failed_format">Export fehlgeschlagen: %1$s</string>
 </resources>

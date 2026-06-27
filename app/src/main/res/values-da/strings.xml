@@ -281,4 +281,29 @@
     <string name="vip_ad_not_ready_title">Vent et øjeblik</string>
     <string name="vip_ad_not_ready_message">Annoncen er ikke klar endnu. Prøv venligst igen senere!</string>
     <string name="vip_ad_no_reward">Du så ikke annoncen færdig – ingen belønning givet.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Lås note op</string>
+    <string name="lock_biometric_prompt_message">Godkend for at få adgang til eller redigere denne note</string>
+    <string name="lock_biometric_not_configured_warning">Sikkerhedsskærmlås er ikke konfigureret på denne enhed</string>
+    <string name="action_lock_note">Lås note</string>
+    <string name="action_unlock_note">Lås note op</string>
+    <string name="time_travel_menu_title">Notehistorik</string>
+    <string name="time_travel_title_no_versions">Historik (Ingen tidligere versioner)</string>
+    <string name="time_travel_title_version_format">Historik (Version %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Ingen historik tilgængelig for denne note</string>
+    <string name="time_travel_btn_cancel">Annuller</string>
+    <string name="time_travel_btn_restore">Gendan</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Eksportmenu klikket!</string>
+    <string name="export_dialog_title">Eksporter note</string>
+    <string name="export_as_pdf">Eksporter som PDF</string>
+    <string name="export_as_image">Eksporter som billede (PNG)</string>
+    <string name="exporting_pdf">Eksporterer PDF...</string>
+    <string name="exporting_image">Eksporterer billede...</string>
+    <string name="export_untitled">Uden titel</string>
+    <string name="export_success_format">Fil genereret! Størrelse: %1$d bytes. Deler...</string>
+    <string name="export_share_title">Del eksporteret note</string>
+    <string name="export_failed_format">Kunne ikke eksportere: %1$s</string>
 </resources>

@@ -281,4 +281,29 @@
     <string name="vip_ad_not_ready_title">Odota hetki</string>
     <string name="vip_ad_not_ready_message">Mainos ei ole vielä valmis. Yritä uudelleen myöhemmin!</string>
     <string name="vip_ad_no_reward">Et katsonut mainosta loppuun – palkintoa ei myönnetty.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Avaa muistiinpanon lukitus</string>
+    <string name="lock_biometric_prompt_message">Tunnistaudu tarkastellaksesi tai muokataksesi tätä muistiinpanoa</string>
+    <string name="lock_biometric_not_configured_warning">Suojattua näytön lukitusta ei ole määritetty tällä laitteella</string>
+    <string name="action_lock_note">Lukitse muistiinpano</string>
+    <string name="action_unlock_note">Avaa muistiinpanon lukitus</string>
+    <string name="time_travel_menu_title">Muistiinpanon historia</string>
+    <string name="time_travel_title_no_versions">Historia (Ei aiempia versioita)</string>
+    <string name="time_travel_title_version_format">Historia (Versio %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Tälle muistiinpanolle ei ole historiaa</string>
+    <string name="time_travel_btn_cancel">Peruuta</string>
+    <string name="time_travel_btn_restore">Palauta</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Vientivalikkoa klikattu!</string>
+    <string name="export_dialog_title">Vie muistiinpano</string>
+    <string name="export_as_pdf">Vie PDF-muodossa</string>
+    <string name="export_as_image">Vie kuvana (PNG)</string>
+    <string name="exporting_pdf">Viedään PDF-muotoon...</string>
+    <string name="exporting_image">Viedään kuvaksi...</string>
+    <string name="export_untitled">Nimetön</string>
+    <string name="export_success_format">Tiedosto luotu! Koko: %1$d tavua. Jaetaan...</string>
+    <string name="export_share_title">Jaa viety muistiinpano</string>
+    <string name="export_failed_format">Vienti epäonnistui: %1$s</string>
 </resources>

@@ -269,4 +269,29 @@
     <string name="vip_ad_not_ready_title">Espera un segundo</string>
     <string name="vip_ad_not_ready_message">El anuncio aún no está listo. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="vip_ad_no_reward">No terminaste el anuncio — no se otorgó recompensa.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Desbloquear nota</string>
+    <string name="lock_biometric_prompt_message">Autentíquese para ver o editar esta nota</string>
+    <string name="lock_biometric_not_configured_warning">Pantalla de bloqueo de seguridad no configurada en este dispositivo</string>
+    <string name="action_lock_note">Bloquear nota</string>
+    <string name="action_unlock_note">Desbloquear nota</string>
+    <string name="time_travel_menu_title">Historial de notas</string>
+    <string name="time_travel_title_no_versions">Historial (Sin versiones anteriores)</string>
+    <string name="time_travel_title_version_format">Historial (Versión %1$d/%2$d)</string>
+    <string name="time_travel_no_history">No hay historial disponible para esta nota</string>
+    <string name="time_travel_btn_cancel">Cancelar</string>
+    <string name="time_travel_btn_restore">Restaurar</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">¡Menú de exportación pulsado!</string>
+    <string name="export_dialog_title">Exportar nota</string>
+    <string name="export_as_pdf">Exportar como PDF</string>
+    <string name="export_as_image">Exportar como imagen (PNG)</string>
+    <string name="exporting_pdf">Exportando PDF...</string>
+    <string name="exporting_image">Exportando imagen...</string>
+    <string name="export_untitled">Sin título</string>
+    <string name="export_success_format">¡Archivo generado! Tamaño: %1$d bytes. Compartiendo...</string>
+    <string name="export_share_title">Compartir nota exportada</string>
+    <string name="export_failed_format">Error al exportar: %1$s</string>
 </resources>

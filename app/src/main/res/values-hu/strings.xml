@@ -276,4 +276,29 @@
     <string name="vip_ad_not_ready_title">Várj egy percet</string>
     <string name="vip_ad_not_ready_message">A hirdetés még nem áll készen. Kérjük, próbáld újra később!</string>
     <string name="vip_ad_no_reward">Nem nézted végig a hirdetést – nem kaptál jutalmat.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Jegyzet feloldása</string>
+    <string name="lock_biometric_prompt_message">Hitelesítsen a jegyzet megtekintéséhez vagy szerkesztéséhez</string>
+    <string name="lock_biometric_not_configured_warning">A képernyőzár biztonsága nincs beállítva ezen az eszközön</string>
+    <string name="action_lock_note">Jegyzet zárolása</string>
+    <string name="action_unlock_note">Jegyzet feloldása</string>
+    <string name="time_travel_menu_title">Jegyzetelőzmények</string>
+    <string name="time_travel_title_no_versions">Előzmények (Nincsenek korábbi verziók)</string>
+    <string name="time_travel_title_version_format">Előzmények (%1$d/%2$d. verzió)</string>
+    <string name="time_travel_no_history">Nincs elérhető előzmény ehhez a jegyzethez</string>
+    <string name="time_travel_btn_cancel">Mégse</string>
+    <string name="time_travel_btn_restore">Visszaállítás</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Exportálás menüre kattintva!</string>
+    <string name="export_dialog_title">Jegyzet exportálása</string>
+    <string name="export_as_pdf">Exportálás PDF-ként</string>
+    <string name="export_as_image">Exportálás képként (PNG)</string>
+    <string name="exporting_pdf">PDF exportálása...</string>
+    <string name="exporting_image">Kép exportálása...</string>
+    <string name="export_untitled">Névtelen</string>
+    <string name="export_success_format">Fájl létrehozva! Méret: %1$d bájt. Megosztás...</string>
+    <string name="export_share_title">Exportált jegyzet megosztása</string>
+    <string name="export_failed_format">Exportálás sikertelen: %1$s</string>
 </resources>

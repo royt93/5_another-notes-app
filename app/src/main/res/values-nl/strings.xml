@@ -276,4 +276,29 @@
     <string name="vip_ad_not_ready_title">Wacht even</string>
     <string name="vip_ad_not_ready_message">De advertentie is nog niet klaar. Probeer het later opnieuw!</string>
     <string name="vip_ad_no_reward">Je hebt de advertentie niet helemaal bekeken — geen beloning ontvangen.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Notitie ontgrendelen</string>
+    <string name="lock_biometric_prompt_message">Verifieer om deze notitie te bekijken of te bewerken</string>
+    <string name="lock_biometric_not_configured_warning">Beveiligingsschermvergrendeling is niet geconfigureerd op dit apparaat</string>
+    <string name="action_lock_note">Notitie vergrendelen</string>
+    <string name="action_unlock_note">Notitie ontgrendelen</string>
+    <string name="time_travel_menu_title">Notitiegeschiedenis</string>
+    <string name="time_travel_title_no_versions">Geschiedenis (Geen eerdere versies)</string>
+    <string name="time_travel_title_version_format">Geschiedenis (Versie %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Geen geschiedenis beschikbaar voor deze notitie</string>
+    <string name="time_travel_btn_cancel">Annuleren</string>
+    <string name="time_travel_btn_restore">Herstellen</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Exportmenu geklikt!</string>
+    <string name="export_dialog_title">Notitie exporteren</string>
+    <string name="export_as_pdf">Exporteren als PDF</string>
+    <string name="export_as_image">Exporteren als afbeelding (PNG)</string>
+    <string name="exporting_pdf">PDF exporteren...</string>
+    <string name="exporting_image">Afbeelding exporteren...</string>
+    <string name="export_untitled">Naamloos</string>
+    <string name="export_success_format">Bestand gegenereerd! Grootte: %1$d bytes. Delen...</string>
+    <string name="export_share_title">Geëxporteerde notitie delen</string>
+    <string name="export_failed_format">Exporteren mislukt: %1$s</string>
 </resources>

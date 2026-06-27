@@ -281,4 +281,29 @@
     <string name="vip_ad_not_ready_title">Περιμένετε ένα δευτερόλεπτο</string>
     <string name="vip_ad_not_ready_message">Η διαφήμιση δεν είναι ακόμα έτοιμη. Παρακαλώ δοκιμάστε ξανά αργότερα!</string>
     <string name="vip_ad_no_reward">Δεν ολοκληρώσατε τη διαφήμιση — δεν χορηγήθηκε ανταμοιβή.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Ξεκλείδωμα σημείωσης</string>
+    <string name="lock_biometric_prompt_message">Ταυτοποιηθείτε για να δείτε ή να επεξεργαστείτε αυτήν τη σημείωση</string>
+    <string name="lock_biometric_not_configured_warning">Το κλείδωμα οθόνης δεν είναι ρυθμισμένο σε αυτήν τη συσκευή</string>
+    <string name="action_lock_note">Κλείδωμα σημείωσης</string>
+    <string name="action_unlock_note">Ξεκλείδωμα σημείωσης</string>
+    <string name="time_travel_menu_title">Ιστορικό σημείωσης</string>
+    <string name="time_travel_title_no_versions">Ιστορικό (Δεν υπάρχουν προηγούμενες εκδόσεις)</string>
+    <string name="time_travel_title_version_format">Ιστορικό (Έκδοση %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Δεν υπάρχει διαθέσιμο ιστορικό για αυτήν τη σημείωση</string>
+    <string name="time_travel_btn_cancel">Ακύρωση</string>
+    <string name="time_travel_btn_restore">Επαναφορά</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Κλικ στο μενού εξαγωγής!</string>
+    <string name="export_dialog_title">Εξαγωγή σημείωσης</string>
+    <string name="export_as_pdf">Εξαγωγή ως PDF</string>
+    <string name="export_as_image">Εξαγωγή ως εικόνα (PNG)</string>
+    <string name="exporting_pdf">Εξαγωγή PDF...</string>
+    <string name="exporting_image">Εξαγωγή εικόνας...</string>
+    <string name="export_untitled">Χωρίς τίτλο</string>
+    <string name="export_success_format">Το αρχείο δημιουργήθηκε! Μέγεθος: %1$d byte. Κοινή χρήση...</string>
+    <string name="export_share_title">Κοινοποίηση εξαγόμενης σημείωσης</string>
+    <string name="export_failed_format">Η εξαγωγή απέτυχε: %1$s</string>
 </resources>

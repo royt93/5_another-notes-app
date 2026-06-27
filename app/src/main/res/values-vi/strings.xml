@@ -274,4 +274,31 @@
     <string name="vip_ad_not_ready_message">Quảng cáo chưa sẵn sàng. Vui lòng thử lại sau!</string>
     <string name="vip_ad_no_reward">Bạn chưa xem hết quảng cáo — không nhận được thưởng.</string>
 
+    <!-- Note Biometric Lock -->
+    <string name="lock_biometric_title">Mở khoá ghi chú</string>
+    <string name="lock_biometric_prompt_message">Xác thực để xem hoặc chỉnh sửa ghi chú này</string>
+    <string name="lock_biometric_not_configured_warning">Màn hình khoá bảo mật chưa được cài đặt trên thiết bị này</string>
+    <string name="action_lock_note">Khoá ghi chú</string>
+    <string name="action_unlock_note">Mở khoá ghi chú</string>
+
+    <!-- Time-Travel Note History -->
+    <string name="time_travel_menu_title">Lịch sử ghi chú</string>
+    <string name="time_travel_title_no_versions">Lịch sử (Chưa có phiên bản cũ)</string>
+    <string name="time_travel_title_version_format">Lịch sử (Phiên bản %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Không có lịch sử cho ghi chú này</string>
+    <string name="time_travel_btn_cancel">Hủy</string>
+    <string name="time_travel_btn_restore">Khôi phục</string>
+
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Đã bấm xuất ghi chú!</string>
+    <string name="export_dialog_title">Xuất Ghi Chú</string>
+    <string name="export_as_pdf">Xuất dưới dạng PDF</string>
+    <string name="export_as_image">Xuất dưới dạng Ảnh (PNG)</string>
+    <string name="exporting_pdf">Đang xuất PDF...</string>
+    <string name="exporting_image">Đang xuất Ảnh...</string>
+    <string name="export_untitled">Chưa đặt tên</string>
+    <string name="export_success_format">Đã tạo tệp! Kích thước: %1$d bytes. Đang chia sẻ...</string>
+    <string name="export_share_title">Chia sẻ ghi chú đã xuất</string>
+    <string name="export_failed_format">Xuất ghi chú thất bại: %1$s</string>
 </resources>

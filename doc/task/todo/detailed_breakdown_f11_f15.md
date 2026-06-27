@@ -6,13 +6,13 @@ This document provides a highly detailed technical breakdown and implementation 
 
 ---
 
-## F-11: Time-Travel Note Slider (Thanh trượt du hành thời gian)
+## F-11: Time-Travel Note Slider (Thanh trượt du hành thời gian) [DONE]
 
 **Mô tả:** Xem lại và khôi phục lịch sử chỉnh sửa ghi chú thông qua thanh trượt Slider trực quan thay vì chỉ dùng Undo/Redo.
 
 ### 📋 Task List & Breakdown
 
-*   [ ] **Task 1: Tạo Database Model & DAO**
+*   [x] **Task 1: Tạo Database Model & DAO**
     *   Tạo entity [NoteHistory.kt](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/model/entity/NoteHistory.kt) lưu lịch sử ghi chú:
         ```kotlin
         @Entity(
@@ -35,19 +35,19 @@ This document provides a highly detailed technical breakdown and implementation 
     *   Tạo `NoteHistoryDao` và tích hợp vào [NotesDb.kt](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/model/NotesDb.kt).
     *   Room migration: Thêm bảng `note_history` vào database (Room v7 -> v8).
 
-*   [ ] **Task 2: Cơ chế tự động lưu snapshot trong EditViewModel**
+*   [x] **Task 2: Cơ chế tự động lưu snapshot trong EditViewModel**
     *   Trong `EditVM.kt`, lắng nghe thay đổi của Tiêu đề và Nội dung ghi chú.
     *   Sử dụng Coroutine Flow with `debounce(10000)` (mỗi 10 giây không có hoạt động gõ máy) để tạo một bản lưu lịch sử mới nếu nội dung thay đổi đáng kể so với bản lưu trước đó (ví dụ: delta > 10 ký tự).
     *   Giới hạn số lượng bản ghi lịch sử tối đa (ví dụ: tối đa 30 bản ghi/note) bằng cách xoá các bản ghi cũ hơn trong database.
 
-*   [ ] **Task 3: Thiết kế giao diện Time-Travel UI**
+*   [x] **Task 3: Thiết kế giao diện Time-Travel UI**
     *   Trong `f_edit.xml`, thêm một cụm điều khiển ẩn ở thanh công cụ dưới hoặc trong một bottom sheet:
         - `Slider`: Dùng để kéo qua lại các phiên bản. Mức độ từ `0` đến `N-1` tương ứng với số lượng snapshot lịch sử.
         - `TextView` hiển thị thời gian lưu snapshot (ví dụ: "Được lưu 2 giờ trước", "Hôm qua lúc 15:30").
         - Nút `Hủy (Cancel)` để tắt chế độ preview lịch sử và quay về nội dung hiện tại.
         - Nút `Khôi phục (Restore)` để chính thức thay thế nội dung hiện tại bằng nội dung lịch sử đang xem.
 
-*   [ ] **Task 4: Logic hiển thị Preview & Restore trong EditFrm**
+*   [x] **Task 4: Logic hiển thị Preview & Restore trong EditFrm**
     *   Khi người dùng kéo Slider, tạm thời vô hiệu hóa chế độ chỉnh sửa của EditText (hoặc set `enabled = false`).
     *   Hiển thị text của snapshot tương ứng lên EditText Tiêu đề và Nội dung.
     *   Nếu nhấn Restore, cập nhật giá trị hiện tại của Note trong VM và bật lại chỉnh sửa.

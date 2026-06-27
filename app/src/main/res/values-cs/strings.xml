@@ -288,4 +288,29 @@
     <string name="vip_ad_not_ready_title">Počkejte chvíli</string>
     <string name="vip_ad_not_ready_message">Reklama ještě není připravena. Zkuste to prosím znovu později!</string>
     <string name="vip_ad_no_reward">Reklamu jste nedokoukali — odměna nebyla udělena.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Odemknout poznámku</string>
+    <string name="lock_biometric_prompt_message">Ověřte se pro zobrazení nebo úpravu této poznámky</string>
+    <string name="lock_biometric_not_configured_warning">Zámek obrazovky zabezpečení není na tomto zařízení nakonfigurován</string>
+    <string name="action_lock_note">Zamknout poznámku</string>
+    <string name="action_unlock_note">Odemknout poznámku</string>
+    <string name="time_travel_menu_title">Historie poznámky</string>
+    <string name="time_travel_title_no_versions">Historie (Žádné předchozí verze)</string>
+    <string name="time_travel_title_version_format">Historie (Verze %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Pro tuto poznámku není k dispozici žádná historie</string>
+    <string name="time_travel_btn_cancel">Zrušit</string>
+    <string name="time_travel_btn_restore">Obnovit</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Kliknuto na nabídku exportu!</string>
+    <string name="export_dialog_title">Exportovat poznámku</string>
+    <string name="export_as_pdf">Exportovat jako PDF</string>
+    <string name="export_as_image">Exportovat jako obrázek (PNG)</string>
+    <string name="exporting_pdf">Exportování PDF...</string>
+    <string name="exporting_image">Exportování obrázku...</string>
+    <string name="export_untitled">Bez názvu</string>
+    <string name="export_success_format">Soubor vytvořen! Velikost: %1$d bajtů. Sdílení...</string>
+    <string name="export_share_title">Sdílet exportovanou poznámku</string>
+    <string name="export_failed_format">Export selhal: %1$s</string>
 </resources>

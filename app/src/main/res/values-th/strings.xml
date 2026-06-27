@@ -274,4 +274,29 @@
     <string name="vip_ad_not_ready_title">รอสักครู่</string>
     <string name="vip_ad_not_ready_message">โฆษณายังไม่พร้อม โปรดลองอีกครั้งในภายหลัง!</string>
     <string name="vip_ad_no_reward">คุณดูโฆษณาไม่จบ — ไม่ได้รับรางวัล</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">ปลดล็อกโน้ต</string>
+    <string name="lock_biometric_prompt_message">ยืนยันตัวตนเพื่อดูหรือแก้ไขโน้ตนี้</string>
+    <string name="lock_biometric_not_configured_warning">ไม่ได้ตั้งค่าการล็อกหน้าจอความปลอดภัยบนอุปกรณ์นี้</string>
+    <string name="action_lock_note">ล็อกโน้ต</string>
+    <string name="action_unlock_note">ปลดล็อกโน้ต</string>
+    <string name="time_travel_menu_title">ประวัติโน้ต</string>
+    <string name="time_travel_title_no_versions">ประวัติ (ไม่มีเวอร์ชันก่อนหน้า)</string>
+    <string name="time_travel_title_version_format">ประวัติ (เวอร์ชัน %1$d/%2$d)</string>
+    <string name="time_travel_no_history">ไม่มีประวัติสำหรับโน้ตนี้</string>
+    <string name="time_travel_btn_cancel">ยกเลิก</string>
+    <string name="time_travel_btn_restore">กู้คืน</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">คลิกเมนูส่งออกแล้ว!</string>
+    <string name="export_dialog_title">ส่งออกโน้ต</string>
+    <string name="export_as_pdf">ส่งออกเป็น PDF</string>
+    <string name="export_as_image">ส่งออกเป็นรูปภาพ (PNG)</string>
+    <string name="exporting_pdf">กำลังส่งออก PDF...</string>
+    <string name="exporting_image">กำลังส่งออกรูปภาพ...</string>
+    <string name="export_untitled">ไม่มีชื่อ</string>
+    <string name="export_success_format">สร้างไฟล์แล้ว! ขนาด: %1$d ไบต์ กำลังแชร์...</string>
+    <string name="export_share_title">แชร์โน้ตที่ส่งออก</string>
+    <string name="export_failed_format">ส่งออกล้มเหลว: %1$s</string>
 </resources>

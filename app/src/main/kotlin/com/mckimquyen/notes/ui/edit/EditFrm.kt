@@ -43,6 +43,7 @@ import com.mckimquyen.notes.ext.hideKeyboard
 import com.mckimquyen.notes.ext.navigateSafe
 import com.mckimquyen.notes.ext.showKeyboard
 import com.mckimquyen.notes.model.entity.Note
+import com.mckimquyen.notes.model.entity.NoteHistory
 import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.model.entity.NoteType
 import com.mckimquyen.notes.model.entity.PinnedStatus
@@ -69,6 +70,7 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     private var lastDisplayedWords = 0
     private var lastDisplayedChars = 0
     private var isFocusMode = false
+    private var historyList: List<NoteHistory> = emptyList()
 
     @Inject
     lateinit var sharedViewModelProvider: Provider<SharedViewModel>
@@ -128,6 +130,10 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             }
             if (viewModel.isReadingMode.value == true) {
                 viewModel.toggleReadingMode()
+                return@addCallback
+            }
+            if (viewModel.isTimeTraveling) {
+                stopTimeTravel(restore = false)
                 return@addCallback
             }
             viewModel.saveNote()
@@ -238,6 +244,31 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         postponeEnterTransition()
         
         setupColorPicker()
+
+        binding.timeTravelSlider.addOnChangeListener { _, value, _ ->
+            val idx = value.toInt()
+            if (idx in historyList.indices) {
+                val history = historyList[idx]
+                viewModel.previewHistoryVersion(history)
+
+                binding.timeTravelTitle.text = getString(R.string.time_travel_title_version_format, idx + 1, historyList.size)
+
+                val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
+                    history.timestamp,
+                    System.currentTimeMillis(),
+                    android.text.format.DateUtils.MINUTE_IN_MILLIS
+                )
+                binding.timeTravelDate.text = timeStr
+            }
+        }
+        binding.timeTravelCancelBtn.setOnClickListener {
+            stopTimeTravel(restore = false)
+        }
+        binding.timeTravelRestoreBtn.setOnClickListener {
+            val idx = binding.timeTravelSlider.value.toInt()
+            val history = historyList.getOrNull(idx)
+            stopTimeTravel(restore = true, restoredHistory = history)
+        }
     }
 
     @SuppressLint("WrongConstant")
@@ -392,6 +423,46 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
         viewModel.exitEvent.observeEvent(viewLifecycleOwner) {
             navController.popBackStack()
+        }
+
+        viewModel.noteHistory.observe(viewLifecycleOwner) { history ->
+            historyList = history
+            if (viewModel.isTimeTraveling) {
+                if (history.isEmpty()) {
+                    android.widget.Toast.makeText(
+                        requireContext(),
+                        R.string.time_travel_no_history,
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    stopTimeTravel(restore = false)
+                } else {
+                    if (history.size == 1) {
+                        binding.timeTravelSlider.isEnabled = false
+                        binding.timeTravelSlider.valueFrom = 0f
+                        binding.timeTravelSlider.valueTo = 1f
+                        binding.timeTravelSlider.value = 0f
+                        binding.timeTravelTitle.text = getString(R.string.time_travel_title_no_versions)
+                    } else {
+                        binding.timeTravelSlider.isEnabled = true
+                        binding.timeTravelSlider.valueFrom = 0f
+                        binding.timeTravelSlider.valueTo = (history.size - 1).toFloat()
+                        binding.timeTravelSlider.value = (history.size - 1).toFloat()
+                        val idx = history.size - 1
+                        binding.timeTravelTitle.text = getString(R.string.time_travel_title_version_format, idx + 1, history.size)
+                    }
+                    binding.timeTravelLayout.visibility = View.VISIBLE
+
+                    val idx = history.size - 1
+                    viewModel.previewHistoryVersion(history[idx])
+
+                    val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
+                        history[idx].timestamp,
+                        System.currentTimeMillis(),
+                        android.text.format.DateUtils.MINUTE_IN_MILLIS
+                    )
+                    binding.timeTravelDate.text = timeStr
+                }
+            }
         }
 
         // Feature 1: Update word/char count footer
@@ -684,8 +755,9 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             R.id.itemFocusMode -> toggleFocusMode()
             R.id.itemReadingMode -> viewModel.toggleReadingMode()
             R.id.itemLock -> viewModel.toggleLock()
+            R.id.itemTimeTravel -> startTimeTravel()
             R.id.itemExport -> {
-                android.widget.Toast.makeText(requireContext(), "Export menu clicked!", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(requireContext(), R.string.export_menu_clicked, android.widget.Toast.LENGTH_SHORT).show()
                 showExportDialog()
             }
             else -> return false
@@ -751,9 +823,12 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     }
 
     private fun showExportDialog() {
-        val options = arrayOf("Export as PDF", "Export as Image (PNG)")
+        val options = arrayOf(
+            getString(R.string.export_as_pdf),
+            getString(R.string.export_as_image)
+        )
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Export Note")
+            .setTitle(R.string.export_dialog_title)
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> exportNote(true)
@@ -764,10 +839,14 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
     }
 
     private fun exportNote(isPdf: Boolean) {
-        android.widget.Toast.makeText(requireContext(), if (isPdf) "Exporting PDF..." else "Exporting Image...", android.widget.Toast.LENGTH_SHORT).show()
+        android.widget.Toast.makeText(
+            requireContext(),
+            if (isPdf) R.string.exporting_pdf else R.string.exporting_image,
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
         val note = viewModel.getNoteForExport()
         val labels = viewModel.getLabelsForExport()
-        val cleanTitle = if (note.title.isBlank()) "Untitled" else note.title.replace("[\\\\/:*?\"<>|]".toRegex(), "_")
+        val cleanTitle = if (note.title.isBlank()) getString(R.string.export_untitled) else note.title.replace("[\\\\/:*?\"<>|]".toRegex(), "_")
         val timestamp = System.currentTimeMillis()
         val filename = if (isPdf) "${cleanTitle}_$timestamp.pdf" else "${cleanTitle}_$timestamp.png"
 
@@ -786,7 +865,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 ExportHelper.exportAsImage(requireContext(), note, labels, file)
             }
 
-            android.widget.Toast.makeText(requireContext(), "File generated! Size: ${file.length()} bytes. Sharing...", android.widget.Toast.LENGTH_LONG).show()
+            android.widget.Toast.makeText(
+                requireContext(),
+                getString(R.string.export_success_format, file.length()),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
 
             // Share tệp
             val uri = androidx.core.content.FileProvider.getUriForFile(
@@ -802,11 +885,55 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
                 clipData = android.content.ClipData.newRawUri("", uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(intent, "Share Exported Note"))
+            startActivity(Intent.createChooser(intent, getString(R.string.export_share_title)))
         } catch (e: Exception) {
             e.printStackTrace()
-            android.widget.Toast.makeText(requireContext(), "Failed to export: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+            android.widget.Toast.makeText(
+                requireContext(),
+                getString(R.string.export_failed_format, e.message),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
         }
+    }
+
+    private fun startTimeTravel() {
+        view?.hideKeyboard()
+
+        binding.colorPickerScroll.visibility = View.GONE
+        binding.moodPickerRow.visibility = View.GONE
+        binding.wordCharCountTxv.visibility = View.GONE
+        binding.charLimitRing.visibility = View.GONE
+
+        val menu = binding.toolbar.menu
+        menu.findItem(R.id.itemType)?.isVisible = false
+        menu.findItem(R.id.itemPin)?.isVisible = false
+        menu.findItem(R.id.itemReminder)?.isVisible = false
+        menu.findItem(R.id.itemLabels)?.isVisible = false
+        menu.findItem(R.id.itemShare)?.isVisible = false
+        menu.findItem(R.id.itemDelete)?.isVisible = false
+
+        viewModel.enterTimeTravelMode()
+        viewModel.loadNoteHistory()
+    }
+
+    private fun stopTimeTravel(restore: Boolean, restoredHistory: NoteHistory? = null) {
+        binding.timeTravelLayout.visibility = View.GONE
+
+        val isReadingMode = viewModel.isReadingMode.value == true
+        val visibility = if (isReadingMode) View.GONE else View.VISIBLE
+        binding.colorPickerScroll.visibility = visibility
+        binding.moodPickerRow.visibility = visibility
+        binding.wordCharCountTxv.visibility = visibility
+
+        val menu = binding.toolbar.menu
+        menu.findItem(R.id.itemType)?.isVisible = !isReadingMode
+        menu.findItem(R.id.itemPin)?.isVisible = !isReadingMode
+        menu.findItem(R.id.itemReminder)?.isVisible = !isReadingMode
+        menu.findItem(R.id.itemLabels)?.isVisible = !isReadingMode
+        menu.findItem(R.id.itemShare)?.isVisible = true
+        menu.findItem(R.id.itemDelete)?.isVisible = true
+
+        viewModel.exitTimeTravelMode(restore, restoredHistory)
     }
 
     companion object {

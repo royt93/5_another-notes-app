@@ -15,6 +15,7 @@ import com.mckimquyen.notes.model.entity.Label
 import com.mckimquyen.notes.model.entity.LabelRef
 import com.mckimquyen.notes.model.entity.Note
 import com.mckimquyen.notes.model.entity.NoteFts
+import com.mckimquyen.notes.model.entity.NoteHistory
 
 @Database(
     entities = [
@@ -22,6 +23,7 @@ import com.mckimquyen.notes.model.entity.NoteFts
         NoteFts::class,
         Label::class,
         LabelRef::class,
+        NoteHistory::class,
     ],
     version = NotesDb.VERSION
 )
@@ -39,9 +41,11 @@ abstract class NotesDb : RoomDatabase() {
 
     abstract fun labelsDao(): LabelsDao
 
+    abstract fun noteHistoryDao(): NoteHistoryDao
+
     @Suppress("MagicNumber")
     companion object {
-        const val VERSION = 7
+        const val VERSION = 8
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -125,6 +129,15 @@ abstract class NotesDb : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `note_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `noteId` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `metadata` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`noteId`) REFERENCES `notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_note_history_noteId` ON `note_history` (`noteId`)")
+            }
+        }
+
         val ALL_MIGRATIONS = arrayOf(
             MIGRATION_1_2,
             MIGRATION_2_3,
@@ -132,6 +145,7 @@ abstract class NotesDb : RoomDatabase() {
             MIGRATION_4_5,
             MIGRATION_5_6,
             MIGRATION_6_7,
+            MIGRATION_7_8,
         )
     }
 }

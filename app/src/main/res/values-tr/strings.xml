@@ -268,4 +268,29 @@
     <string name="vip_ad_not_ready_title">Bir saniye bekle</string>
     <string name="vip_ad_not_ready_message">Reklam henüz hazır değil. Lütfen daha sonra tekrar deneyin!</string>
     <string name="vip_ad_no_reward">Reklamı sonuna kadar izlemediniz — ödül verilmedi.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Notun kilidini aç</string>
+    <string name="lock_biometric_prompt_message">Bu notu görüntülemek veya düzenlemek için kimlik doğrulaması yapın</string>
+    <string name="lock_biometric_not_configured_warning">Güvenlik kilit ekranı bu cihazda yapılandırılmamış</string>
+    <string name="action_lock_note">Notu kilitle</string>
+    <string name="action_unlock_note">Notun kilidini aç</string>
+    <string name="time_travel_menu_title">Not geçmişi</string>
+    <string name="time_travel_title_no_versions">Geçmiş (Önceki sürüm yok)</string>
+    <string name="time_travel_title_version_format">Geçmiş (Sürüm %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Bu not için geçmiş bulunmamaktadır</string>
+    <string name="time_travel_btn_cancel">İptal</string>
+    <string name="time_travel_btn_restore">Geri yükle</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Dışa aktarma menüsüne tıklandı!</string>
+    <string name="export_dialog_title">Notu Dışa Aktar</string>
+    <string name="export_as_pdf">PDF olarak dışa aktar</string>
+    <string name="export_as_image">Resim (PNG) olarak dışa aktar</string>
+    <string name="exporting_pdf">PDF dışa aktarılıyor...</string>
+    <string name="exporting_image">Resim dışa aktarılıyor...</string>
+    <string name="export_untitled">Başlıksız</string>
+    <string name="export_success_format">Dosya oluşturuldu! Boyut: %1$d bayt. Paylaşılıyor...</string>
+    <string name="export_share_title">Dışa Aktarılan Notu Paylaş</string>
+    <string name="export_failed_format">Dışa aktarma başarısız: %1$s</string>
 </resources>

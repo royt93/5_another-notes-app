@@ -24,4 +24,7 @@ object DbModule {
 
     @Provides
     fun providesLabelsDao(database: NotesDb) = database.labelsDao()
+
+    @Provides
+    fun providesNoteHistoryDao(database: NotesDb) = database.noteHistoryDao()
 }

@@ -274,4 +274,29 @@
     <string name="vip_ad_not_ready_title">잠시만 기다려주세요</string>
     <string name="vip_ad_not_ready_message">광고가 아직 준비되지 않았습니다. 나중에 다시 시도해주세요!</string>
     <string name="vip_ad_no_reward">광고를 끝까지 보지 않아 보상이 지급되지 않았습니다.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">메모 잠금 해제</string>
+    <string name="lock_biometric_prompt_message">이 메모를 보거나 편집하려면 인증하세요</string>
+    <string name="lock_biometric_not_configured_warning">이 기기에 보안 잠금 화면이 구성되어 있지 않습니다</string>
+    <string name="action_lock_note">메모 잠금</string>
+    <string name="action_unlock_note">메모 잠금 해제</string>
+    <string name="time_travel_menu_title">변경 이력</string>
+    <string name="time_travel_title_no_versions">이력 (이전 버전 없음)</string>
+    <string name="time_travel_title_version_format">이력 (버전 %1$d/%2$d)</string>
+    <string name="time_travel_no_history">이 메모에 대한 이력이 없습니다</string>
+    <string name="time_travel_btn_cancel">취소</string>
+    <string name="time_travel_btn_restore">복원</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">내보내기 메뉴를 클릭했습니다!</string>
+    <string name="export_dialog_title">메모 내보내기</string>
+    <string name="export_as_pdf">PDF로 내보내기</string>
+    <string name="export_as_image">이미지 (PNG)로 내보내기</string>
+    <string name="exporting_pdf">PDF 내보내는 중...</string>
+    <string name="exporting_image">이미지 내보내는 중...</string>
+    <string name="export_untitled">제목 없음</string>
+    <string name="export_success_format">파일이 생성되었습니다! 크기: %1$d 바이트. 공유 중...</string>
+    <string name="export_share_title">내보낸 메모 공유</string>
+    <string name="export_failed_format">내보내기 실패: %1$s</string>
 </resources>

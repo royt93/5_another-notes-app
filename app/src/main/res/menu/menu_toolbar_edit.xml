@@ -89,4 +89,10 @@
         android:title="Lock note"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/itemTimeTravel"
+        android:icon="@drawable/ic_restore"
+        android:title="@string/time_travel_menu_title"
+        app:showAsAction="never" />
+
 </menu>

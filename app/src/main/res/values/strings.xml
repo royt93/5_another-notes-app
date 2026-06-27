@@ -323,4 +323,24 @@
     <string name="action_lock_note">Lock note</string>
     <string name="action_unlock_note">Unlock note</string>
 
+    <!-- Time-Travel Note History -->
+    <string name="time_travel_menu_title">Note history</string>
+    <string name="time_travel_title_no_versions">Note history (No previous versions)</string>
+    <string name="time_travel_title_version_format">Note history (Version %1$d/%2$d)</string>
+    <string name="time_travel_no_history">No history available for this note</string>
+    <string name="time_travel_btn_cancel">Cancel</string>
+    <string name="time_travel_btn_restore">Restore</string>
+
+    <!-- Export Note -->
+    <string name="export_menu_clicked">Export menu clicked!</string>
+    <string name="export_dialog_title">Export Note</string>
+    <string name="export_as_pdf">Export as PDF</string>
+    <string name="export_as_image">Export as Image (PNG)</string>
+    <string name="exporting_pdf">Exporting PDF...</string>
+    <string name="exporting_image">Exporting Image...</string>
+    <string name="export_untitled">Untitled</string>
+    <string name="export_success_format">File generated! Size: %1$d bytes. Sharing...</string>
+    <string name="export_share_title">Share Exported Note</string>
+    <string name="export_failed_format">Failed to export: %1$s</string>
+
 </resources>

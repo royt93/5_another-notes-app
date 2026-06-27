@@ -272,4 +272,29 @@
     <string name="vip_ad_not_ready_title">Attendez une seconde</string>
     <string name="vip_ad_not_ready_message">La publicité n\'est pas encore prête. Veuillez réessayer plus tard !</string>
     <string name="vip_ad_no_reward">Vous n\'avez pas regardé l\'annonce jusqu\'au bout — aucune récompense.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Déverrouiller la note</string>
+    <string name="lock_biometric_prompt_message">Authentifiez-vous pour afficher ou modifier cette note</string>
+    <string name="lock_biometric_not_configured_warning">Écran de verrouillage de sécurité non configuré sur cet appareil</string>
+    <string name="action_lock_note">Verrouiller la note</string>
+    <string name="action_unlock_note">Déverrouiller la note</string>
+    <string name="time_travel_menu_title">Historique de la note</string>
+    <string name="time_travel_title_no_versions">Historique (Aucune version précédente)</string>
+    <string name="time_travel_title_version_format">Historique (Version %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Aucun historique disponible pour cette note</string>
+    <string name="time_travel_btn_cancel">Annuler</string>
+    <string name="time_travel_btn_restore">Restaurer</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Menu d\'exportation cliqué !</string>
+    <string name="export_dialog_title">Exporter la note</string>
+    <string name="export_as_pdf">Exporter en PDF</string>
+    <string name="export_as_image">Exporter en image (PNG)</string>
+    <string name="exporting_pdf">Exportation du PDF...</string>
+    <string name="exporting_image">Exportation de l\'image...</string>
+    <string name="export_untitled">Sans titre</string>
+    <string name="export_success_format">Fichier généré ! Taille : %1$d octets. Partage...</string>
+    <string name="export_share_title">Partager la note exportée</string>
+    <string name="export_failed_format">Échec de l\'exportation : %1$s</string>
 </resources>

@@ -85,4 +85,56 @@ class NoteDatabaseTest {
         
         assertEquals(true, loaded?.isLocked)
     }
+
+    @Test
+    fun insertAndReadNoteHistory() = runBlocking {
+        val note = Note(
+            type = NoteType.TEXT,
+            title = "Origin Note",
+            content = "Origin Content",
+            metadata = BlankNoteMetadata,
+            addedDate = Date(),
+            lastModifiedDate = Date(),
+            status = NoteStatus.ACTIVE,
+            pinned = PinnedStatus.UNPINNED,
+            reminder = null
+        )
+        val noteId = notesDao.insert(note)
+
+        val historyDao = db.noteHistoryDao()
+
+        val history1 = com.mckimquyen.notes.model.entity.NoteHistory(
+            noteId = noteId,
+            title = "Version 1",
+            content = "Content 1",
+            metadata = BlankNoteMetadata,
+            timestamp = 1000L
+        )
+        val history2 = com.mckimquyen.notes.model.entity.NoteHistory(
+            noteId = noteId,
+            title = "Version 2",
+            content = "Content 2",
+            metadata = BlankNoteMetadata,
+            timestamp = 2000L
+        )
+
+        historyDao.insert(history1)
+        historyDao.insert(history2)
+
+        val historyList = historyDao.getHistoryForNote(noteId)
+        assertEquals(2, historyList.size)
+        assertEquals("Version 2", historyList[0].title) // Sorted by timestamp DESC
+        assertEquals("Version 1", historyList[1].title)
+
+        // Test pruning: keep only 1
+        historyDao.pruneHistory(noteId, 1)
+        val prunedList = historyDao.getHistoryForNote(noteId)
+        assertEquals(1, prunedList.size)
+        assertEquals("Version 2", prunedList[0].title) // Only the latest remains
+
+        // Test clearing
+        historyDao.clearHistoryForNote(noteId)
+        val clearedList = historyDao.getHistoryForNote(noteId)
+        assertEquals(0, clearedList.size)
+    }
 }

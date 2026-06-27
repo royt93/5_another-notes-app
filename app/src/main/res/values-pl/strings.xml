@@ -270,4 +270,29 @@
     <string name="vip_ad_not_ready_title">Poczekaj chwilę</string>
     <string name="vip_ad_not_ready_message">Reklama nie jest jeszcze gotowa. Spróbuj ponownie później!</string>
     <string name="vip_ad_no_reward">Nie obejrzałeś reklamy do końca — nagroda nie została przyznana.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Odblokuj notatkę</string>
+    <string name="lock_biometric_prompt_message">Uwierzytelnij się, aby wyświetlić lub edytować notatkę</string>
+    <string name="lock_biometric_not_configured_warning">Blokada ekranu zabezpieczeń nie została skonfigurowana na tym urządzeniu</string>
+    <string name="action_lock_note">Zablokuj notatkę</string>
+    <string name="action_unlock_note">Odblokuj notatkę</string>
+    <string name="time_travel_menu_title">Historia notatki</string>
+    <string name="time_travel_title_no_versions">Historia (Brak poprzednich wersji)</string>
+    <string name="time_travel_title_version_format">Historia (Wersja %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Brak historii dla tej notatki</string>
+    <string name="time_travel_btn_cancel">Anuluj</string>
+    <string name="time_travel_btn_restore">Przywróć</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Kliknięto menu eksportu!</string>
+    <string name="export_dialog_title">Eksportuj notatkę</string>
+    <string name="export_as_pdf">Eksportuj jako PDF</string>
+    <string name="export_as_image">Eksportuj jako obraz (PNG)</string>
+    <string name="exporting_pdf">Eksportowanie PDF...</string>
+    <string name="exporting_image">Eksportowanie obrazu...</string>
+    <string name="export_untitled">Bez tytułu</string>
+    <string name="export_success_format">Plik wygenerowany! Rozmiar: %1$d bajtów. Udostępnianie...</string>
+    <string name="export_share_title">Udostępnij wyeksportowaną notatkę</string>
+    <string name="export_failed_format">Błąd eksportu: %1$s</string>
 </resources>

@@ -270,4 +270,29 @@
     <string name="vip_ad_not_ready_title">Зачекайте хвилинку</string>
     <string name="vip_ad_not_ready_message">Реклама ще не готова. Будь ласка, спробуйте знову пізніше!</string>
     <string name="vip_ad_no_reward">Ви не додивилися рекламу — нагороду не нараховано.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Розблокувати замітку</string>
+    <string name="lock_biometric_prompt_message">Автентифікуйтеся, щоб переглянути або змінити цю замітку</string>
+    <string name="lock_biometric_not_configured_warning">Блокування безпеки екрана не налаштовано на цьому пристрої</string>
+    <string name="action_lock_note">Заблокувати замітку</string>
+    <string name="action_unlock_note">Розблокувати замітку</string>
+    <string name="time_travel_menu_title">Історія замітки</string>
+    <string name="time_travel_title_no_versions">Історія (Немає попередніх версій)</string>
+    <string name="time_travel_title_version_format">Історія (Версія %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Для цієї замітки немає історії</string>
+    <string name="time_travel_btn_cancel">Скасувати</string>
+    <string name="time_travel_btn_restore">Відновити</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Натиснуто меню експорту!</string>
+    <string name="export_dialog_title">Експорт замітки</string>
+    <string name="export_as_pdf">Експортувати як PDF</string>
+    <string name="export_as_image">Експортувати як зображення (PNG)</string>
+    <string name="exporting_pdf">Експорт PDF...</string>
+    <string name="exporting_image">Експорт зображення...</string>
+    <string name="export_untitled">Без назви</string>
+    <string name="export_success_format">Файл створено! Розмір: %1$d байт. Надсилання...</string>
+    <string name="export_share_title">Поділитися експортованою заміткою</string>
+    <string name="export_failed_format">Помилка експорту: %1$s</string>
 </resources>

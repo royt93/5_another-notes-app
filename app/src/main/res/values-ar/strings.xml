@@ -288,4 +288,29 @@
     <string name="vip_ad_not_ready_title">انتظر لحظة</string>
     <string name="vip_ad_not_ready_message">الإعلان ليس جاهزًا بعد. يرجى المحاولة مرة أخرى لاحقًا!</string>
     <string name="vip_ad_no_reward">لم تُكمل مشاهدة الإعلان — لم تُمنح أي مكافأة.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">إلغاء قفل الملاحظة</string>
+    <string name="lock_biometric_prompt_message">الرجاء التحقق لعرض أو تعديل هذه الملاحظة</string>
+    <string name="lock_biometric_not_configured_warning">قفل الشاشة غير مفعّل على هذا الجهاز</string>
+    <string name="action_lock_note">قفل الملاحظة</string>
+    <string name="action_unlock_note">إلغاء قفل الملاحظة</string>
+    <string name="time_travel_menu_title">سجل الملاحظة</string>
+    <string name="time_travel_title_no_versions">السجل (لا توجد إصدارات سابقة)</string>
+    <string name="time_travel_title_version_format">السجل (إصدار %1$d/%2$d)</string>
+    <string name="time_travel_no_history">لا يوجد سجل متاح لهذه الملاحظة</string>
+    <string name="time_travel_btn_cancel">إلغاء</string>
+    <string name="time_travel_btn_restore">استعادة</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">تم النقر على قائمة التصدير!</string>
+    <string name="export_dialog_title">تصدير الملاحظة</string>
+    <string name="export_as_pdf">تصدير كـ PDF</string>
+    <string name="export_as_image">تصدير كصورة (PNG)</string>
+    <string name="exporting_pdf">جاري تصدير PDF...</string>
+    <string name="exporting_image">جاري تصدير الصورة...</string>
+    <string name="export_untitled">بدون عنوان</string>
+    <string name="export_success_format">تم إنشاء الملف! الحجم: %1$d بايت. جاري المشاركة...</string>
+    <string name="export_share_title">مشاركة الملاحظة المصدرة</string>
+    <string name="export_failed_format">فشل التصدير: %1$s</string>
 </resources>

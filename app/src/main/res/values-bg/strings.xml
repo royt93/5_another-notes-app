@@ -241,4 +241,29 @@
     <string name="vip_ad_not_ready_title">Изчакайте малко</string>
     <string name="vip_ad_not_ready_message">Рекламата все още не е готова. Моля, опитайте отново по-късно!</string>
     <string name="vip_ad_no_reward">Не изгледахте рекламата докрай — не е дадена награда.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Отключване на бележка</string>
+    <string name="lock_biometric_prompt_message">Удостоверете се за преглед или редактиране на тази бележка</string>
+    <string name="lock_biometric_not_configured_warning">Защитното заключване на екрана не е конфигурирано на това устройство</string>
+    <string name="action_lock_note">Заключване на бележка</string>
+    <string name="action_unlock_note">Отключване на бележка</string>
+    <string name="time_travel_menu_title">История на бележката</string>
+    <string name="time_travel_title_no_versions">История (Няма предишни версии)</string>
+    <string name="time_travel_title_version_format">История (Версия %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Няма налична история за тази бележка</string>
+    <string name="time_travel_btn_cancel">Отказ</string>
+    <string name="time_travel_btn_restore">Възстановяване</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Кликнато меню за експортиране!</string>
+    <string name="export_dialog_title">Експортиране на бележка</string>
+    <string name="export_as_pdf">Експортиране като PDF</string>
+    <string name="export_as_image">Експортиране като изображение (PNG)</string>
+    <string name="exporting_pdf">Експортиране на PDF...</string>
+    <string name="exporting_image">Експортиране на изображение...</string>
+    <string name="export_untitled">Без заглавие</string>
+    <string name="export_success_format">Файлът е генериран! Размер: %1$d байта. Споделяне...</string>
+    <string name="export_share_title">Споделяне на експортираната бележка</string>
+    <string name="export_failed_format">Неуспешно експортиране: %1$s</string>
 </resources>

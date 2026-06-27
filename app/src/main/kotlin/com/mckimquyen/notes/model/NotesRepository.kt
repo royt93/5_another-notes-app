@@ -3,6 +3,7 @@ package com.mckimquyen.notes.model
 import com.mckimquyen.notes.model.entity.Note
 import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.model.entity.NoteWithLabels
+import com.mckimquyen.notes.model.entity.NoteHistory
 import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {
@@ -27,4 +28,9 @@ interface NotesRepository {
     suspend fun deleteOldNotesInTrash()
 
     suspend fun clearAllData()
+
+    suspend fun insertNoteHistory(history: NoteHistory): Long
+    suspend fun getHistoryForNote(noteId: Long): List<NoteHistory>
+    suspend fun pruneHistory(noteId: Long, limit: Int = 30)
+    suspend fun clearHistoryForNote(noteId: Long)
 }

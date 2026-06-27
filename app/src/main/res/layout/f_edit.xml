@@ -63,6 +63,74 @@
 
         </HorizontalScrollView>
 
+        <!-- Time-Travel History Slider UI -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeTravelLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorSurfaceVariant"
+            android:elevation="8dp"
+            android:padding="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/timeTravelTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/time_travel_title_no_versions"
+                android:textAppearance="?textAppearanceTitleSmall"
+                android:textColor="?colorOnSurfaceVariant"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/timeTravelDate"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/timeTravelDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?textAppearanceBodyMedium"
+                android:textColor="?colorOnSurfaceVariant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10 phút trước" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/timeTravelSlider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:labelBehavior="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeTravelTitle"
+                tools:value="0"
+                tools:valueFrom="0"
+                tools:valueTo="10" />
+
+            <Button
+                android:id="@+id/timeTravelCancelBtn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_travel_btn_cancel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeTravelSlider" />
+
+            <Button
+                android:id="@+id/timeTravelRestoreBtn"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_travel_btn_restore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeTravelSlider" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,6 +3,7 @@ package com.mckimquyen.notes.model
 import android.content.Context
 import com.mckimquyen.notes.model.entity.Note
 import com.mckimquyen.notes.model.entity.NoteStatus
+import com.mckimquyen.notes.model.entity.NoteHistory
 import com.mckimquyen.notes.widget.NoteCountWidget
 import com.mckimquyen.notes.widget.RecentNotesWidget
 import kotlinx.coroutines.NonCancellable
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class DefaultNotesRepository @Inject constructor(
     private val context: Context,
     private val notesDao: NotesDao,
+    private val noteHistoryDao: NoteHistoryDao,
     private val prefs: PrefsManager,
 ) : NotesRepository {
 
@@ -89,5 +91,19 @@ class DefaultNotesRepository @Inject constructor(
         notesDao.clear()
         NoteCountWidget.updateAllWidgets(context)
         RecentNotesWidget.updateAllWidgets(context)
+    }
+
+    override suspend fun insertNoteHistory(history: NoteHistory): Long = withContext(NonCancellable) {
+        noteHistoryDao.insert(history)
+    }
+
+    override suspend fun getHistoryForNote(noteId: Long): List<NoteHistory> = noteHistoryDao.getHistoryForNote(noteId)
+
+    override suspend fun pruneHistory(noteId: Long, limit: Int) = withContext(NonCancellable) {
+        noteHistoryDao.pruneHistory(noteId, limit)
+    }
+
+    override suspend fun clearHistoryForNote(noteId: Long) = withContext(NonCancellable) {
+        noteHistoryDao.clearHistoryForNote(noteId)
     }
 }

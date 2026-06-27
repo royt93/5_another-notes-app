@@ -274,4 +274,29 @@
     <string name="vip_ad_not_ready_title">Tunggu sebentar</string>
     <string name="vip_ad_not_ready_message">Iklan belum sedia. Sila cuba lagi nanti!</string>
     <string name="vip_ad_no_reward">Anda tidak menonton iklan sepenuhnya — tiada ganjaran diberikan.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Buka kunci nota</string>
+    <string name="lock_biometric_prompt_message">Sahkan untuk melihat atau mengedit nota ini</string>
+    <string name="lock_biometric_not_configured_warning">Skrin kunci keselamatan tidak dikonfigurasikan pada peranti ini</string>
+    <string name="action_lock_note">Kunci nota</string>
+    <string name="action_unlock_note">Buka kunci nota</string>
+    <string name="time_travel_menu_title">Sejarah nota</string>
+    <string name="time_travel_title_no_versions">Sejarah (Tiada versi terdahulu)</string>
+    <string name="time_travel_title_version_format">Sejarah (Versi %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Tiada sejarah tersedia untuk nota ini</string>
+    <string name="time_travel_btn_cancel">Batal</string>
+    <string name="time_travel_btn_restore">Pulihkan</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Menu eksport diklik!</string>
+    <string name="export_dialog_title">Eksport Nota</string>
+    <string name="export_as_pdf">Eksport sebagai PDF</string>
+    <string name="export_as_image">Eksport sebagai Imej (PNG)</string>
+    <string name="exporting_pdf">Mengeksport PDF...</string>
+    <string name="exporting_image">Mengeksport Imej...</string>
+    <string name="export_untitled">Tanpa tajuk</string>
+    <string name="export_success_format">Fail dijana! Saiz: %1$d bait. Berkongsi...</string>
+    <string name="export_share_title">Kongsi Nota yang Dieksport</string>
+    <string name="export_failed_format">Gagal mengeksport: %1$s</string>
 </resources>

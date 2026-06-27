@@ -281,4 +281,29 @@
     <string name="vip_ad_not_ready_title">Așteaptă o secundă</string>
     <string name="vip_ad_not_ready_message">Anunțul nu este gata încă. Te rugăm să încerci din nou mai târziu!</string>
     <string name="vip_ad_no_reward">Nu ai vizionat reclama până la capăt — recompensa nu a fost acordată.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Deblochează nota</string>
+    <string name="lock_biometric_prompt_message">Autentificați-vă pentru a vizualiza sau edita această notă</string>
+    <string name="lock_biometric_not_configured_warning">Ecranul de blocare de securitate nu este configurat pe acest dispozitiv</string>
+    <string name="action_lock_note">Blochează nota</string>
+    <string name="action_unlock_note">Deblochează nota</string>
+    <string name="time_travel_menu_title">Istoricul notei</string>
+    <string name="time_travel_title_no_versions">Istoric (Fără versiuni anterioare)</string>
+    <string name="time_travel_title_version_format">Istoric (Versiunea %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Niciun istoric disponibil pentru această notă</string>
+    <string name="time_travel_btn_cancel">Anulează</string>
+    <string name="time_travel_btn_restore">Restaurează</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Meniu export clicat!</string>
+    <string name="export_dialog_title">Exportă nota</string>
+    <string name="export_as_pdf">Exportă ca PDF</string>
+    <string name="export_as_image">Exportă ca imagine (PNG)</string>
+    <string name="exporting_pdf">Se exportă ca PDF...</string>
+    <string name="exporting_image">Se exportă ca imagine...</string>
+    <string name="export_untitled">Fără titlu</string>
+    <string name="export_success_format">Fișier generat! Dimensiune: %1$d octeți. Se trimite...</string>
+    <string name="export_share_title">Trimite nota exportată</string>
+    <string name="export_failed_format">Export eșuat: %1$s</string>
 </resources>

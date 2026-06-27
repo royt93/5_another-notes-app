@@ -281,4 +281,29 @@
     <string name="vip_ad_not_ready_title">Vänta en sekund</string>
     <string name="vip_ad_not_ready_message">Annonsen är inte klar än. Vänligen försök igen senare!</string>
     <string name="vip_ad_no_reward">Du tittade inte färdigt på annonsen – ingen belöning utdelades.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Lås upp anteckning</string>
+    <string name="lock_biometric_prompt_message">Verifiera för att visa eller redigera anteckningen</string>
+    <string name="lock_biometric_not_configured_warning">Säkerhetsskärmlås har inte konfigurerats på den här enheten</string>
+    <string name="action_lock_note">Lås anteckning</string>
+    <string name="action_unlock_note">Lås upp anteckning</string>
+    <string name="time_travel_menu_title">Anteckningshistorik</string>
+    <string name="time_travel_title_no_versions">Historik (Inga tidigare versioner)</string>
+    <string name="time_travel_title_version_format">Historik (Version %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Ingen historik tillgänglig för denna anteckning</string>
+    <string name="time_travel_btn_cancel">Avbryt</string>
+    <string name="time_travel_btn_restore">Återställ</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Exportmenyn klickades!</string>
+    <string name="export_dialog_title">Exportera anteckning</string>
+    <string name="export_as_pdf">Exportera som PDF</string>
+    <string name="export_as_image">Exportera som bild (PNG)</string>
+    <string name="exporting_pdf">Exporterar PDF...</string>
+    <string name="exporting_image">Exporterar bild...</string>
+    <string name="export_untitled">Namnlös</string>
+    <string name="export_success_format">Fil skapad! Storlek: %1$d byte. Delar...</string>
+    <string name="export_share_title">Dela exporterad anteckning</string>
+    <string name="export_failed_format">Misslyckades att exportera: %1$s</string>
 </resources>

@@ -243,4 +243,29 @@
     <string name="vip_ad_not_ready_title">Počkajte chvíľu</string>
     <string name="vip_ad_not_ready_message">Reklama ešte nie je pripravená. Skúste to znova neskôr!</string>
     <string name="vip_ad_no_reward">Reklamu ste nedopozerali — odmena nebola udelená.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Odomknúť poznámku</string>
+    <string name="lock_biometric_prompt_message">Overte sa pre zobrazenie alebo úpravu tejto poznámky</string>
+    <string name="lock_biometric_not_configured_warning">Zámek obrazovky zabezpečenia nie je na tomto zariadení nakonfigurovaný</string>
+    <string name="action_lock_note">Zamknúť poznámku</string>
+    <string name="action_unlock_note">Odomknúť poznámku</string>
+    <string name="time_travel_menu_title">História poznámky</string>
+    <string name="time_travel_title_no_versions">História (Žiadne predchádzajúce verzie)</string>
+    <string name="time_travel_title_version_format">História (Verzia %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Pre túto poznámku nie je k dispozícii žiadna história</string>
+    <string name="time_travel_btn_cancel">Zrušit</string>
+    <string name="time_travel_btn_restore">Obnoviť</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Kliknuté na ponuku exportu!</string>
+    <string name="export_dialog_title">Exportovať poznámku</string>
+    <string name="export_as_pdf">Exportovať ako PDF</string>
+    <string name="export_as_image">Exportovať ako obrázok (PNG)</string>
+    <string name="exporting_pdf">Exportovanie PDF...</string>
+    <string name="exporting_image">Exportovanie obrázka...</string>
+    <string name="export_untitled">Bez názvu</string>
+    <string name="export_success_format">Súbor vytvorený! Veľkosť: %1$d bajtov. Zdieľanie...</string>
+    <string name="export_share_title">Zdieľať exportovanú poznámku</string>
+    <string name="export_failed_format">Export zlyhal: %1$s</string>
 </resources>

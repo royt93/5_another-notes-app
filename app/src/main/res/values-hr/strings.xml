@@ -243,4 +243,29 @@
     <string name="vip_ad_not_ready_title">Pričekajte trenutak</string>
     <string name="vip_ad_not_ready_message">Oglas još nije spreman. Molimo pokušajte ponovo kasnije!</string>
     <string name="vip_ad_no_reward">Niste odgledali oglas do kraja – nagrada nije dodijeljena.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Otključaj bilješku</string>
+    <string name="lock_biometric_prompt_message">Provjerite autentičnost da biste vidjeli ili uredili ovu bilješku</string>
+    <string name="lock_biometric_not_configured_warning">Zaključavanje zaslona nije konfigurirano na ovom uređaju</string>
+    <string name="action_lock_note">Zaključaj bilješku</string>
+    <string name="action_unlock_note">Otključaj bilješku</string>
+    <string name="time_travel_menu_title">Povijest bilješke</string>
+    <string name="time_travel_title_no_versions">Povijest (Nema prethodnih verzija)</string>
+    <string name="time_travel_title_version_format">Povijest (Verzija %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Nema dostupne povijesti za ovu bilješku</string>
+    <string name="time_travel_btn_cancel">Odustani</string>
+    <string name="time_travel_btn_restore">Vrati</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Kliknut izbornik za izvoz!</string>
+    <string name="export_dialog_title">Izvezi bilješku</string>
+    <string name="export_as_pdf">Izvezi kao PDF</string>
+    <string name="export_as_image">Izvezi kao sliku (PNG)</string>
+    <string name="exporting_pdf">Izvoz PDF-a...</string>
+    <string name="exporting_image">Izvoz slike...</string>
+    <string name="export_untitled">Bez naslova</string>
+    <string name="export_success_format">Datoteka stvorena! Veličina: %1$d bajtova. Dijeljenje...</string>
+    <string name="export_share_title">Podijeli izvezenu bilješku</string>
+    <string name="export_failed_format">Izvoz nije uspio: %1$s</string>
 </resources>

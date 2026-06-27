@@ -240,4 +240,29 @@
     <string name="vip_ad_not_ready_title">Vent et øyeblikk</string>
     <string name="vip_ad_not_ready_message">Annonsen er ikke klar ennå. Prøv igjen senere!</string>
     <string name="vip_ad_no_reward">Du så ikke annonsen ferdig – ingen belønning gitt.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Lås opp notat</string>
+    <string name="lock_biometric_prompt_message">Autentiser for å vise eller redigere dette notatet</string>
+    <string name="lock_biometric_not_configured_warning">Sikkerhetsskjermlås er ikke konfigurert på denne enheten</string>
+    <string name="action_lock_note">Lås notat</string>
+    <string name="action_unlock_note">Lås opp notat</string>
+    <string name="time_travel_menu_title">Notathistorikk</string>
+    <string name="time_travel_title_no_versions">Historikk (Ingen tidligere versjoner)</string>
+    <string name="time_travel_title_version_format">Historikk (Versjon %1$d/%2$d)</string>
+    <string name="time_travel_no_history">Ingen historikk tilgjengelig for dette notatet</string>
+    <string name="time_travel_btn_cancel">Avbryt</string>
+    <string name="time_travel_btn_restore">Gjenopprett</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Eksportmeny klikket!</string>
+    <string name="export_dialog_title">Eksporter notat</string>
+    <string name="export_as_pdf">Eksporter som PDF</string>
+    <string name="export_as_image">Eksporter som bilde (PNG)</string>
+    <string name="exporting_pdf">Eksporterer PDF...</string>
+    <string name="exporting_image">Eksporterer bilde...</string>
+    <string name="export_untitled">Uten tittel</string>
+    <string name="export_success_format">Fil opprettet! Størrelse: %1$d byte. Deler...</string>
+    <string name="export_share_title">Del eksportert notat</string>
+    <string name="export_failed_format">Kunne ikke eksportere: %1$s</string>
 </resources>

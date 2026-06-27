@@ -274,4 +274,29 @@
     <string name="vip_ad_not_ready_title">एक पल प्रतीक्षा करें</string>
     <string name="vip_ad_not_ready_message">विज्ञापन अभी तैयार नहीं है। कृपया बाद में पुनः प्रयास करें!</string>
     <string name="vip_ad_no_reward">आपने विज्ञापन पूरा नहीं देखा — कोई पुरस्कार नहीं मिला।</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">नोट अनलॉक करें</string>
+    <string name="lock_biometric_prompt_message">इस नोट को देखने या संपादित करने के लिए प्रमाणित करें</string>
+    <string name="lock_biometric_not_configured_warning">इस डिवाइस पर सुरक्षा लॉक स्क्रीन कॉन्फ़िगर नहीं की गई है</string>
+    <string name="action_lock_note">नोट लॉक करें</string>
+    <string name="action_unlock_note">नोट अनलॉक करें</string>
+    <string name="time_travel_menu_title">नोट इतिहास</string>
+    <string name="time_travel_title_no_versions">इतिहास (कोई पिछला संस्करण नहीं)</string>
+    <string name="time_travel_title_version_format">इतिहास (संस्करण %1$d/%2$d)</string>
+    <string name="time_travel_no_history">इस नोट के लिए कोई इतिहास उपलब्ध नहीं है</string>
+    <string name="time_travel_btn_cancel">रद्द करें</string>
+    <string name="time_travel_btn_restore">पुनर्स्थापित करें</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">निर्यात मेनू पर क्लिक किया गया!</string>
+    <string name="export_dialog_title">नोट निर्यात करें</string>
+    <string name="export_as_pdf">PDF के रूप में निर्यात करें</string>
+    <string name="export_as_image">छवि (PNG) के रूप में निर्यात करें</string>
+    <string name="exporting_pdf">PDF निर्यात हो रहा है...</string>
+    <string name="exporting_image">छवि निर्यात हो रही है...</string>
+    <string name="export_untitled">बिना शीर्षक का</string>
+    <string name="export_success_format">फ़ाइल उत्पन्न हुई! आकार: %1$d बाइट्स। साझा किया जा रहा है...</string>
+    <string name="export_share_title">निर्यातित नोट साझा करें</string>
+    <string name="export_failed_format">निर्यात विफल रहा: %1$s</string>
 </resources>

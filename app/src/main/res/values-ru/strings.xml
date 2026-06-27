@@ -294,4 +294,29 @@
     <string name="vip_ad_not_ready_title">Подождите секунду</string>
     <string name="vip_ad_not_ready_message">Реклама еще не готова. Пожалуйста, повторите попытку позже!</string>
     <string name="vip_ad_no_reward">Вы не досмотрели рекламу — награда не начислена.</string>
+
+    <!-- Added features localization -->
+    <string name="lock_biometric_title">Разблокировать заметку</string>
+    <string name="lock_biometric_prompt_message">Авторизуйтесь, чтобы просмотреть или отредактировать заметку</string>
+    <string name="lock_biometric_not_configured_warning">Экран блокировки не настроен на этом устройстве</string>
+    <string name="action_lock_note">Заблокировать заметку</string>
+    <string name="action_unlock_note">Разблокировать заметку</string>
+    <string name="time_travel_menu_title">История изменений</string>
+    <string name="time_travel_title_no_versions">История (Нет предыдущих версий)</string>
+    <string name="time_travel_title_version_format">История (Версия %1$d/%2$d)</string>
+    <string name="time_travel_no_history">История для этой заметки отсутствует</string>
+    <string name="time_travel_btn_cancel">Отмена</string>
+    <string name="time_travel_btn_restore">Восстановить</string>
+
+    <!-- Features localization keys -->
+    <string name="export_menu_clicked">Нажато меню экспорта!</string>
+    <string name="export_dialog_title">Экспорт заметки</string>
+    <string name="export_as_pdf">Экспорт в PDF</string>
+    <string name="export_as_image">Экспорт в изображение (PNG)</string>
+    <string name="exporting_pdf">Экспорт PDF...</string>
+    <string name="exporting_image">Экспорт изображения...</string>
+    <string name="export_untitled">Без названия</string>
+    <string name="export_success_format">Файл создан! Размер: %1$d байт. Отправка...</string>
+    <string name="export_share_title">Поделиться экспортированной заметкой</string>
+    <string name="export_failed_format">Ошибка экспорта: %1$s</string>
 </resources>

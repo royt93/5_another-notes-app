@@ -19,6 +19,7 @@ import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.model.entity.NoteType
 import com.mckimquyen.notes.model.entity.PinnedStatus
 import com.mckimquyen.notes.model.entity.Reminder
+import com.mckimquyen.notes.model.entity.NoteHistory
 import com.mckimquyen.notes.ui.AssistedSavedStateViewModelFactory
 import com.mckimquyen.notes.ui.Event
 import com.mckimquyen.notes.ui.ShareData
@@ -105,6 +106,10 @@ class EditVM @AssistedInject constructor(
      * URL of last clicked span, if any.
      */
     private var linkUrl: String? = null
+
+    private var historySnapshotJob: Job? = null
+    private var lastSnapshotTitle: String? = null
+    private var lastSnapshotContent: String? = null
 
     /**
      * The currently displayed list items created in [recreateListItems].
@@ -218,6 +223,18 @@ class EditVM @AssistedInject constructor(
     val charLimitWarningEvent: LiveData<Event<Int>>
         get() = _charLimitWarningEvent
     private var lastCharWarnThreshold = 0
+
+    private val _noteHistory = MutableLiveData<List<NoteHistory>>()
+    val noteHistory: LiveData<List<NoteHistory>>
+        get() = _noteHistory
+
+    private val _historyUpdated = MutableLiveData<Boolean>(false)
+    val historyUpdated: LiveData<Boolean>
+        get() = _historyUpdated
+
+    private val _restoreEvent = MutableLiveData<Event<Pair<String, String>>>()
+    val restoreEvent: LiveData<Event<Pair<String, String>>>
+        get() = _restoreEvent
 
     // F-04: Word count milestones
     private val _wordMilestoneEvent = MutableLiveData<Event<Int>>()
@@ -361,8 +378,19 @@ class EditVM @AssistedInject constructor(
      * This updates last modified date.
      */
     fun saveNote() {
-        // Update note
-        updateNote()
+        if (isTimeTraveling) {
+            // Restore draft values so that history preview doesn't overwrite active changes if screen exits/backgrounds
+            note = note.copy(
+                title = draftTitle,
+                content = draftContent,
+                metadata = draftMetadata,
+                type = draftType
+            )
+        } else {
+            updateNote()
+        }
+
+        historySnapshotJob?.cancel()
 
         // NonCancellable to avoid save being cancelled if called right before fragment destruction
         updateNoteJob = viewModelScope.launch(NonCancellable) {
@@ -385,6 +413,9 @@ class EditVM @AssistedInject constructor(
 
                 notesRepository.updateNote(note)
                 updateNoteJob = null
+            }
+            if (!isTimeTraveling) {
+                saveHistorySnapshot(note.title, note.content)
             }
         }
     }
@@ -747,6 +778,8 @@ class EditVM @AssistedInject constructor(
                 }
             }
         }
+
+        scheduleHistorySnapshot(title, content)
     }
 
     private suspend fun deleteNoteInternal() {
@@ -758,6 +791,148 @@ class EditVM @AssistedInject constructor(
      * Create label refs for a note ID from [labels].
      */
     private fun createLabelRefs(noteId: Long) = labels.map { LabelRef(noteId, it.id) }
+
+    private fun scheduleHistorySnapshot(title: String, content: String) {
+        if (note.id == Note.NO_ID) return
+
+        historySnapshotJob?.cancel()
+        historySnapshotJob = viewModelScope.launch {
+            kotlinx.coroutines.delay(10000)
+            saveHistorySnapshot(title, content)
+        }
+    }
+
+    private suspend fun saveHistorySnapshot(title: String, content: String) {
+        val noteId = note.id
+        if (noteId == Note.NO_ID) return
+
+        updateNote()
+
+        if (lastSnapshotTitle == null && lastSnapshotContent == null) {
+            val history = notesRepository.getHistoryForNote(noteId)
+            if (history.isNotEmpty()) {
+                lastSnapshotTitle = history.first().title
+                lastSnapshotContent = history.first().content
+            }
+        }
+
+        val lastTitle = lastSnapshotTitle ?: ""
+        val lastContent = lastSnapshotContent ?: ""
+
+        val titleDiff = Math.abs(title.length - lastTitle.length)
+        val contentDiff = Math.abs(content.length - lastContent.length)
+
+        if ((title != lastTitle || content != lastContent) && (titleDiff + contentDiff > 10 || lastSnapshotTitle == null)) {
+            val snapshot = NoteHistory(
+                noteId = noteId,
+                title = title,
+                content = content,
+                metadata = note.metadata,
+                timestamp = System.currentTimeMillis()
+            )
+            notesRepository.insertNoteHistory(snapshot)
+            notesRepository.pruneHistory(noteId, 30)
+
+            lastSnapshotTitle = title
+            lastSnapshotContent = content
+            _historyUpdated.value = true
+        }
+    }
+
+    fun loadNoteHistory() {
+        if (note.id == Note.NO_ID) return
+        viewModelScope.launch {
+            _noteHistory.value = notesRepository.getHistoryForNote(note.id)
+        }
+    }
+
+    var isTimeTraveling: Boolean = false
+        private set
+
+    private var draftTitle: String = ""
+    private var draftContent: String = ""
+    private var draftMetadata: NoteMetadata = BlankNoteMetadata
+    private var draftType: NoteType = NoteType.TEXT
+
+    fun enterTimeTravelMode() {
+        updateNote()
+        draftTitle = note.title
+        draftContent = note.content
+        draftMetadata = note.metadata
+        draftType = note.type
+        isTimeTraveling = true
+    }
+
+    fun previewHistoryVersion(history: NoteHistory) {
+        historySnapshotJob?.cancel()
+        listItems.clear()
+
+        if (shouldShowDate) {
+            listItems += EditDateItem(note.addedDate.time)
+        }
+
+        listItems += EditTitleItem(DefaultEditableText(history.title), false)
+
+        val historyType = if (history.metadata is ListNoteMetadata) NoteType.LIST else NoteType.TEXT
+        val tempNote = note.copy(
+            title = history.title,
+            content = history.content,
+            metadata = history.metadata,
+            type = historyType
+        )
+        when (historyType) {
+            NoteType.TEXT -> {
+                listItems += EditContentItem(DefaultEditableText(tempNote.content), false)
+            }
+            NoteType.LIST -> {
+                val noteItems = tempNote.listItems
+                if (prefs.moveCheckedToBottom) {
+                    for ((i, item) in noteItems.withIndex()) {
+                        if (!item.checked) {
+                            listItems += EditItemItem(DefaultEditableText(item.content), false, false, i)
+                        }
+                    }
+                    val checkCount = noteItems.count { it.checked }
+                    if (checkCount > 0) {
+                        listItems += EditCheckedHeaderItem(checkCount)
+                        for ((i, item) in noteItems.withIndex()) {
+                            if (item.checked) {
+                                listItems += EditItemItem(DefaultEditableText(item.content), true, false, i)
+                            }
+                        }
+                    }
+                } else {
+                    for ((i, item) in noteItems.withIndex()) {
+                        listItems += EditItemItem(DefaultEditableText(item.content), item.checked, false, i)
+                    }
+                }
+            }
+        }
+        updateListItems()
+    }
+
+    fun exitTimeTravelMode(restore: Boolean, restoredHistory: NoteHistory? = null) {
+        isTimeTraveling = false
+        if (restore && restoredHistory != null) {
+            note = note.copy(
+                title = restoredHistory.title,
+                content = restoredHistory.content,
+                metadata = restoredHistory.metadata,
+                type = restoredHistory.metadata.let { if (it is ListNoteMetadata) NoteType.LIST else NoteType.TEXT }
+            )
+            lastSnapshotTitle = restoredHistory.title
+            lastSnapshotContent = restoredHistory.content
+        } else {
+            note = note.copy(
+                title = draftTitle,
+                content = draftContent,
+                metadata = draftMetadata,
+                type = draftType
+            )
+        }
+        recreateListItems()
+        updateListItems()
+    }
 
     /**
      * Update list items to match content of [note].
