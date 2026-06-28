@@ -15,6 +15,9 @@ class ReadingModeUITest {
     @Test
     fun testReadingModeUIFlow() {
         ActivityScenario.launch(MainAct::class.java).use { scenario ->
+            // Wait for activity to load and settle
+            Thread.sleep(1500)
+
             // 1. Click FAB to open EditFrm
             scenario.onActivity { activity ->
                 val fab = activity.findViewById<View>(R.id.fab)
@@ -22,17 +25,24 @@ class ReadingModeUITest {
                 fab.performClick()
             }
 
-            // Wait on the test thread (not main thread) for navigation to complete
-            Thread.sleep(1500)
+            // Wait for navigation and recycler view layout binding
+            var colorPicker: View? = null
+            var moodPicker: View? = null
+            for (i in 1..5) {
+                scenario.onActivity { activity ->
+                    colorPicker = activity.findViewById<View>(R.id.colorPickerScroll)
+                    moodPicker = activity.findViewById<View>(R.id.moodPickerRow)
+                }
+                if (colorPicker != null && moodPicker != null) break
+                Thread.sleep(500)
+            }
+            assertNotNull("colorPickerScroll should exist within timeout", colorPicker)
+            assertNotNull("moodPickerRow should exist within timeout", moodPicker)
 
             // 2. Verify initial visibility in Edit Mode and toggle reading mode
             scenario.onActivity { activity ->
-                val colorPicker = activity.findViewById<View>(R.id.colorPickerScroll)
-                val moodPicker = activity.findViewById<View>(R.id.moodPickerRow)
-                assertNotNull("colorPickerScroll should exist", colorPicker)
-                assertNotNull("moodPickerRow should exist", moodPicker)
-                assertEquals("Color picker should be visible in edit mode", View.VISIBLE, colorPicker.visibility)
-                assertEquals("Mood picker should be visible in edit mode", View.VISIBLE, moodPicker.visibility)
+                assertEquals("Color picker should be visible in edit mode", View.VISIBLE, colorPicker!!.visibility)
+                assertEquals("Mood picker should be visible in edit mode", View.VISIBLE, moodPicker!!.visibility)
 
                 val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
                 assertNotNull("Toolbar should exist", toolbar)

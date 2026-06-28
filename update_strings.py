@@ -1,7 +1,7 @@
 import os
 import re
 
-res_dir = "/Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res"
+res_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "app", "src", "main", "res")
 
 strings_to_add = """
     <!-- VIP Features -->

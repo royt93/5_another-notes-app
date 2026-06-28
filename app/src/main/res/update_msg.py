@@ -1,7 +1,7 @@
 import os
 import re
 
-res_dir = "/Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res"
+res_dir = os.path.dirname(os.path.abspath(__file__))
 
 translations = {
     "base": "The ad is not ready yet. Please try again later!",

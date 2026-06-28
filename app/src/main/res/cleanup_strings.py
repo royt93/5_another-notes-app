@@ -1,7 +1,7 @@
 import os
 import re
 
-res_dir = "/Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res"
+res_dir = os.path.dirname(os.path.abspath(__file__))
 
 count = 0
 for d in os.listdir(res_dir):

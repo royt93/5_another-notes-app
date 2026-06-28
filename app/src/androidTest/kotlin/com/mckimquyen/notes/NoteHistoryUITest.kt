@@ -17,6 +17,9 @@ class NoteHistoryUITest {
     @Test
     fun testNoteHistoryUIFlow() {
         ActivityScenario.launch(MainAct::class.java).use { scenario ->
+            // Wait for activity to load and settle
+            Thread.sleep(1500)
+
             // 1. Click FAB to open EditFrm
             scenario.onActivity { activity ->
                 val fab = activity.findViewById<View>(R.id.fab)

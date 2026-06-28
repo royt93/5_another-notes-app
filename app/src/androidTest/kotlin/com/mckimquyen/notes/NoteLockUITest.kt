@@ -17,6 +17,9 @@ class NoteLockUITest {
     @Test
     fun testNoteLockUIFlow() {
         ActivityScenario.launch(MainAct::class.java).use { scenario ->
+            // Wait for activity to load and settle
+            Thread.sleep(1500)
+
             // 1. Click FAB to open EditFrm
             scenario.onActivity { activity ->
                 val fab = activity.findViewById<View>(R.id.fab)
@@ -46,7 +49,7 @@ class NoteLockUITest {
                 // Toggle Lock on the note
                 val lockMenuItem = toolbar.menu.findItem(R.id.itemLock)
                 assertNotNull("Lock menu item should exist", lockMenuItem)
-                assertEquals("Lock note", lockMenuItem.title.toString())
+                assertEquals(activity.getString(R.string.action_lock_note), lockMenuItem.title.toString())
 
                 // Perform the lock action
                 toolbar.menu.performIdentifierAction(R.id.itemLock, 0)
@@ -60,7 +63,7 @@ class NoteLockUITest {
                 val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
                 assertNotNull(toolbar)
                 val lockMenuItem = toolbar.menu.findItem(R.id.itemLock)
-                assertEquals("Unlock note", lockMenuItem.title.toString())
+                assertEquals(activity.getString(R.string.action_unlock_note), lockMenuItem.title.toString())
 
                 // Exit EditFrm
                 activity.onBackPressedDispatcher.onBackPressed()

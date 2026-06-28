@@ -1,7 +1,7 @@
 import os
 import re
 
-res_dir = "/Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260221another-notes-app/app/src/main/res"
+res_dir = os.path.dirname(os.path.abspath(__file__))
 
 translations = {
     "ro": ("Vizionează anunț (Primești 3 zile Premium)", "Așteaptă o secundă", "Anunțul nu este gata încă. Te rugăm să încerci din nou în aproximativ 1 minut!"),
