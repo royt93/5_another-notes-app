@@ -336,10 +336,10 @@
     <string name="export_dialog_title">Export Note</string>
     <string name="export_as_pdf">Export as PDF</string>
     <string name="export_as_image">Export as Image (PNG)</string>
-    <string name="exporting_pdf">Exporting PDF...</string>
-    <string name="exporting_image">Exporting Image...</string>
+    <string name="exporting_pdf">Exporting PDF…</string>
+    <string name="exporting_image">Exporting Image…</string>
     <string name="export_untitled">Untitled</string>
-    <string name="export_success_format">File generated! Size: %1$d bytes. Sharing...</string>
+    <string name="export_success_format">File generated! Size: %1$d bytes. Sharing…</string>
     <string name="export_share_title">Share Exported Note</string>
     <string name="export_failed_format">Failed to export: %1$s</string>
 
