@@ -92,15 +92,23 @@
     <string name="edit_message_blank_note_discarded">Üres jegyzet eldobva.</string>
     <plurals name="edit_move_archive_message">
         <item quantity="other">Jegyzet archiválva.</item>
+    
+        <item quantity="one">Jegyzet archiválva.</item>
     </plurals>
     <plurals name="edit_message_move_delete">
         <item quantity="other">Jegyzet a lomtárba helyezve.</item>
+    
+        <item quantity="one">A jegyzet a lomtárba került.</item>
     </plurals>
     <plurals name="edit_message_move_restore">
         <item quantity="other">Jegyzet visszaállítva.</item>
+    
+        <item quantity="one">Jegyzet visszaállítva.</item>
     </plurals>
     <plurals name="edit_message_move_unarchive">
         <item quantity="other">Jegyzet kivéve az archívumból.</item>
+    
+        <item quantity="one">Jegyzet archiválva.</item>
     </plurals>
     <string name="edit_in_trash_message">A lomtárban lévő jegyzet nem szerkeszthető.</string>
 
@@ -111,6 +119,8 @@
 
     <plurals name="edit_checked_items">
         <item quantity="other">%d bejelölt elem</item>
+    
+        <item quantity="one">%dbejelölt tétel</item>
     </plurals>
 
     <string name="note_reminders">Emlékeztetők</string>
@@ -301,4 +311,9 @@
     <string name="export_success_format">Fájl létrehozva! Méret: %1$d bájt. Megosztás...</string>
     <string name="export_share_title">Exportált jegyzet megosztása</string>
     <string name="export_failed_format">Exportálás sikertelen: %1$s</string>
+
+    <string name="action_layout_timeline">Megtekintés idővonalként</string>
+    <string name="reminder_quick_in_one_hour">1 óra alatt</string>
+    <string name="reminder_quick_tomorrow">Holnap 9 óra</string>
+    <string name="reminder_quick_next_week">Jövő héten</string>
 </resources>

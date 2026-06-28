@@ -295,4 +295,40 @@
     <string name="export_success_format">Plik wygenerowany! Rozmiar: %1$d bajtów. Udostępnianie...</string>
     <string name="export_share_title">Udostępnij wyeksportowaną notatkę</string>
     <string name="export_failed_format">Błąd eksportu: %1$s</string>
+
+    <string name="action_layout_timeline">Wyświetl jako oś czasu</string>
+    <string name="action_open">Otwarte</string>
+    <string name="reminder_quick_in_one_hour">Za 1 godzinę</string>
+    <string name="reminder_quick_tomorrow">Jutro o 9:00</string>
+    <string name="reminder_quick_next_week">Przyszły tydzień</string>
+    <string name="reminder_notif_permission">Aby móc wysyłać powiadomienia przypominające, aplikacja potrzebuje pozwolenia.
+    Kliknij OK, aby wyświetlić prośbę o pozwolenie. Później będziesz mógł ustawić przypomnienie.</string>
+    <string name="reminder_notif_permission_denied">Odmówiono pozwolenia na powiadamianie.
+    Alarmy przypominające nie będą działać, dopóki nie zostaną włączone.</string>
+    <string name="pref_dynamic_colors">Używaj dynamicznych kolorów</string>
+    <string name="widget_guide_title">Widżety</string>
+    <string name="pref_data_encrypted_export">Szyfrowany eksport</string>
+    <string name="pref_data_encrypted_export_summary">Szyfruje wyeksportowane notatki. Dostęp nie jest możliwy bez
+        prawidłowe hasło.</string>
+    <string name="pref_about_view_source_fork">Wyświetl na Githubie (rozwidlony)</string>
+    <string name="pref_restart_dialog_title">Wymagane ponowne uruchomienie!</string>
+    <string name="pref_restart_dialog_description">Aby zmiany zaczęły obowiązywać, wymagane jest ponowne uruchomienie.
+        Czy chcesz teraz ponownie uruchomić aplikację?</string>
+    <string name="export_serialization_fail">Wystąpił błąd podczas eksportu danych.
+        Spróbuj wyłączyć szyfrowanie i spróbuj ponownie.</string>
+    <string name="encrypted_export_dialog_title">Ustaw hasło</string>
+    <string name="encrypted_export_password">Hasło</string>
+    <string name="encrypted_export_repeat_password">Potwierdź hasło</string>
+    <string name="encrypted_export_password_matching_error">Hasła nie pasują</string>
+    <string name="encrypted_export_key_generation_successful">Szyfrowanie włączone pomyślnie!</string>
+    <string name="encrypted_export_key_deletion_successful">Szyfrowanie wyłączone pomyślnie!</string>
+    <string name="encrypted_import_dialog_title">Wprowadź hasło</string>
+    <string name="encrypted_import_key_error">Wystąpił błąd podczas próby odszyfrowania tego pliku.
+        Sprawdź, czy hasło było prawidłowe.</string>
+    <string name="encrypted_import_encryption_unsupported">Nie można zaimportować danych, szyfrowanie nie jest obsługiwane
+        w tej wersji Androida.</string>
+    <string name="term_policy"><![CDATA[Warunki i zasady]]></string>
+    <string name="rate_this_app_5">Oceń tę aplikację 5★</string>
+    <string name="get_more_apps">Pobierz więcej aplikacji</string>
+    <string name="share_this_app">Udostępnij tę aplikację</string>
 </resources>

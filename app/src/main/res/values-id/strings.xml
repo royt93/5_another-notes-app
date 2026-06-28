@@ -299,4 +299,9 @@
     <string name="export_success_format">File dibuat! Ukuran: %1$d byte. Membagikan...</string>
     <string name="export_share_title">Bagikan Catatan yang Diekspor</string>
     <string name="export_failed_format">Gagal mengekspor: %1$s</string>
+
+    <string name="action_layout_timeline">Lihat sebagai garis waktu</string>
+    <string name="reminder_quick_in_one_hour">Dalam 1 jam</string>
+    <string name="reminder_quick_tomorrow">Besok jam 9 pagi</string>
+    <string name="reminder_quick_next_week">Minggu depan</string>
 </resources>

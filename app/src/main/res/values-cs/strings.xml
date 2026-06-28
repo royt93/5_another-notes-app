@@ -313,4 +313,9 @@
     <string name="export_success_format">Soubor vytvořen! Velikost: %1$d bajtů. Sdílení...</string>
     <string name="export_share_title">Sdílet exportovanou poznámku</string>
     <string name="export_failed_format">Export selhal: %1$s</string>
+
+    <string name="action_layout_timeline">Zobrazit jako časovou osu</string>
+    <string name="reminder_quick_in_one_hour">Za 1 hodinu</string>
+    <string name="reminder_quick_tomorrow">Zítra v 9 hodin</string>
+    <string name="reminder_quick_next_week">Příští týden</string>
 </resources>

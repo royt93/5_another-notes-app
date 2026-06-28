@@ -299,4 +299,9 @@
     <string name="export_success_format">สร้างไฟล์แล้ว! ขนาด: %1$d ไบต์ กำลังแชร์...</string>
     <string name="export_share_title">แชร์โน้ตที่ส่งออก</string>
     <string name="export_failed_format">ส่งออกล้มเหลว: %1$s</string>
+
+    <string name="action_layout_timeline">ดูเป็นไทม์ไลน์</string>
+    <string name="reminder_quick_in_one_hour">ใน 1 ชั่วโมง</string>
+    <string name="reminder_quick_tomorrow">พรุ่งนี้ 9.00 น</string>
+    <string name="reminder_quick_next_week">สัปดาห์หน้า</string>
 </resources>

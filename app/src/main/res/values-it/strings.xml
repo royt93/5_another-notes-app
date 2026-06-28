@@ -270,4 +270,42 @@ Cliccare OK per procedere.</string>
     <string name="export_success_format">File generato! Dimensione: %1$d byte. Condivisione...</string>
     <string name="export_share_title">Condividi nota esportata</string>
     <string name="export_failed_format">Esportazione non riuscita: %1$s</string>
+
+    <string name="action_layout_timeline">Visualizza come sequenza temporale</string>
+    <string name="action_open">Aprire</string>
+    <string name="reminder_quick_in_one_hour">Tra 1 ora</string>
+    <string name="reminder_quick_tomorrow">Domani 9:00</string>
+    <string name="reminder_quick_next_week">La prossima settimana</string>
+    <string name="reminder_notif_permission">Per poter inviare notifiche di promemoria, l\'app necessita di un\'autorizzazione.
+    Fare clic su OK per visualizzare la richiesta di autorizzazione. Potrai impostare un promemoria in seguito.</string>
+    <string name="reminder_notif_permission_denied">L\'autorizzazione alla notifica è stata negata.
+    Gli allarmi promemoria non funzioneranno finché non saranno abilitati.</string>
+    <string name="pref_dynamic_colors">Usa colori dinamici</string>
+    <string name="widget_guide_title">Widget</string>
+    <string name="pref_behavior_swipe_action_left">Scorri verso sinistra</string>
+    <string name="pref_behavior_swipe_action_right">Scorri verso destra</string>
+    <string name="pref_data_encrypted_export">Esportazione crittografata</string>
+    <string name="pref_data_encrypted_export_summary">Crittografa le note esportate. L\'accesso non è possibile senza
+        la password corretta.</string>
+    <string name="pref_about_view_source_fork">Visualizza su Github (biforcato)</string>
+    <string name="pref_restart_dialog_title">È necessario riavviare!</string>
+    <string name="pref_restart_dialog_description">È necessario un riavvio affinché queste modifiche abbiano effetto.
+        Vuoi riavviare l\'app adesso?</string>
+    <string name="export_serialization_fail">Si è verificato un errore durante l\'esportazione dei dati.
+        Prova a disattivare la crittografia e riprova.</string>
+    <string name="encrypted_export_dialog_title">Imposta la password</string>
+    <string name="encrypted_export_password">Password</string>
+    <string name="encrypted_export_repeat_password">Conferma password</string>
+    <string name="encrypted_export_password_matching_error">Le password non corrispondono</string>
+    <string name="encrypted_export_key_generation_successful">Crittografia abilitata con successo!</string>
+    <string name="encrypted_export_key_deletion_successful">Crittografia disabilitata con successo!</string>
+    <string name="encrypted_import_dialog_title">Inserisci la password</string>
+    <string name="encrypted_import_key_error">Si è verificato un errore durante il tentativo di decrittografare questo file.
+        Controlla se la password era corretta.</string>
+    <string name="encrypted_import_encryption_unsupported">Impossibile importare i dati, la crittografia non è supportata
+        su questa versione di Android.</string>
+    <string name="term_policy"><![CDATA[Termini e Politica]]></string>
+    <string name="rate_this_app_5">Valuta questa app 5★</string>
+    <string name="get_more_apps">Ottieni più app</string>
+    <string name="share_this_app">Condividi questa app</string>
 </resources>

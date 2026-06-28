@@ -297,4 +297,15 @@
     <string name="export_success_format">Fichier généré ! Taille : %1$d octets. Partage...</string>
     <string name="export_share_title">Partager la note exportée</string>
     <string name="export_failed_format">Échec de l\'exportation : %1$s</string>
+
+    <string name="action_layout_timeline">Afficher sous forme de chronologie</string>
+    <string name="reminder_quick_in_one_hour">Dans 1 heure</string>
+    <string name="reminder_quick_tomorrow">Demain 9h</string>
+    <string name="reminder_quick_next_week">La semaine prochaine</string>
+    <string name="widget_guide_title">Widgets</string>
+    <string name="pref_about_view_source_fork">Voir sur Github (Forked)</string>
+    <string name="term_policy"><![CDATA[Conditions et politiques]]></string>
+    <string name="rate_this_app_5">Notez cette application 5★</string>
+    <string name="get_more_apps">Obtenez plus d\'applications</string>
+    <string name="share_this_app">Partager cette application</string>
 </resources>

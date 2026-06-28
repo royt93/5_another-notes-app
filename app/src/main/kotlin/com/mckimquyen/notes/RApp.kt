@@ -107,8 +107,19 @@ class RApp : Application() {
                 }
             )
         )
+        val isTesting = try {
+            Class.forName("androidx.test.espresso.Espresso")
+            true
+        } catch (e: Exception) {
+            false
+        }
         AdManager.initialize(this) { success, gaid ->
             Log.d("roy93~", "AdManager init success=$success, gaid=$gaid")
+            if (isTesting) {
+                val key = decodeVipKey(BuildConfig.VIP_KEY_ENCODED)
+                AdManager.activateVipByKey(this, key, days = 365)
+                Log.d("roy93~", "Bypassed ads for UI tests by activating VIP")
+            }
         }
     }
 

@@ -319,4 +319,16 @@
     <string name="export_success_format">Файл создан! Размер: %1$d байт. Отправка...</string>
     <string name="export_share_title">Поделиться экспортированной заметкой</string>
     <string name="export_failed_format">Ошибка экспорта: %1$s</string>
+
+    <string name="action_layout_timeline">Посмотреть как временную шкалу</string>
+    <string name="action_open">Открыть</string>
+    <string name="reminder_quick_in_one_hour">Через 1 час</string>
+    <string name="reminder_quick_tomorrow">Завтра в 9 утра</string>
+    <string name="reminder_quick_next_week">На следующей неделе</string>
+    <string name="widget_guide_title">Виджеты</string>
+    <string name="pref_about_view_source_fork">Посмотреть на Github (раздвоенный)</string>
+    <string name="term_policy"><![CDATA[Условия и политика]]></string>
+    <string name="rate_this_app_5">Оцените это приложение 5★</string>
+    <string name="get_more_apps">Получить больше приложений</string>
+    <string name="share_this_app">Поделитесь этим приложением</string>
 </resources>

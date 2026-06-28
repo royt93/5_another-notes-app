@@ -313,4 +313,40 @@
     <string name="export_success_format">تم إنشاء الملف! الحجم: %1$d بايت. جاري المشاركة...</string>
     <string name="export_share_title">مشاركة الملاحظة المصدرة</string>
     <string name="export_failed_format">فشل التصدير: %1$s</string>
+
+    <string name="action_layout_timeline">عرض كجدول زمني</string>
+    <string name="action_open">يفتح</string>
+    <string name="reminder_quick_in_one_hour">في 1 ساعة</string>
+    <string name="reminder_quick_tomorrow">غدا 9 صباحا</string>
+    <string name="reminder_quick_next_week">الأسبوع المقبل</string>
+    <string name="reminder_notif_permission">لتتمكن من إرسال إشعارات التذكير، يحتاج التطبيق إلى إذن.
+    انقر فوق موافق لإظهار طلب الإذن. سوف تكون قادرا على تعيين تذكير بعد ذلك.</string>
+    <string name="reminder_notif_permission_denied">تم رفض إذن الإعلام.
+    لن تعمل إنذارات التذكير حتى يتم تمكينها.</string>
+    <string name="pref_dynamic_colors">استخدم الألوان الديناميكية</string>
+    <string name="widget_guide_title">الحاجيات</string>
+    <string name="pref_data_encrypted_export">تصدير مشفرة</string>
+    <string name="pref_data_encrypted_export_summary">تشفير الملاحظات المصدرة. الوصول غير ممكن بدون
+        كلمة المرور الصحيحة.</string>
+    <string name="pref_about_view_source_fork">عرض على جيثب (متشعب)</string>
+    <string name="pref_restart_dialog_title">إعادة التشغيل مطلوبة!</string>
+    <string name="pref_restart_dialog_description">يلزم إعادة التشغيل حتى تدخل هذه التغييرات حيز التنفيذ.
+        هل تريد إعادة تشغيل التطبيق الآن؟</string>
+    <string name="export_serialization_fail">حدث خطأ أثناء تصدير البيانات.
+        حاول تعطيل التشفير وحاول مرة أخرى.</string>
+    <string name="encrypted_export_dialog_title">تعيين كلمة المرور</string>
+    <string name="encrypted_export_password">كلمة المرور</string>
+    <string name="encrypted_export_repeat_password">تأكيد كلمة المرور</string>
+    <string name="encrypted_export_password_matching_error">كلمات المرور غير متطابقة</string>
+    <string name="encrypted_export_key_generation_successful">تم تمكين التشفير بنجاح!</string>
+    <string name="encrypted_export_key_deletion_successful">تم تعطيل التشفير بنجاح!</string>
+    <string name="encrypted_import_dialog_title">أدخل كلمة المرور</string>
+    <string name="encrypted_import_key_error">حدث خطأ أثناء محاولة فك تشفير هذا الملف.
+        تحقق مما إذا كانت كلمة المرور صحيحة.</string>
+    <string name="encrypted_import_encryption_unsupported">تعذر استيراد البيانات، التشفير غير مدعوم
+        على هذا الإصدار من أندرويد.</string>
+    <string name="term_policy"><![CDATA[المصطلح والسياسة]]></string>
+    <string name="rate_this_app_5">قيم هذا التطبيق 5★</string>
+    <string name="get_more_apps">احصل على المزيد من التطبيقات</string>
+    <string name="share_this_app">مشاركة هذا التطبيق</string>
 </resources>

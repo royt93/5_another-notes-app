@@ -265,4 +265,46 @@
     <string name="export_success_format">Fil opprettet! Størrelse: %1$d byte. Deler...</string>
     <string name="export_share_title">Del eksportert notat</string>
     <string name="export_failed_format">Kunne ikke eksportere: %1$s</string>
+
+    <string name="action_layout_timeline">Vis som tidslinje</string>
+    <string name="action_open">Åpne</string>
+    <string name="reminder_quick_in_one_hour">Om 1 time</string>
+    <string name="reminder_quick_tomorrow">I morgen kl 9</string>
+    <string name="reminder_quick_next_week">Neste uke</string>
+    <string name="reminder_notif_permission">For å kunne sende påminnelsesvarsler trenger appen en tillatelse.
+    Klikk OK for å vise tillatelsesforespørselen. Du vil kunne stille inn en påminnelse etterpå.</string>
+    <string name="reminder_notif_permission_denied">Varseltillatelsen er nektet.
+    Påminnelsesalarmer vil ikke fungere før de er aktivert.</string>
+    <string name="pref_dynamic_colors">Bruk dynamiske farger</string>
+    <string name="widget_guide_title">Widgets</string>
+    <string name="pref_data_encrypted_export">Kryptert eksport</string>
+    <string name="pref_data_encrypted_export_summary">Krypterer de eksporterte notatene. Tilgang er ikke mulig uten
+        riktig passord.</string>
+    <string name="pref_about_view_source_fork">Se på Github (Forked)</string>
+    <string name="pref_restart_dialog_title">Restart kreves!</string>
+    <string name="pref_restart_dialog_description">En omstart er nødvendig for at disse endringene skal tre i kraft.
+        Vil du starte appen på nytt nå?</string>
+    <string name="export_serialization_fail">Det oppstod en feil under dataeksporten.
+        Prøv å deaktivere kryptering og prøv igjen.</string>
+    <string name="encrypted_export_dialog_title">Angi passord</string>
+    <string name="encrypted_export_password">Passord</string>
+    <string name="encrypted_export_repeat_password">Bekreft passord</string>
+    <string name="encrypted_export_password_matching_error">Passord stemmer ikke</string>
+    <string name="encrypted_export_key_generation_successful">Kryptering er aktivert!</string>
+    <string name="encrypted_export_key_deletion_successful">Kryptering er deaktivert!</string>
+    <string name="encrypted_import_dialog_title">Skriv inn passord</string>
+    <string name="encrypted_import_key_error">Det oppstod en feil under forsøk på å dekryptere denne filen.
+        Sjekk om passordet var riktig.</string>
+    <string name="encrypted_import_encryption_unsupported">Kunne ikke importere data, kryptering støttes ikke
+        på denne versjonen av Android.</string>
+    <string name="term_policy"><![CDATA[Vilkår og retningslinjer]]></string>
+    <string name="rate_this_app_5">Ranger denne appen 5★</string>
+    <string name="get_more_apps">Få flere apper</string>
+    <string name="share_this_app">Del denne appen</string>
+    <plurals name="date_rel_days_past">
+        <item quantity="other">%ddager siden,%s</item>
+    </plurals>
+    <plurals name="date_rel_days_future">
+        <item quantity="other">Om%ddager,%s</item>
+    </plurals>
 </resources>

@@ -306,4 +306,9 @@
     <string name="export_success_format">Το αρχείο δημιουργήθηκε! Μέγεθος: %1$d byte. Κοινή χρήση...</string>
     <string name="export_share_title">Κοινοποίηση εξαγόμενης σημείωσης</string>
     <string name="export_failed_format">Η εξαγωγή απέτυχε: %1$s</string>
+
+    <string name="action_layout_timeline">Προβολή ως χρονοδιάγραμμα</string>
+    <string name="reminder_quick_in_one_hour">Σε 1 ώρα</string>
+    <string name="reminder_quick_tomorrow">Αύριο 9 το πρωί</string>
+    <string name="reminder_quick_next_week">Από βδομάδα</string>
 </resources>

@@ -293,4 +293,16 @@
     <string name="export_success_format">Dosya oluşturuldu! Boyut: %1$d bayt. Paylaşılıyor...</string>
     <string name="export_share_title">Dışa Aktarılan Notu Paylaş</string>
     <string name="export_failed_format">Dışa aktarma başarısız: %1$s</string>
+
+    <string name="action_layout_timeline">Zaman çizelgesi olarak görüntüle</string>
+    <string name="action_open">Açık</string>
+    <string name="reminder_quick_in_one_hour">1 saat içinde</string>
+    <string name="reminder_quick_tomorrow">Yarın sabah 9\'da</string>
+    <string name="reminder_quick_next_week">Gelecek hafta</string>
+    <string name="widget_guide_title">Widget\'lar</string>
+    <string name="pref_about_view_source_fork">Github\'da görüntüle (Çatallı)</string>
+    <string name="term_policy"><![CDATA[Şartlar ve Politika]]></string>
+    <string name="rate_this_app_5">Bu uygulamaya puan verin 5★</string>
+    <string name="get_more_apps">Daha fazla uygulama edinin</string>
+    <string name="share_this_app">Bu uygulamayı paylaş</string>
 </resources>

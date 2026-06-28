@@ -285,4 +285,16 @@
     <string name="export_success_format">Datei erstellt! Größe: %1$d Bytes. Teilen...</string>
     <string name="export_share_title">Exportierte Notiz teilen</string>
     <string name="export_failed_format">Export fehlgeschlagen: %1$s</string>
+
+    <string name="action_layout_timeline">Als Zeitleiste anzeigen</string>
+    <string name="action_open">Offen</string>
+    <string name="reminder_quick_in_one_hour">In 1 Stunde</string>
+    <string name="reminder_quick_tomorrow">Morgen 9 Uhr</string>
+    <string name="reminder_quick_next_week">Nächste Woche</string>
+    <string name="widget_guide_title">Widgets</string>
+    <string name="pref_about_view_source_fork">Ansicht auf Github (Forked)</string>
+    <string name="term_policy"><![CDATA[Term & Policy]]></string>
+    <string name="rate_this_app_5">Bewerten Sie diese App mit 5★</string>
+    <string name="get_more_apps">Holen Sie sich mehr Apps</string>
+    <string name="share_this_app">Teilen Sie diese App</string>
 </resources>

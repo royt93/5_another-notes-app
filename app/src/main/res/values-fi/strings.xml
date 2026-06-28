@@ -306,4 +306,9 @@
     <string name="export_success_format">Tiedosto luotu! Koko: %1$d tavua. Jaetaan...</string>
     <string name="export_share_title">Jaa viety muistiinpano</string>
     <string name="export_failed_format">Vienti epäonnistui: %1$s</string>
+
+    <string name="action_layout_timeline">Näytä aikajanana</string>
+    <string name="reminder_quick_in_one_hour">1 tunnissa</string>
+    <string name="reminder_quick_tomorrow">Tomorrow 9am</string>
+    <string name="reminder_quick_next_week">Ensi viikolla</string>
 </resources>

@@ -301,4 +301,16 @@
     <string name="export_success_format">Bestand gegenereerd! Grootte: %1$d bytes. Delen...</string>
     <string name="export_share_title">Geëxporteerde notitie delen</string>
     <string name="export_failed_format">Exporteren mislukt: %1$s</string>
+
+    <string name="action_layout_timeline">Bekijk als tijdlijn</string>
+    <string name="action_open">Open</string>
+    <string name="reminder_quick_in_one_hour">Binnen 1 uur</string>
+    <string name="reminder_quick_tomorrow">Morgen 9.00 uur</string>
+    <string name="reminder_quick_next_week">Volgende week</string>
+    <string name="widget_guide_title">Widgets</string>
+    <string name="pref_about_view_source_fork">Bekijk op Github (gevorkt)</string>
+    <string name="term_policy"><![CDATA[Termijn en beleid]]></string>
+    <string name="rate_this_app_5">Beoordeel deze app 5★</string>
+    <string name="get_more_apps">Ontvang meer apps</string>
+    <string name="share_this_app">Deel deze app</string>
 </resources>

@@ -104,26 +104,32 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
         setContentView(binding.root)
 
         // FOOLPROOF INJECT 50 NOTES ON STARTUP FOR THE USER TO SEE
-        if (com.mckimquyen.notes.BuildConfig.DEBUG) {
+        val isRunningTests = try {
+            Class.forName("androidx.test.espresso.Espresso")
+            true
+        } catch (e: Exception) {
+            false
+        }
+        if (com.mckimquyen.notes.BuildConfig.DEBUG && !isRunningTests) {
             this.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 if (notesDao.getActiveNotesCount() == 0) {
-                val list = mutableListOf<com.mckimquyen.notes.model.entity.Note>()
-                for (i in 1..50) {
-                    list.add(com.mckimquyen.notes.model.entity.Note(
-                        type = com.mckimquyen.notes.model.entity.NoteType.TEXT,
-                        title = "FOOLPROOF Dummy Note $i",
-                        content = "This is a dummy note injected on startup to test UI scroll and search. Number: $i",
-                        metadata = com.mckimquyen.notes.model.entity.BlankNoteMetadata,
-                        addedDate = java.util.Date(),
-                        lastModifiedDate = java.util.Date(),
-                        status = com.mckimquyen.notes.model.entity.NoteStatus.ACTIVE,
-                        pinned = com.mckimquyen.notes.model.entity.PinnedStatus.UNPINNED,
-                        reminder = null
-                    ))
+                    val list = mutableListOf<com.mckimquyen.notes.model.entity.Note>()
+                    for (i in 1..50) {
+                        list.add(com.mckimquyen.notes.model.entity.Note(
+                            type = com.mckimquyen.notes.model.entity.NoteType.TEXT,
+                            title = "FOOLPROOF Dummy Note $i",
+                            content = "This is a dummy note injected on startup to test UI scroll and search. Number: $i",
+                            metadata = com.mckimquyen.notes.model.entity.BlankNoteMetadata,
+                            addedDate = java.util.Date(),
+                            lastModifiedDate = java.util.Date(),
+                            status = com.mckimquyen.notes.model.entity.NoteStatus.ACTIVE,
+                            pinned = com.mckimquyen.notes.model.entity.PinnedStatus.UNPINNED,
+                            reminder = null
+                        ))
+                    }
+                    notesDao.insertAll(list)
                 }
-                notesDao.insertAll(list)
             }
-        }
         }
 
         // Allow for transparent status and navigation bars

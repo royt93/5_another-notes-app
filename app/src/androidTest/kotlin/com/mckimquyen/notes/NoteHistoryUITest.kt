@@ -11,8 +11,19 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import org.junit.Before
+import androidx.room.Room
+import androidx.test.platform.app.InstrumentationRegistry
+import com.mckimquyen.notes.model.NotesDb
+
 @RunWith(AndroidJUnit4::class)
 class NoteHistoryUITest {
+
+    @Before
+    fun setup() {
+        val app = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().applicationContext as RApp
+        app.database.clearAllTables()
+    }
 
     @Test
     fun testNoteHistoryUIFlow() {

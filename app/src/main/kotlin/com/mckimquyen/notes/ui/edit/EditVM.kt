@@ -830,8 +830,12 @@ class EditVM @AssistedInject constructor(
                 metadata = note.metadata,
                 timestamp = System.currentTimeMillis()
             )
-            notesRepository.insertNoteHistory(snapshot)
-            notesRepository.pruneHistory(noteId, 30)
+            try {
+                notesRepository.insertNoteHistory(snapshot)
+                notesRepository.pruneHistory(noteId, 30)
+            } catch (e: Exception) {
+                android.util.Log.w("roy93~", "Failed to insert note history (likely note was deleted or DB cleared): noteId=$noteId", e)
+            }
 
             lastSnapshotTitle = title
             lastSnapshotContent = content

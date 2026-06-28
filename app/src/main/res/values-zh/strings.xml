@@ -277,4 +277,15 @@
     <string name="export_success_format">文件已生成！大小：%1$d 字节。正在分享...</string>
     <string name="export_share_title">分享导出的笔记</string>
     <string name="export_failed_format">导出失败：%1$s</string>
+
+    <string name="action_layout_timeline">以时间线形式查看</string>
+    <string name="reminder_quick_in_one_hour">1小时内</string>
+    <string name="reminder_quick_tomorrow">明天上午 9 点</string>
+    <string name="reminder_quick_next_week">下周</string>
+    <string name="widget_guide_title">小部件</string>
+    <string name="pref_about_view_source_fork">在 Github 上查看（分叉）</string>
+    <string name="term_policy"><![CDATA[条款和政策]]></string>
+    <string name="rate_this_app_5">给这个应用程序评分 5★</string>
+    <string name="get_more_apps">获取更多应用程序</string>
+    <string name="share_this_app">分享这个应用程序</string>
 </resources>

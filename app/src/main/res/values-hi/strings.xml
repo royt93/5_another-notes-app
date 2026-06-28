@@ -59,9 +59,13 @@
 
     <plurals name="note_list_item_info">
         <item quantity="other">+ %d और सूची आइटम</item>
+    
+        <item quantity="one">+%dअन्य सूची आइटम</item>
     </plurals>
     <plurals name="note_list_item_info_checked">
         <item quantity="other">+ %d चयनित आइटम</item>
+    
+        <item quantity="one">+%dचेक किया गया आइटम</item>
     </plurals>
 
     <string name="trash_reminder_message">कूड़े के नोट %d दिनों बाद स्वचालित रूप से हटा दिए जाते हैं।</string>
@@ -90,15 +94,23 @@
     <string name="edit_message_blank_note_discarded">खाली नोट हटाया।</string>
     <plurals name="edit_move_archive_message">
         <item quantity="other">नोट संग्रहित।</item>
+    
+        <item quantity="one">नोट संग्रहीत.</item>
     </plurals>
     <plurals name="edit_message_move_delete">
         <item quantity="other">नोट कूड़े में ले जाए।</item>
+    
+        <item quantity="one">नोट को रीसायकल बिन में ले जाया गया।</item>
     </plurals>
     <plurals name="edit_message_move_restore">
         <item quantity="other">नोट पुनर्स्थापित।</item>
+    
+        <item quantity="one">नोट पुनर्स्थापित किया गया.</item>
     </plurals>
     <plurals name="edit_message_move_unarchive">
         <item quantity="other">नोट संग्रह से हटाए।</item>
+    
+        <item quantity="one">नोट संग्रहित नहीं किया गया.</item>
     </plurals>
     <string name="edit_in_trash_message">कूड़े में नोट संपादित नहीं कर सकते।</string>
 
@@ -109,6 +121,8 @@
 
     <plurals name="edit_checked_items">
         <item quantity="other">%d चयनित आइटम</item>
+    
+        <item quantity="one">%dचेक किया गया आइटम</item>
     </plurals>
 
     <string name="note_reminders">रिमाइंडर</string>
@@ -299,4 +313,9 @@
     <string name="export_success_format">फ़ाइल उत्पन्न हुई! आकार: %1$d बाइट्स। साझा किया जा रहा है...</string>
     <string name="export_share_title">निर्यातित नोट साझा करें</string>
     <string name="export_failed_format">निर्यात विफल रहा: %1$s</string>
+
+    <string name="action_layout_timeline">समयरेखा के रूप में देखें</string>
+    <string name="reminder_quick_in_one_hour">1 घंटे में</string>
+    <string name="reminder_quick_tomorrow">कल सुबह 9 बजे</string>
+    <string name="reminder_quick_next_week">अगले सप्ताह</string>
 </resources>

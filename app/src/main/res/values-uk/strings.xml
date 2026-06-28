@@ -295,4 +295,40 @@
     <string name="export_success_format">Файл створено! Розмір: %1$d байт. Надсилання...</string>
     <string name="export_share_title">Поділитися експортованою заміткою</string>
     <string name="export_failed_format">Помилка експорту: %1$s</string>
+
+    <string name="action_layout_timeline">Переглянути як часову шкалу</string>
+    <string name="action_open">ВІДЧИНЕНО</string>
+    <string name="reminder_quick_in_one_hour">Через 1 годину</string>
+    <string name="reminder_quick_tomorrow">Завтра о 9 ранку</string>
+    <string name="reminder_quick_next_week">Наступного тижня</string>
+    <string name="reminder_notif_permission">Щоб мати можливість надсилати сповіщення про нагадування, програмі потрібен дозвіл.
+    Натисніть OK, щоб показати запит на дозвіл. Згодом ви зможете встановити нагадування.</string>
+    <string name="reminder_notif_permission_denied">У дозволі на сповіщення відмовлено.
+    Сигнали нагадування не працюватимуть, доки не ввімкнено.</string>
+    <string name="pref_dynamic_colors">Використовуйте динамічні кольори</string>
+    <string name="widget_guide_title">Віджети</string>
+    <string name="pref_data_encrypted_export">Зашифрований експорт</string>
+    <string name="pref_data_encrypted_export_summary">Шифрує експортовані нотатки. Доступ неможливий без
+        правильний пароль.</string>
+    <string name="pref_about_view_source_fork">Переглянути на Github (форкований)</string>
+    <string name="pref_restart_dialog_title">Потрібен перезапуск!</string>
+    <string name="pref_restart_dialog_description">Щоб ці зміни набули чинності, потрібен перезапуск.
+        Перезапустити програму зараз?</string>
+    <string name="export_serialization_fail">Під час експорту даних сталася помилка.
+        Спробуйте вимкнути шифрування та повторіть спробу.</string>
+    <string name="encrypted_export_dialog_title">Встановити пароль</string>
+    <string name="encrypted_export_password">Пароль</string>
+    <string name="encrypted_export_repeat_password">Підтвердьте пароль</string>
+    <string name="encrypted_export_password_matching_error">Паролі не збігаються</string>
+    <string name="encrypted_export_key_generation_successful">Шифрування успішно ввімкнено!</string>
+    <string name="encrypted_export_key_deletion_successful">Шифрування успішно вимкнено!</string>
+    <string name="encrypted_import_dialog_title">Введіть пароль</string>
+    <string name="encrypted_import_key_error">Під час спроби розшифрувати цей файл сталася помилка.
+        Перевірте, чи правильний пароль.</string>
+    <string name="encrypted_import_encryption_unsupported">Не вдалося імпортувати дані, шифрування не підтримується
+        на цій версії Android.</string>
+    <string name="term_policy"><![CDATA[Умови та політика]]></string>
+    <string name="rate_this_app_5">Оцініть цей додаток 5★</string>
+    <string name="get_more_apps">Отримати більше програм</string>
+    <string name="share_this_app">Поділіться цією програмою</string>
 </resources>

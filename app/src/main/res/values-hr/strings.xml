@@ -84,15 +84,23 @@
     <string name="edit_message_blank_note_discarded">Prazna bilješka odbačena.</string>
     <plurals name="edit_move_archive_message">
         <item quantity="other">Bilješka arhivirana.</item>
+    
+        <item quantity="one">Bilješka je arhivirana.</item>
     </plurals>
     <plurals name="edit_message_move_delete">
         <item quantity="other">Bilješka premještena u smeće.</item>
+    
+        <item quantity="one">Napomena premještena u koš za smeće.</item>
     </plurals>
     <plurals name="edit_message_move_restore">
         <item quantity="other">Bilješka vraćena.</item>
+    
+        <item quantity="one">Napomena vraćena.</item>
     </plurals>
     <plurals name="edit_message_move_unarchive">
         <item quantity="other">Bilješka vraćena iz arhive.</item>
+    
+        <item quantity="one">Napomena vraćena iz arhive.</item>
     </plurals>
     <string name="edit_in_trash_message">Ne može se uređivati bilješka u smeću.</string>
     <string name="edit_copy_suffix">Kopija</string>
@@ -100,6 +108,8 @@
     <string name="edit_convert_keep_checked">Tekstualne bilješke ne podržavaju potvrdne okvire. Ukloniti označene stavke?</string>
     <plurals name="edit_checked_items">
         <item quantity="other">%d označenih stavki</item>
+    
+        <item quantity="one">%doznačena stavka</item>
     </plurals>
     <string name="note_reminders">Podsjetnici</string>
     <string name="reminder_upcoming">Nadolazeći</string>
@@ -268,4 +278,9 @@
     <string name="export_success_format">Datoteka stvorena! Veličina: %1$d bajtova. Dijeljenje...</string>
     <string name="export_share_title">Podijeli izvezenu bilješku</string>
     <string name="export_failed_format">Izvoz nije uspio: %1$s</string>
+
+    <string name="action_layout_timeline">Prikaži kao vremensku traku</string>
+    <string name="reminder_quick_in_one_hour">Za 1 sat</string>
+    <string name="reminder_quick_tomorrow">Sutra u 9 ujutro</string>
+    <string name="reminder_quick_next_week">Sljedeći tjedan</string>
 </resources>

@@ -82,15 +82,23 @@
     <string name="edit_message_blank_note_discarded">Празна бележка отхвърлена.</string>
     <plurals name="edit_move_archive_message">
         <item quantity="other">Бележка архивирана.</item>
+    
+        <item quantity="one">Бележката е архивирана.</item>
     </plurals>
     <plurals name="edit_message_move_delete">
         <item quantity="other">Бележка преместена в кошчето.</item>
+    
+        <item quantity="one">Бележката е преместена в кошчето.</item>
     </plurals>
     <plurals name="edit_message_move_restore">
         <item quantity="other">Бележка възстановена.</item>
+    
+        <item quantity="one">Бележката е възстановена.</item>
     </plurals>
     <plurals name="edit_message_move_unarchive">
         <item quantity="other">Бележка извадена от архив.</item>
+    
+        <item quantity="one">Бележката е деархивирана.</item>
     </plurals>
     <string name="edit_in_trash_message">Не може да се редактира бележка в кошчето.</string>
     <string name="edit_copy_suffix">Копие</string>
@@ -98,6 +106,8 @@
     <string name="edit_convert_keep_checked">Текстовите бележки не поддържат отметки. Премахване на отметнатите?</string>
     <plurals name="edit_checked_items">
         <item quantity="other">%d отметнати елементи</item>
+    
+        <item quantity="one">%dотметнат елемент</item>
     </plurals>
     <string name="note_reminders">Напомняния</string>
     <string name="reminder_upcoming">Предстоящи</string>
@@ -266,4 +276,9 @@
     <string name="export_success_format">Файлът е генериран! Размер: %1$d байта. Споделяне...</string>
     <string name="export_share_title">Споделяне на експортираната бележка</string>
     <string name="export_failed_format">Неуспешно експортиране: %1$s</string>
+
+    <string name="action_layout_timeline">Преглед като времева линия</string>
+    <string name="reminder_quick_in_one_hour">След 1 час</string>
+    <string name="reminder_quick_tomorrow">Утре 9 сутринта</string>
+    <string name="reminder_quick_next_week">Следващата седмица</string>
 </resources>

@@ -306,4 +306,9 @@
     <string name="export_success_format">Fil skapad! Storlek: %1$d byte. Delar...</string>
     <string name="export_share_title">Dela exporterad anteckning</string>
     <string name="export_failed_format">Misslyckades att exportera: %1$s</string>
+
+    <string name="action_layout_timeline">Visa som tidslinje</string>
+    <string name="reminder_quick_in_one_hour">Om 1 timme</string>
+    <string name="reminder_quick_tomorrow">Imorgon kl 9</string>
+    <string name="reminder_quick_next_week">Nästa vecka</string>
 </resources>

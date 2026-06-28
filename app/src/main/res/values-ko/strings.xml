@@ -299,4 +299,9 @@
     <string name="export_success_format">파일이 생성되었습니다! 크기: %1$d 바이트. 공유 중...</string>
     <string name="export_share_title">내보낸 메모 공유</string>
     <string name="export_failed_format">내보내기 실패: %1$s</string>
+
+    <string name="action_layout_timeline">타임라인으로 보기</string>
+    <string name="reminder_quick_in_one_hour">1시간 후</string>
+    <string name="reminder_quick_tomorrow">내일 오전 9시</string>
+    <string name="reminder_quick_next_week">다음 주</string>
 </resources>

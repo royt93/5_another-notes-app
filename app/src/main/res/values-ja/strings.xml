@@ -299,4 +299,9 @@
     <string name="export_success_format">ファイルが生成されました！サイズ：%1$d 局。共有中...</string>
     <string name="export_share_title">エクスポートされたメモを共有</string>
     <string name="export_failed_format">エクスポートに失敗しました：%1$s</string>
+
+    <string name="action_layout_timeline">タイムラインとして表示</string>
+    <string name="reminder_quick_in_one_hour">1時間以内</string>
+    <string name="reminder_quick_tomorrow">明日午前9時</string>
+    <string name="reminder_quick_next_week">来週</string>
 </resources>

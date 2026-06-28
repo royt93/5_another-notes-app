@@ -301,4 +301,9 @@
     <string name="export_success_format">Đã tạo tệp! Kích thước: %1$d bytes. Đang chia sẻ...</string>
     <string name="export_share_title">Chia sẻ ghi chú đã xuất</string>
     <string name="export_failed_format">Xuất ghi chú thất bại: %1$s</string>
+
+    <string name="action_layout_timeline">Xem dưới dạng dòng thời gian</string>
+    <string name="reminder_quick_in_one_hour">trong 1 giờ</string>
+    <string name="reminder_quick_tomorrow">Ngày mai 9 giờ sáng</string>
+    <string name="reminder_quick_next_week">Tuần tới</string>
 </resources>

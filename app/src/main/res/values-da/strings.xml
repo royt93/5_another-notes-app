@@ -306,4 +306,9 @@
     <string name="export_success_format">Fil genereret! Størrelse: %1$d bytes. Deler...</string>
     <string name="export_share_title">Del eksporteret note</string>
     <string name="export_failed_format">Kunne ikke eksportere: %1$s</string>
+
+    <string name="action_layout_timeline">Se som tidslinje</string>
+    <string name="reminder_quick_in_one_hour">Om 1 time</string>
+    <string name="reminder_quick_tomorrow">I morgen kl 9</string>
+    <string name="reminder_quick_next_week">Næste uge</string>
 </resources>

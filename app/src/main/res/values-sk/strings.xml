@@ -84,15 +84,23 @@
     <string name="edit_message_blank_note_discarded">Prázdna poznámka zahodená.</string>
     <plurals name="edit_move_archive_message">
         <item quantity="other">Poznámka archivovaná.</item>
+    
+        <item quantity="one">Poznámka archivovaná.</item>
     </plurals>
     <plurals name="edit_message_move_delete">
         <item quantity="other">Poznámka presunutá do koša.</item>
+    
+        <item quantity="one">Poznámka presunutá do koša.</item>
     </plurals>
     <plurals name="edit_message_move_restore">
         <item quantity="other">Poznámka obnovená.</item>
+    
+        <item quantity="one">Poznámka obnovená.</item>
     </plurals>
     <plurals name="edit_message_move_unarchive">
         <item quantity="other">Archivácia zrušená.</item>
+    
+        <item quantity="one">Poznámka bola obnovená z archívu.</item>
     </plurals>
     <string name="edit_in_trash_message">Poznámku v koši nemožno upraviť.</string>
     <string name="edit_copy_suffix">Kópia</string>
@@ -100,6 +108,8 @@
     <string name="edit_convert_keep_checked">Textové poznámky nepodporujú zaškrtávacie políčka. Odstrániť označené položky?</string>
     <plurals name="edit_checked_items">
         <item quantity="other">%d označených položiek</item>
+    
+        <item quantity="one">%dzačiarknutá položka</item>
     </plurals>
     <string name="note_reminders">Pripomienky</string>
     <string name="reminder_upcoming">Nadchádzajúce</string>
@@ -268,4 +278,9 @@
     <string name="export_success_format">Súbor vytvorený! Veľkosť: %1$d bajtov. Zdieľanie...</string>
     <string name="export_share_title">Zdieľať exportovanú poznámku</string>
     <string name="export_failed_format">Export zlyhal: %1$s</string>
+
+    <string name="action_layout_timeline">Zobraziť ako časovú os</string>
+    <string name="reminder_quick_in_one_hour">Za 1 hodinu</string>
+    <string name="reminder_quick_tomorrow">Zajtra o 9:00</string>
+    <string name="reminder_quick_next_week">Budúci týždeň</string>
 </resources>
