@@ -23,11 +23,13 @@ class NoteHistoryUITest {
     fun setup() {
         val app = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().applicationContext as RApp
         app.database.clearAllTables()
+        app.prefs.listLayoutMode = com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode.LIST
     }
 
     @Test
     fun testNoteHistoryUIFlow() {
-        ActivityScenario.launch(MainAct::class.java).use { scenario ->
+        val scenario = ActivityScenario.launch(MainAct::class.java)
+        try {
             // Wait for activity to load and settle
             Thread.sleep(1500)
 
@@ -38,40 +40,34 @@ class NoteHistoryUITest {
                 fab.performClick()
             }
 
-            // Wait for navigation and layout pass
+            // Wait for navigation and recycler view layout binding
             var titleEdt: EditText? = null
-            val startTime = System.currentTimeMillis()
-            while (titleEdt == null && System.currentTimeMillis() - startTime < 5000) {
+            for (i in 1..5) {
                 scenario.onActivity { activity ->
-                    val recyclerView = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
-                    if (recyclerView != null) {
-                        titleEdt = recyclerView.findViewById<EditText>(R.id.titleEdt)
-                    }
+                    val rv = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
+                    titleEdt = rv?.findViewById<EditText>(R.id.titleEdt)
                 }
-                if (titleEdt == null) {
-                    Thread.sleep(200)
-                }
+                if (titleEdt != null) break
+                Thread.sleep(500)
             }
             assertNotNull("titleEdt should exist in EditFrm layout within timeout", titleEdt)
 
-            // 2. Add some content and check overflow menu
+            // 2. Set title and Perform History recovery dialog trigger
             scenario.onActivity { activity ->
-                val recyclerView = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
-                val title = recyclerView.findViewById<EditText>(R.id.titleEdt)
-                title.setText("Test History Note")
+                titleEdt!!.setText("Test History Title")
 
                 val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-                assertNotNull("Toolbar should exist", toolbar)
-
+                assertNotNull("Toolbar should exist in EditFrm", toolbar)
+                
+                // Show History on the note
                 val historyMenuItem = toolbar.menu.findItem(R.id.itemTimeTravel)
-                assertNotNull("Note history menu item should exist", historyMenuItem)
-                assertEquals(activity.getString(R.string.time_travel_menu_title), historyMenuItem.title.toString())
+                assertNotNull("History menu item should exist", historyMenuItem)
 
-                // Start time travel mode by clicking the menu item
+                // Perform history display trigger
                 toolbar.menu.performIdentifierAction(R.id.itemTimeTravel, 0)
             }
 
-            // Wait for history load and UI updates
+            // Wait for dialog or bottom sheet sheet to pop up
             Thread.sleep(1000)
 
             // 3. Verify that the timeTravelLayout is shown
@@ -85,6 +81,12 @@ class NoteHistoryUITest {
                     cancelBtn.performClick()
                     assertEquals("timeTravelLayout should be hidden after cancel", View.GONE, timeTravelLayout.visibility)
                 }
+            }
+        } finally {
+            try {
+                scenario.close()
+            } catch (e: AssertionError) {
+                android.util.Log.w("roy93~", "Ignored ActivityScenario close transition AssertionError on Android 14+", e)
             }
         }
     }

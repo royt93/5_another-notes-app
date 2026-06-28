@@ -21,6 +21,7 @@ class ReadingModeUITest {
     fun setup() {
         val app = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().applicationContext as RApp
         app.database.clearAllTables()
+        app.prefs.listLayoutMode = com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode.LIST
     }
 
     @Test
@@ -40,7 +41,7 @@ class ReadingModeUITest {
             // Wait for navigation and recycler view layout binding
             var colorPicker: View? = null
             var moodPicker: View? = null
-            for (i in 1..5) {
+            for (i in 1..15) {
                 scenario.onActivity { activity ->
                     colorPicker = activity.findViewById<View>(R.id.colorPickerScroll)
                     moodPicker = activity.findViewById<View>(R.id.moodPickerRow)

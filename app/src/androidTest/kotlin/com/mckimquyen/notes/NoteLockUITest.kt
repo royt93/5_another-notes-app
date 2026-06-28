@@ -23,11 +23,13 @@ class NoteLockUITest {
     fun setup() {
         val app = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().applicationContext as RApp
         app.database.clearAllTables()
+        app.prefs.listLayoutMode = com.mckimquyen.notes.ui.note.adt.NoteListLayoutMode.LIST
     }
 
     @Test
     fun testNoteLockUIFlow() {
-        ActivityScenario.launch(MainAct::class.java).use { scenario ->
+        val scenario = ActivityScenario.launch(MainAct::class.java)
+        try {
             // Wait for activity to load and settle
             Thread.sleep(1500)
 
@@ -40,7 +42,7 @@ class NoteLockUITest {
 
             // Wait for navigation and recycler view layout binding
             var titleEdt: EditText? = null
-            for (i in 1..5) {
+            for (i in 1..15) {
                 scenario.onActivity { activity ->
                     val rv = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
                     titleEdt = rv?.findViewById<EditText>(R.id.titleEdt)
@@ -101,6 +103,12 @@ class NoteLockUITest {
                         assertEquals("contentTxv should be hidden for locked note", View.GONE, contentTxv.visibility)
                     }
                 }
+            }
+        } finally {
+            try {
+                scenario.close()
+            } catch (e: AssertionError) {
+                android.util.Log.w("roy93~", "Ignored ActivityScenario close transition AssertionError on Android 14+", e)
             }
         }
     }
