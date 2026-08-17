@@ -614,10 +614,14 @@ class EditVM @AssistedInject constructor(
     }
 
     fun uncheckAllItems() {
-        for ((i, item) in listItems.withIndex()) {
+        // EditDiffCallback.areItemsTheSame() compares by reference (===) — every other
+        // mutation in this file mutates EditItemItem's `var` properties in place for exactly
+        // that reason. Replacing the list slot with item.copy(checked = false) made DiffUtil
+        // see a brand new item (remove+insert instead of update), causing the checklist to
+        // flicker and any focused row to lose its focus. FIX-M17.
+        for (item in listItems) {
             if (item is EditItemItem && item.checked) {
-                // FIXME breaks animation
-                listItems[i] = item.copy(checked = false)
+                item.checked = false
             }
         }
         moveCheckedItemsToBottom()
