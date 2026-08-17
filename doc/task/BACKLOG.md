@@ -38,22 +38,27 @@ Toàn bộ 52 issue trong [FIX.md](todo/FIX.md) (4 Critical + 10 High + 26 Mediu
 
 ✅ = đã tự đọc lại source code xác nhận trong lúc duyệt priority, không chỉ dựa vào audit gốc.
 
-## Đề xuất Sprint kế tiếp (2 tuần, theo phong cách Scrum) — 10 task P0
+## Sprint 1 — ✅ HOÀN TẤT 2026-08-17 — 10/10 task P0
 
 **Sprint Goal:** Vá các bug ảnh hưởng trực tiếp tới toàn vẹn dữ liệu và bảo mật người dùng, dọn nợ kỹ thuật kiến trúc DI/source-set làm nền cho các sprint sau.
 
-| # | Task | Effort | Vì sao ưu tiên |
-|---|---|---|---|
-| 1 | FIX-C01 — vá export/import mất color/mood/lock | S | Hồi quy bảo mật, ảnh hưởng mọi user backup/restore |
-| 2 | FIX-C02 — vá mergeNotes xoá reminder | S | Mất dữ liệu âm thầm, không có cảnh báo |
-| 3 | FIX-C03 — vá recurrence ngày cuối tháng | XS | 1 dòng, impact cao cho user dùng reminder định kỳ |
-| 4 | FIX-C04 + FIX-H01 (= ENH-A01) — dọn source-set debug/release | M | Chặn release build "sạch" thật sự, nền cho toàn bộ variant sau này |
-| 5 | FIX-H02 — sửa double-back-to-exit | XS | Rẻ, impact 100% user |
-| 6 | FIX-H03 — guard binding null trong VipFrm reward callback | S | Crash path thật, dễ tái hiện, ảnh hưởng doanh thu ad |
-| 7 | FIX-H06 — vá leak Input/OutputStream import/export | XS×2 | Rẻ, dễ |
-| 8 | FIX-H07 — MainAct.onNewIntent() gọi lại handleIntent() | XS | Reminder tap khi app đang mở bị no-op |
-| 9 | FIX-H08 — chuyển rateAppInApp() ra khỏi BaseAct dùng chung | XS | Ảnh hưởng rating Store trực tiếp |
-| 10 | FIX-H09 — vá double interstitial ad sau xoá note | S | Rủi ro chính sách AdMob |
+Mỗi fix: 1 commit riêng, compile xác nhận (`compileDevDebugKotlin` + `compileProductionReleaseKotlin` cho các fix chạm build-variant) trước khi commit.
+
+| # | Task | Effort | Commit | Ghi chú |
+|---|---|---|---|---|
+| 1 | FIX-C01 — vá export/import mất color/mood/lock | S | `5ef01b4` | |
+| 2 | FIX-C02 — vá mergeNotes xoá reminder | S | `f40f3fc` | |
+| 3 | FIX-C03 — vá recurrence ngày cuối tháng | XS | `6e347f9` | |
+| 4 | FIX-C04 + FIX-H01 (= ENH-A01) | M | `2867827` | **Đổi hướng lúc code:** không tách source-set (AppModule.kt ở src/main không thể import class chỉ tồn tại 1 variant mà không vỡ compile variant kia) — dùng runtime guard `BuildConfig.ENABLE_DEBUG_FEATURES` trong `DebugExtensions.kt`/`DebugBuildTypeBehavior.kt` thay thế, đã hỏi ý kiến qua AskUserQuestion trước khi đổi hướng |
+| 5 | FIX-H02 — sửa double-back-to-exit | XS | `ff9197a` | |
+| 6 | FIX-H03 — guard binding null trong VipFrm reward callback | S | `ef249d8` | |
+| 7 | FIX-H06 — vá leak Input/OutputStream import/export | XS×2 | `437c207` | |
+| 8 | FIX-H07 — MainAct.onNewIntent() gọi lại handleIntent() | XS | `a267962` | |
+| 9 | FIX-H08 — chuyển rateAppInApp() ra khỏi BaseAct dùng chung | XS | `53dc71c` | |
+| 10 | FIX-H09 — vá double interstitial ad sau xoá note | S | `8653f03` | |
+
+**Đã verify:** `compileDevDebugKotlin` + `compileProductionReleaseKotlin` PASS sau fix cuối cùng. `detekt` fail nhưng do lỗi config có sẵn từ trước (`config/detekt/detekt.yml` có property `formatting` không hợp lệ với version detekt hiện tại) — không liên quan tới sprint này, chưa sửa (ngoài phạm vi).
+**Chưa làm:** chưa chạy `./gradlew test`/instrumented test, chưa cài lên device thật để smoke-test — cần làm trước khi merge/release.
 
 **Sprint kế tiếp (19 task P1, gợi ý gom theo khu vực code để giảm context-switch):**
 - Nhóm import/export (chung `DefaultJsonManager.kt`/`SettingsVM.kt`): H05, H06(đã làm ở sprint 1, bỏ qua), M05, M11
