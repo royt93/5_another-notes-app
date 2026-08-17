@@ -85,7 +85,13 @@ object ExportHelper {
         // 1. Draw Title
         if (note.title.isNotEmpty()) {
             val titleLayout = createStaticLayout(note.title, titlePaint, contentWidth)
+            // Every other block below (meta, paragraphs, items) wraps its draw() call in
+            // save/translate(marginLeft, currentY)/restore — this one didn't, so the title
+            // always painted at the canvas origin (0,0) regardless of margins. FIX-M14.
+            canvas.save()
+            canvas.translate(marginLeft, currentY)
             titleLayout.draw(canvas)
+            canvas.restore()
             currentY += titleLayout.height + 15
         }
 
