@@ -273,6 +273,16 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
                 )
             )
         }
+
+        // Go to label, if it has been newly created. Registered here (once, from onCreate)
+        // rather than in onStart() — MainAct is a single long-lived Activity instance that
+        // isn't recreated on every stop/start cycle like a Fragment, so registering this in
+        // onStart() piled up a new Observer on every foreground/background cycle. FIX-M02.
+        sharedViewModel.labelAddEventNav.observeEvent(this) { label ->
+            if (navController.previousBackStackEntry?.destination?.id == R.id.fragment_home) {
+                viewModel.selectLabel(label)
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -299,14 +309,6 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
 
     override fun onStart() {
         super.onStart()
-
-        // Go to label, if it has been newly created
-        sharedViewModel.labelAddEventNav.observeEvent(this) { label ->
-            if (navController.previousBackStackEntry?.destination?.id == R.id.fragment_home) {
-                viewModel.selectLabel(label)
-            }
-        }
-
         viewModel.onStart()
     }
 
