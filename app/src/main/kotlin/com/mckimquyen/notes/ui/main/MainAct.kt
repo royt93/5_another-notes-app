@@ -45,7 +45,6 @@ import com.mckimquyen.notes.ui.navGraphViewModel
 import com.mckimquyen.notes.ui.navigation.HomeDestination
 import com.mckimquyen.notes.ui.observeEvent
 import com.mckimquyen.notes.ui.viewModel
-import java.io.IOException
 import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.inject.Provider
@@ -380,12 +379,15 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
                 val uri = extras.get(Intent.EXTRA_STREAM) as? Uri
                 if (uri != null) {
                     try {
-                        val reader = InputStreamReader(contentResolver.openInputStream(uri))
-                        val title = uri.pathSegments.last()
-                        val content = reader.readText()
+                        // Catches more than IOException: pathSegments.last() throws
+                        // NoSuchElementException for a URI with no path segments, and
+                        // openInputStream() returning null throws NullPointerException here.
+                        // Neither is an IOException, so both used to crash uncaught. FIX-L08.
+                        val title = uri.pathSegments.lastOrNull() ?: getString(R.string.export_untitled)
+                        val content = contentResolver.openInputStream(uri)!!
+                            .use { InputStreamReader(it).readText() }
                         noteData = NewNoteData(NoteType.TEXT, title, content)
-                        reader.close()
-                    } catch (e: IOException) {
+                    } catch (e: Exception) {
                         // nothing to do (file doesn't exist, access error, etc)
                     }
                 }
