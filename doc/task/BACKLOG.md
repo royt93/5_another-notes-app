@@ -25,7 +25,20 @@
 5. **Nhiều tính năng "mới" trong backlog cũ thực ra đã được làm rồi:** mood tag, note color, khoá note bằng sinh trắc học, Timeline view, Time Travel, export PDF/ảnh, Reading mode, VIP/premium screen. Xem cảnh báo đầu [NEW_FEATURE.md](todo/NEW_FEATURE.md) — đừng làm lại.
 6. **`doc/memory_leak.md` đã lỗi thời:** ads SDK (`AdMobManager`) đã được tách ra thư viện ngoài closed-source `com.roy.sdkadbmob`, không audit được implementation từ repo này nữa. Cần cập nhật doc.
 
-## Đề xuất Sprint kế tiếp (2 tuần, theo phong cách Scrum)
+## Kết quả duyệt priority — user 2026-08-17
+
+Toàn bộ 52 issue trong [FIX.md](todo/FIX.md) (4 Critical + 10 High + 26 Medium + 12 Low) cộng 4 mục "cần xác minh thêm" đã được review từng cái một qua `AskUserQuestion`, với 3 mục được tự đọc lại code để xác minh thêm ngay trong lúc duyệt (FIX-M14 PDF export, FIX-M15 Timeline header ID, FIX-L08/L09/L10/L11, EditVM actualPos, ClassCastException). Kết quả:
+
+| Priority | Số lượng | Danh sách |
+|---|---|---|
+| **P0 — sửa ngay** | 10 | C01, C02, C03, C04+H01 (gộp ENH-A01), H02, H03, H06, H07, H08, H09 |
+| **P1 — sớm** | 19 | H05, H10, M01, M02, M03, M04, M05, M07, M11, M13, M14✅, M15✅, M17, M18, M20, M23, L04, L08✅(nâng từ Low, crash thật), P01 (MainVM mutex) |
+| **P2 — backlog** | 23 | H04, M06, M08, M09, M10, M12, M19, M21, M22, M24, M25, M26, L01, L02, L03, L05, L06, L07, L09✅, L10✅, L11✅, L12, P02 |
+| **Loại bỏ (debunked)** | 2 | M16 (ReminderDlg permission — code đúng chuẩn), EditVM actualPos IndexOutOfBounds (đã trace hết đường mutate, không có gap) |
+
+✅ = đã tự đọc lại source code xác nhận trong lúc duyệt priority, không chỉ dựa vào audit gốc.
+
+## Đề xuất Sprint kế tiếp (2 tuần, theo phong cách Scrum) — 10 task P0
 
 **Sprint Goal:** Vá các bug ảnh hưởng trực tiếp tới toàn vẹn dữ liệu và bảo mật người dùng, dọn nợ kỹ thuật kiến trúc DI/source-set làm nền cho các sprint sau.
 
@@ -36,10 +49,16 @@
 | 3 | FIX-C03 — vá recurrence ngày cuối tháng | XS | 1 dòng, impact cao cho user dùng reminder định kỳ |
 | 4 | FIX-C04 + FIX-H01 (= ENH-A01) — dọn source-set debug/release | M | Chặn release build "sạch" thật sự, nền cho toàn bộ variant sau này |
 | 5 | FIX-H02 — sửa double-back-to-exit | XS | Rẻ, impact 100% user |
-| 6 | FIX-H03 — guard binding null trong VipFrm reward callback | S | Crash path thật, dễ tái hiện |
-| 7 | FIX-H05 + ENH-A03 — import atomic + batch insert | M | Nền tảng cho NEW-01/02 (đính kèm ảnh/audio) sau này cần import ổn định |
-| 8 | FIX-H06 — vá leak Input/OutputStream import/export | XS×2 | Rẻ, dễ, tránh EMFILE tích luỹ |
+| 6 | FIX-H03 — guard binding null trong VipFrm reward callback | S | Crash path thật, dễ tái hiện, ảnh hưởng doanh thu ad |
+| 7 | FIX-H06 — vá leak Input/OutputStream import/export | XS×2 | Rẻ, dễ |
+| 8 | FIX-H07 — MainAct.onNewIntent() gọi lại handleIntent() | XS | Reminder tap khi app đang mở bị no-op |
+| 9 | FIX-H08 — chuyển rateAppInApp() ra khỏi BaseAct dùng chung | XS | Ảnh hưởng rating Store trực tiếp |
+| 10 | FIX-H09 — vá double interstitial ad sau xoá note | S | Rủi ro chính sách AdMob |
 
-**Không đưa vào sprint này** (để sprint sau, cần thêm thời gian thiết kế UI hoặc điều tra sâu hơn): FIX-H04 (exact alarm — cần UI xin quyền), FIX-M01→M26 (Medium, backlog), 4 mục "cần xác minh thêm" trong FIX.md (chưa đủ tin cậy để cam kết effort).
+**Sprint kế tiếp (19 task P1, gợi ý gom theo khu vực code để giảm context-switch):**
+- Nhóm import/export (chung `DefaultJsonManager.kt`/`SettingsVM.kt`): H05, H06(đã làm ở sprint 1, bỏ qua), M05, M11
+- Nhóm EditFrm/checklist: H10, M07, M17, M18
+- Nhóm reminder/alarm: M20, P01 (MainVM mutex, khác file nhưng cùng chủ đề "tạo note/reminder ổn định")
+- Nhóm lẻ còn lại: M01, M02, M03, M04, M13, M14, M15, M23, L04, L08
 
-**Sprint sau đó (gợi ý):** EXC-A02 (hoàn thiện + PR câu chuyện "zero-cloud encrypted backup", điều kiện: sprint 1 phải xong FIX-C01 trước), ENH-01 (Checklist Bulk Actions), FIX-H04 (exact alarm reminder).
+**Không đưa vào 2 sprint đầu:** FIX-H04 (exact alarm — cần thiết kế UI xin quyền, effort M), toàn bộ 23 mục P2 (để backlog, xem chi tiết từng mục trong FIX.md).

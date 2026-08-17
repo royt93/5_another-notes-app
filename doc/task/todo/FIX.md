@@ -68,6 +68,11 @@ if (recurrence.byMonthDay == -1 &&
 
 ## High
 
+> ✅ **User đã duyệt 2026-08-17:**
+> - **P0 (sửa ngay):** FIX-H01 (gộp FIX-C04), FIX-H02, FIX-H03, FIX-H06, FIX-H07, FIX-H08, FIX-H09
+> - **P1 (sớm):** FIX-H05, FIX-H10
+> - **P2 (backlog):** FIX-H04 (exact alarm — cần thiết kế UI xin quyền trước, không phải 1-dòng-sửa)
+
 ### FIX-H01 — `BuildTypeModule` luôn resolve bản Debug ở MỌI variant, kể cả release ✅🔁(2 nguồn)
 **File:** `di/AppModule.kt` import cứng `com.mckimquyen.debug.notes.di.BuildTypeModule`. Bản release ở `src/release/kotlin/com/maltaisn/notes/di/BuildTypeModule.kt` (bind `ReleaseBuildTypeBehavior` no-op) không được include ở đâu — dead code.
 **Hệ quả:** `HomeVM.doExtraAction()` luôn gọi `DebugBuildTypeBehavior.doExtraAction()` — chèn 3 note rác vào DB thật ở mọi build, kể cả release. Hiện bị chặn gián tiếp bởi `HomeFrm.kt` ẩn menu item khi `BuildConfig.ENABLE_DEBUG_FEATURES=false`, nhưng đây là lớp bảo vệ UI-only, không phải do DI graph tự chặn.
@@ -144,6 +149,11 @@ Vì flag khởi tạo `true` và chỉ nhánh `else` (không bao giờ chạy tr
 
 ## Medium
 
+> ✅ **User đã duyệt 2026-08-17:**
+> - **P1 (sớm):** M01, M02, M03, M04, M05, M07, M11, M13, M14 (đã tự verify: CONFIRMED, xem chi tiết cuối bảng), M15 (đã tự verify: CONFIRMED, xem chi tiết cuối bảng), M17, M18, M20, M23
+> - **P2 (backlog):** M06, M08, M09, M10, M12, M19, M21, M22, M24, M25, M26
+> - **Loại bỏ khỏi backlog:** M16 — đã tự verify bằng cách đọc toàn bộ `ReminderDlg.onCreateDialog()`: `requestNotificationPermission()` gọi đồng bộ trong `onCreateDialog()` (dòng 164-166), chạy trước STARTED, đúng chuẩn AndroidX. Không phải bug.
+
 | ID | Tiêu đề | File | Nguồn | Effort |
 |---|---|---|---|---|
 | FIX-M01 | `PrefsManager` enum preference crash (`NoSuchElementException`) nếu giá trị lưu không khớp enum hiện tại — hazard khi tương lai xoá/đổi tên hằng enum | `model/PrefsManager.kt:120-125` | claude-bypass (FIX-007), subagent data-layer (nghi ngờ) | XS |
@@ -177,6 +187,10 @@ Vì flag khởi tạo `true` và chỉ nhánh `else` (không bao giờ chạy tr
 
 ## Low
 
+> ✅ **User đã duyệt 2026-08-17:**
+> - **P1 (sớm, nâng hạng):** L04 (rủi ro R8 rename), L08 — đã tự verify: **CONFIRMED crash thật** (`uri.pathSegments.last()` throw `NoSuchElementException`, không phải subtype `IOException` nên không bị catch bởi try/catch bao quanh — nâng từ Low lên P1)
+> - **P2 (backlog, giữ Low):** L01, L02, L03, L05, L06, L07, L09 (đã tự verify: CONFIRMED — `exportDir.listFiles()?.forEach{it.delete()}` không điều kiện ngay trước khi tạo file mới), L10 (đã tự verify: CONFIRMED — ép kiểu thô `as MaterialShapeDrawable` tại 4 chỗ không safe-cast), L11 (đã tự verify: CONFIRMED — `importDataLauncher` thiếu set null trong `onDestroy()`), L12
+
 | ID | Tiêu đề | File | Nguồn | Effort |
 |---|---|---|---|---|
 | FIX-L01 | `HighlightHelper`: `query.first()`/`substring(1, length-1)` có thể throw `StringIndexOutOfBoundsException` nếu query rỗng hoặc đúng 1 ký tự `"` — hiện an toàn vì FTS4 chặn trước, nhưng utility giòn | `ui/note/HighlightHelper.kt:16-69` | claude-bypass (FIX-032) | XS |
@@ -196,12 +210,12 @@ Vì flag khởi tạo `true` và chỉ nhánh `else` (không bao giờ chạy tr
 
 ---
 
-## Cần xác minh thêm trước khi làm (chưa đủ tin cậy để đưa hẳn vào Critical/High)
+## Cần xác minh thêm — ĐÃ XÁC MINH XONG 2026-08-17, kết quả cuối
 
-- **`MainVM._deletionFinishedMutex` có thể treo vĩnh viễn** (`ui/main/MainVM.kt:64,106-110,222`) — đã verify cấu trúc: `Mutex(locked=true)` được unlock ở cuối 1 khối `viewModelScope.launch` tuần tự (không có try/finally) trước khi vào vòng lặp `while(true)`; nếu `notesRepository.getLastCreatedNote()`/`deleteNote()` throw giữa chừng, `unlock()` không bao giờ chạy → `createNote().withLock{}` treo vĩnh viễn, tạo note mới bị đứng im vô thời hạn. **Xác nhận cấu trúc code đúng như agy mô tả (FIX-02)**, nhưng kịch bản kích hoạt cần 1 exception thật từ Room (hiếm, nhưng khả thi khi đĩa đầy/DB hỏng). Effort XS (bọc try/finally). Priority P1.
-- **`EditVM` — `items[item.actualPos] = item` có thể `IndexOutOfBoundsException`** (agy FIX-03, `EditVM.kt:712-718`) — code có 1 hàm renumber actualPos về dãy liên tục (dòng ~630-638), nhưng CHƯA xác minh được liệu mọi đường mutate checklist (xoá, paste nhiều dòng, sort checked-to-bottom, drag reorder) đều gọi hàm renumber đó trước khi `noteContent` serialize. Cần trace kỹ toàn bộ các hàm mutate `listItems` trong `EditVM.kt` trước khi sửa — không loại trừ nhưng cũng chưa chứng minh được đường đi cụ thể gây lệch `actualPos`.
-- **`ClassCastException` trong `moveCheckedItemsToBottom`** (agy FIX-06, `EditVM.kt:1198-1200`) — dòng `.sortBy { (it as EditItemItem).actualPos }` ép kiểu thô trên `subList`; cần xác minh subList đó có thể chứa phần tử không phải `EditItemItem` hay không trước khi coi là bug thật.
-- **`ReminderDlg.registerForActivityResult` gọi ngoài `onCreate()`** (agy FIX-09) — đã xác nhận `onCreate()` override tồn tại riêng (dòng 70) và registration nằm trong hàm gọi từ `onCreateDialog()` (dòng ~274, không phải trực tiếp trong `onCreate()`). Cần đọc toàn bộ thân `onCreate()` (dòng 70-75) xem có gọi `requestNotificationPermission()` từ đó không — nếu có thì KHÔNG phải bug (đăng ký vẫn nằm trong `onCreate()` execution path); nếu chỉ gọi từ `onCreateDialog()`/nơi khác thì bug thật, có thể crash Android 13+.
+- **FIX-P01 — `MainVM._deletionFinishedMutex` có thể treo vĩnh viễn** (`ui/main/MainVM.kt:64,106-110,222`) — CONFIRMED cấu trúc: `Mutex(locked=true)` được unlock ở cuối 1 khối `viewModelScope.launch` tuần tự (không có try/finally); nếu `notesRepository.getLastCreatedNote()`/`deleteNote()` throw giữa chừng, `unlock()` không bao giờ chạy → `createNote().withLock{}` treo vĩnh viễn. Effort XS (bọc try/finally). **✅ P1 — user duyệt 2026-08-17.**
+- ~~`EditVM` — `items[item.actualPos] = item` có thể `IndexOutOfBoundsException`~~ — **❌ Đã trace toàn bộ đường mutate (xoá đơn `deleteListItemAt`, xoá hàng loạt `deleteCheckedItems`, paste multi-line, thêm item `addChecklistItem`, swap reorder) — tất cả đều renumber `actualPos` đúng. Không tìm ra đường gây lệch. Loại khỏi backlog theo quyết định user 2026-08-17 (agy false positive).**
+- **FIX-P02 — `ClassCastException` khả năng thấp trong `moveCheckedItemsToBottom`** (`EditVM.kt:1198-1200`) — dòng `.sortBy { (it as EditItemItem).actualPos }` ép kiểu thô trên `subList`. Đã đọc code: trong điều kiện bình thường subList chỉ chứa `EditItemItem` (các item đặc biệt đã bị lọc trước). Dựa vào 1 invariant chưa chứng minh tuyệt đối. **✅ P2, giữ backlog với ghi chú độ tin cậy thấp — user duyệt 2026-08-17.** Fix an toàn: đổi `as` → `filterIsInstance`.
+- ~~`ReminderDlg.registerForActivityResult` gọi ngoài `onCreate()`~~ — **❌ DEBUNKED, xem FIX-M16 phía trên (Medium section).** Đã đọc toàn bộ `onCreateDialog()`: `requestNotificationPermission()` gọi đồng bộ tại dòng 164-166, trước STARTED, đúng chuẩn AndroidX. Không phải bug.
 
 ---
 
