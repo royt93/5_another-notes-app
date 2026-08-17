@@ -13,6 +13,8 @@ import com.mckimquyen.notes.model.NotesRepository
 import com.mckimquyen.notes.ui.main.MainAct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -34,12 +36,24 @@ class NoteCountWidget : AppWidgetProvider() {
         // Inject dependencies
         (context.applicationContext as RApp).appComponent.inject(this)
 
-        appWidgetIds.forEach { appWidgetId ->
-            updateWidget(context, appWidgetManager, appWidgetId)
+        // onUpdate() is BroadcastReceiver.onReceive() under the hood — the process can be
+        // killed as soon as this method returns. goAsync() plus a scope cancelled in finally
+        // matches the pattern already used in AlarmReceiver (see doc/memory_leak.md). FIX-M04.
+        val pendingResult = goAsync()
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        scope.launch {
+            try {
+                appWidgetIds.forEach { appWidgetId ->
+                    updateWidget(context, appWidgetManager, appWidgetId)
+                }
+            } finally {
+                pendingResult.finish()
+                scope.cancel()
+            }
         }
     }
 
-    private fun updateWidget(
+    private suspend fun updateWidget(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
@@ -60,13 +74,10 @@ class NoteCountWidget : AppWidgetProvider() {
         val pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, flags)
         views.setOnClickPendingIntent(R.id.widgetRoot, pendingIntent)
 
-        // Fetch count in a coroutine
-        CoroutineScope(Dispatchers.IO).launch {
-            val count = repository.getActiveNotesCount()
-            withContext(Dispatchers.Main) {
-                views.setTextViewText(R.id.widgetCountText, count.toString())
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-            }
+        val count = repository.getActiveNotesCount()
+        withContext(Dispatchers.Main) {
+            views.setTextViewText(R.id.widgetCountText, count.toString())
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
     companion object {
