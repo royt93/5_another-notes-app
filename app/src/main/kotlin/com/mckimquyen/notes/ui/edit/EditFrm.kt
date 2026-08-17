@@ -123,7 +123,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         // Paired with removeListener in onDestroyView; onCreate cannot register here because onDestroyView runs many times.
         (sharedElementReturnTransition as? MaterialContainerTransform)?.addListener(transitionListener)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
+        // viewLifecycleOwner, not `this` (the Fragment) — Navigation Component drops this
+        // Fragment's view to CREATED (without destroying the Fragment instance) when
+        // navigating to Reminder/Labels and back, so onViewCreated() re-runs on the same
+        // instance. Registering against `this` piled up one extra callback per round trip. FIX-M03.
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (isFocusMode) {
                 toggleFocusMode()
                 return@addCallback
