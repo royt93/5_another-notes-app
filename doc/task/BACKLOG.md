@@ -83,9 +83,26 @@ Mỗi fix: 1 commit riêng, `compileDevDebugKotlin` PASS trước khi commit. `.
 | 13 | FIX-M07 — cancel ViewPropertyAnimator trong `onDestroyView()` | `40ae8f6` | |
 | 14 | FIX-M18 — giữ trạng thái checked khi paste multi-line | `5989ec3` | |
 | 15 | FIX-H10 — TextWatcher detach khi RecyclerView recycle | `3ef6af8` | |
-| 16 | FIX-M17 — `uncheckAllItems()` mutate in-place thay vì `.copy()` | `61fc3d4` | Effort thực tế thấp hơn ước lượng (XS thay vì M) — root cause là 1 dòng, không cần refactor diffing |
+| 16 | FIX-M17 — `uncheckAllItems()` mutate in-place thay vì `.copy()` | `61fc3d4` | ⚠️ **Revert sau khi smoke test phát hiện regression tệ hơn bug gốc — xem bên dưới.** |
 | 17 | FIX-M15 — disambiguate Timeline header trùng ID | `107562e` | |
 | 18 | FIX-H05 — bọc import trong `db.withTransaction{}` + catch bad data | `37b7d7e` | Inject thêm `NotesDb` vào `DefaultJsonManager` |
 | 19 | FIX-M05 — refresh widget sau import JSON | `228b0ed` | Inject thêm `Context` vào `DefaultJsonManager` |
 
 **Không đưa vào 2 sprint đầu:** FIX-H04 (exact alarm — cần thiết kế UI xin quyền, effort M), toàn bộ 23 mục P2 (để backlog, xem chi tiết từng mục trong FIX.md).
+
+## Smoke test Sprint 2 trên device thật — 2026-08-17
+
+Cài `devDebug` lên TECNO BG6 (Android 13, thiết bị thật), theo dõi logcat liên tục xuyên suốt, thao tác tay qua adb (screenshot + tap + uiautomator dump để lấy toạ độ chính xác). **Bắt được 2 regression thật trước khi merge** — đúng giá trị của việc smoke-test thay vì chỉ tin compile + unit test:
+
+1. **Regression #1 (từ FIX-M02):** Di chuyển đăng ký `sharedViewModel.labelAddEventNav` vào `setupViewModelObservers()` (chạy trong `onCreate()`) khiến app **crash ngay lần mở đầu tiên** — `IllegalStateException: does not have a NavController set`, vì `NavHostFragment` chưa gắn xong NavController tại thời điểm đó. Biên dịch sạch, unit test pass, nhưng crash 100% trên device thật ngay khi mở app. **Sửa:** revert về đăng ký trong `onStart()`, thêm guard `labelAddObserverRegistered` để vẫn chỉ đăng ký 1 lần đúng như mục tiêu ban đầu của fix. Commit `0c7e7c4`.
+2. **Regression #2 (từ FIX-M17):** Đổi `uncheckAllItems()` từ `.copy()` sang mutate in-place khiến `EditDiffCallback` (identity-only `===`) không phát hiện thay đổi gì → RecyclerView không rebind → bấm "Uncheck all items" **không có phản hồi UI nào cả** dù data đã đúng (xác nhận bằng cách thoát note rồi mở lại — Home list hiện đúng trạng thái unchecked). Tệ hơn bug gốc (flicker nhưng ít nhất UI cập nhật). **Sửa:** revert về `.copy()`. Commit `e37076b`.
+
+**Đã xác nhận sống trên device (không chỉ code review):**
+- FIX-H02 (double-back-to-exit): PASS — xem chi tiết Sprint 1.
+- FIX-M18 (giữ checked state khi split item): PASS trực tiếp — check "Item one", nhấn Enter giữa dòng để split, item mới ("SplitPart") vẫn giữ trạng thái checked.
+- FIX-M17 sau revert: PASS — "Uncheck all items" cập nhật UI ngay lập tức trên màn Edit, không cần thoát vào lại.
+- FIX-L04 (`HomeDestination.Reminders` + `@Keep`): PASS gián tiếp — màn "Reminders" từ drawer mở bình thường, không crash.
+- Settings, Premium/VIP (H03), Home, Notes list: mở bình thường, không crash, không ANR.
+- Không có `FATAL EXCEPTION` nào trong logcat từ sau khi sửa 2 regression trên tới cuối phiên test.
+
+**Chưa test được live** (do giới hạn automation qua adb, không phải nghi ngờ code sai): H10 (stress-scroll checklist dài), M04/M05/M13 (cần add widget thật lên home-screen), M07 (cần trúng đúng race ~200-400ms), M11 (cần simulate lỗi `openOutputStream`), M20 (cần reboot thật hoặc broadcast `QUICKBOOT_POWERON` giả lập), M01 (cần corrupt pref value), M23/P01 (cần trúng đúng thời điểm coroutine bị cancel) — các mục này đã được verify qua đọc code + biên dịch + unit test, chưa qua device.
