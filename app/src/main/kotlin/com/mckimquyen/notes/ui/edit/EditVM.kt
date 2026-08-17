@@ -614,14 +614,31 @@ class EditVM @AssistedInject constructor(
     }
 
     fun uncheckAllItems() {
-        // EditDiffCallback.areItemsTheSame() compares by reference (===) — every other
-        // mutation in this file mutates EditItemItem's `var` properties in place for exactly
-        // that reason. Replacing the list slot with item.copy(checked = false) made DiffUtil
-        // see a brand new item (remove+insert instead of update), causing the checklist to
-        // flicker and any focused row to lose its focus. FIX-M17.
-        for (item in listItems) {
+        // REVERTED (device smoke test caught a worse regression from the in-place-mutate
+        // attempt below — see doc/task/todo/FIX.md FIX-M17 postmortem):
+        //
+        //     for (item in listItems) {
+        //         if (item is EditItemItem && item.checked) item.checked = false
+        //     }
+        //
+        // EditDiffCallback.areItemsTheSame() is IDENTITY-only (old === new). Mutating in
+        // place means the object AsyncListDiffer holds as "the current list" and the object
+        // in the newly submitted list are the exact same instance — there is no before/after
+        // snapshot for DiffUtil to diff, so it reports zero changes and RecyclerView never
+        // rebinds. On device this looked like nothing happened at all: checkboxes stayed
+        // visually checked. The underlying ViewModel state WAS correct (confirmed by leaving
+        // the note and reopening it), only the RecyclerView never re-rendered. That's a worse
+        // outcome than the original bug this was meant to fix — the original .copy() causes
+        // DiffUtil to treat the row as a brand-new item (remove+insert instead of an in-place
+        // update), which does flicker and drops row focus, but at least the checklist visibly
+        // and reliably updates. Fixing this properly needs either a stable id-based
+        // areItemsTheSame() (so DiffUtil can match "same logical row, different content") or
+        // an explicit notifyItemChanged() call from the adapter side — out of scope for a
+        // one-line P1 fix. Reverted to .copy(), the correctness-preserving option.
+        // FIX-M17.
+        for ((i, item) in listItems.withIndex()) {
             if (item is EditItemItem && item.checked) {
-                item.checked = false
+                listItems[i] = item.copy(checked = false)
             }
         }
         moveCheckedItemsToBottom()
