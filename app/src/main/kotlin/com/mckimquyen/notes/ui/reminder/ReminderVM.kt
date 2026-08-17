@@ -165,7 +165,7 @@ class ReminderVM @AssistedInject constructor(
     private fun updateRecurrenceForDate() {
         // Set to repeat on last day of the month but start date isn't on the last day.
         if (recurrence.byMonthDay == -1 &&
-            calendar[Calendar.DATE] != calendar.getActualMaximum(Calendar.MONTH)
+            calendar[Calendar.DATE] != calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
         ) {
             recurrence = Recurrence(recurrence) { dayInMonth = 0 }
         }
