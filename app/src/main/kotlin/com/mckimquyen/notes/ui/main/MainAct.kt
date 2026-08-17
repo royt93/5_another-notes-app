@@ -277,6 +277,9 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
+        // Resumed activities get onNewIntent() without a following onResume() — without this,
+        // tapping a reminder notification while the app is already open was a no-op. FIX-H07.
+        handleIntent()
     }
 
     override fun onDestinationChanged(
