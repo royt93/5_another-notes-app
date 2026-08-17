@@ -48,7 +48,12 @@ class AlarmReceiver : BroadcastReceiver() {
             try {
                 val noteId = intent.getLongExtra(EXTRA_NOTE_ID, Note.NO_ID)
                 when (intent.action) {
-                    Intent.ACTION_BOOT_COMPLETED -> reminderAlarmManager.updateAllAlarms()
+                    // Manifest also registers these two — some OEM fast-boot paths (and HTC
+                    // devices) never send ACTION_BOOT_COMPLETED, only one of these. FIX-M20.
+                    Intent.ACTION_BOOT_COMPLETED,
+                    "android.intent.action.QUICKBOOT_POWERON",
+                    "com.htc.intent.action.QUICKBOOT_POWERON",
+                    -> reminderAlarmManager.updateAllAlarms()
                     ACTION_ALARM -> showNotificationForReminder(context, noteId)
                     ACTION_MARK_DONE -> markReminderAsDone(context, noteId)
                 }
