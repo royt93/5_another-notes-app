@@ -116,8 +116,13 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
                 if (output != null) {
                     viewModel.setupAutoExport(output = output, uri = uri.toString())
                 } else {
+                    // takePersistableUriPermission() above already succeeded even though
+                    // openOutputStream() then failed — release it via disableAutoExport()
+                    // instead of only flipping the switch, or the permission grant leaks
+                    // permanently. FIX-M11.
                     showMessage(R.string.export_fail)
                     autoExportPref.isChecked = false
+                    viewModel.disableAutoExport()
                 }
             }
         }
