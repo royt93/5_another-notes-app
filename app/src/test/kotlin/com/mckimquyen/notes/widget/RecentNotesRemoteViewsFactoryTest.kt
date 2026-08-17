@@ -138,7 +138,9 @@ class RecentNotesRemoteViewsFactoryTest {
         val titleTxv1 = view1.findViewById<android.widget.TextView>(R.id.widgetItemTitle)
         val contentTxv1 = view1.findViewById<android.widget.TextView>(R.id.widgetItemContent)
         
-        assertEquals("🔒 Secret Note", titleTxv1.text.toString())
+        // FIX-M13: the real title is hidden too, not shown in the clear — a home-screen
+        // widget is a wider exposure surface than in-app (no unlock/auth needed to see it).
+        assertEquals("🔒 Locked Note", titleTxv1.text.toString())
         assertEquals("Locked", contentTxv1.text.toString())
 
         val remoteViews2 = factory.getViewAt(1)
