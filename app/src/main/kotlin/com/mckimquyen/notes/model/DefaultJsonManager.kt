@@ -272,7 +272,8 @@ class DefaultJsonManager @Inject constructor(
                 return null
             }
 
-            else -> null
+            // Either both null, or both non-null and equal — keep as is.
+            else -> new.reminder
         }
 
         return new.copy(reminder = reminder)
