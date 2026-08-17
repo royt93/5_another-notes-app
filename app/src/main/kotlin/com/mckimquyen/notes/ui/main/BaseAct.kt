@@ -10,7 +10,6 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.mckimquyen.notes.BuildConfig
 import java.util.Calendar
 
 open class BaseAct : AppCompatActivity() {
@@ -26,7 +25,9 @@ open class BaseAct : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             enableAdaptiveRefreshRate()
         }
-        rateAppInApp(BuildConfig.DEBUG)
+        // Not called here: this base class is shared by SplashActivity and the transparent
+        // NotificationAct too, and an in-app review prompt has no business interrupting either.
+        // Only MainAct.onResume() calls rateAppInApp(). See FIX-H08 in doc/task/todo/FIX.md.
     }
 
     private fun enableAdaptiveRefreshRate() {
@@ -59,9 +60,16 @@ fun Activity.rateAppInApp(forceRateInApp: Boolean = false) {
 //    implementation("com.google.android.play:review-ktx:2.0.2")
 
     val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    val lastReviewTime = sharedPreferences.getLong("last_review_time", 0L)
-//    Log.d("roy93~", "requestReview lastReviewTime $lastReviewTime")
     val currentTime = Calendar.getInstance().timeInMillis
+    val lastReviewTime = sharedPreferences.getLong("last_review_time", -1L)
+    if (lastReviewTime == -1L && !forceRateInApp) {
+        // First time this ever runs (fresh install) — seed the baseline instead of treating
+        // "never reviewed" as "reviewed at epoch 0", which used to prompt on the very first
+        // open. See FIX-H08 in doc/task/todo/FIX.md.
+        sharedPreferences.edit().putLong("last_review_time", currentTime).apply()
+        return
+    }
+//    Log.d("roy93~", "requestReview lastReviewTime $lastReviewTime")
     val daysSinceLastReview = (currentTime - lastReviewTime) / (1000 * 60 * 60 * 24)
 //    Log.d("roy93~", "requestReview forceRateInApp $forceRateInApp")
 //    Log.d("roy93~", "requestReview daysSinceLastReview $daysSinceLastReview")

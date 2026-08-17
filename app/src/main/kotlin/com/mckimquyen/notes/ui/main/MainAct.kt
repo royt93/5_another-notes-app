@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.color.DynamicColors
+import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.NavGraphMainDirections
 import com.mckimquyen.notes.R
 import com.mckimquyen.notes.RApp
@@ -312,6 +313,7 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     override fun onResume() {
         super.onResume()
         handleIntent()
+        rateAppInApp(BuildConfig.DEBUG)
     }
 
     override fun onStop() {
