@@ -121,7 +121,9 @@ class PrefsManager @Inject constructor(
         object : ReadWriteProperty<PrefsManager, T> {
             override fun getValue(thisRef: PrefsManager, property: KProperty<*>): T {
                 val value = thisRef.prefs.all.getOrElse(key) { default.value }
-                return enumValues<T>().first { it.value == value }
+                // Fall back to default instead of crashing if a stored value no longer
+                // matches any enum constant (e.g. after removing/renaming one). FIX-M01.
+                return enumValues<T>().firstOrNull { it.value == value } ?: default
             }
 
             override fun setValue(thisRef: PrefsManager, property: KProperty<*>, value: T) {
