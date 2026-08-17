@@ -3,6 +3,7 @@
 package com.mckimquyen.debug.notes.ui.home
 
 import com.mckimquyen.debug.notes.DebugUtils
+import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.model.LabelsRepository
 import com.mckimquyen.notes.model.NotesRepository
 import com.mckimquyen.notes.model.entity.LabelRef
@@ -18,6 +19,10 @@ class DebugBuildTypeBehavior @Inject constructor(
 ) : BuildTypeBehavior {
 
     override suspend fun doExtraAction(viewModel: HomeVM) {
+        // This class is wired in for every build type (see FIX-H01 in doc/task/todo/FIX.md) —
+        // guard at runtime so a release build never inserts placeholder notes into a real DB.
+        if (!BuildConfig.ENABLE_DEBUG_FEATURES) return
+
         // Add a few random notes of the currently selected status.
         val destination = viewModel.currentDestination
         if (destination is HomeDestination.Status) {
