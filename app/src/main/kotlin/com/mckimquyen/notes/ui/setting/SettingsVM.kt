@@ -71,21 +71,21 @@ class SettingsVM @AssistedInject constructor(
 
     fun exportData(output: OutputStream) {
         viewModelScope.launch(Dispatchers.IO) {
-            val jsonData = try {
-                jsonManager.exportJsonData()
-            } catch (e: Exception) {
-                showMessage(R.string.export_serialization_fail)
-                return@launch
-            }
+            output.use {
+                val jsonData = try {
+                    jsonManager.exportJsonData()
+                } catch (e: Exception) {
+                    showMessage(R.string.export_serialization_fail)
+                    return@launch
+                }
 
-            try {
-                output.use {
+                try {
                     // bufferedWriter().write fails here for some reason...
                     output.write(jsonData.toByteArray())
+                    showMessage(R.string.export_success)
+                } catch (e: Exception) {
+                    showMessage(R.string.export_fail)
                 }
-                showMessage(R.string.export_success)
-            } catch (e: Exception) {
-                showMessage(R.string.export_fail)
             }
         }
     }
@@ -93,24 +93,24 @@ class SettingsVM @AssistedInject constructor(
     fun setupAutoExport(output: OutputStream, uri: String) {
         prefsManager.autoExportUri = uri
         viewModelScope.launch(Dispatchers.IO) {
-            val jsonData = try {
-                jsonManager.exportJsonData()
-            } catch (e: Exception) {
-                showMessage(R.string.export_serialization_fail)
-                return@launch
-            }
-
-            try {
-                output.use {
-                    output.write(jsonData.toByteArray())
+            output.use {
+                val jsonData = try {
+                    jsonManager.exportJsonData()
+                } catch (e: Exception) {
+                    showMessage(R.string.export_serialization_fail)
+                    return@launch
                 }
-                showMessage(R.string.export_success)
 
-                val now = System.currentTimeMillis()
-                prefsManager.lastAutoExportTime = now
-                _lastAutoExport.postValue(now)
-            } catch (e: Exception) {
-                showMessage(R.string.export_fail)
+                try {
+                    output.write(jsonData.toByteArray())
+                    showMessage(R.string.export_success)
+
+                    val now = System.currentTimeMillis()
+                    prefsManager.lastAutoExportTime = now
+                    _lastAutoExport.postValue(now)
+                } catch (e: Exception) {
+                    showMessage(R.string.export_fail)
+                }
             }
         }
     }
@@ -123,7 +123,7 @@ class SettingsVM @AssistedInject constructor(
     fun importData(input: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {
             val jsonData = try {
-                input.bufferedReader().readText()
+                input.use { it.bufferedReader().readText() }
             } catch (e: Exception) {
                 showMessage(R.string.import_bad_input)
                 return@launch
