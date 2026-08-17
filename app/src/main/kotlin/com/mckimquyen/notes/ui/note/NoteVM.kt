@@ -49,11 +49,20 @@ abstract class NoteVM(
         if (_listLayoutMode.value != NoteListLayoutMode.TIMELINE) return items
         val result = mutableListOf<NoteListItem>()
         var lastDateLabel: String? = null
+        // Sorting by anything other than date (Title A-Z, Modified date...) can scatter notes
+        // from the same day into more than one non-contiguous run, which used to produce two
+        // TimelineDateHeaderItem instances with the identical id (pure hash of dateLabel) in
+        // the same list — a stable-id contract violation that confused DiffUtil. Folding the
+        // per-date occurrence count into the id keeps the common case (each date's notes
+        // contiguous, one header) byte-identical while disambiguating repeats. FIX-M15.
+        val headerOccurrences = mutableMapOf<String, Int>()
         for (item in items) {
             if (item is NoteItem) {
                 val dateLabel = timelineDateFormat.format(item.note.addedDate)
                 if (dateLabel != lastDateLabel) {
-                    val headerId = -(dateLabel.hashCode().toLong() and 0xFFFFFFFFL) - 1000L
+                    val occurrence = headerOccurrences.getOrDefault(dateLabel, 0)
+                    headerOccurrences[dateLabel] = occurrence + 1
+                    val headerId = -(dateLabel.hashCode().toLong() and 0xFFFFFFFFL) - 1000L - occurrence * 100_000L
                     result += TimelineDateHeaderItem(id = headerId, dateLabel = dateLabel)
                     lastDateLabel = dateLabel
                 }
