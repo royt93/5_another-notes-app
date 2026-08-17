@@ -725,6 +725,13 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         super.onDestroyView()
         wordCountAnimator?.cancel()
         wordCountAnimator = null
+        // These ViewPropertyAnimators have withEndAction lambdas that touch `binding` — cancel
+        // them before _binding = null below, or a callback firing 200-400ms after this method
+        // returns hits `_binding!!` and crashes. FIX-M07.
+        binding.charLimitRing.animate().cancel()
+        binding.wordCharCountTxv.animate().cancel()
+        binding.toolbarLayout.animate().cancel()
+        binding.colorPickerScroll.animate().cancel()
         // Fix MEDIUM-2: Remove TouchListener to release the lambda that captures binding.viewBackground
         binding.recyclerView.setOnTouchListener(null)
         // Remove transition listener to prevent memory leaks
