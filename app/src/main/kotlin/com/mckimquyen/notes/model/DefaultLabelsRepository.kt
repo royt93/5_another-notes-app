@@ -22,11 +22,11 @@ class DefaultLabelsRepository @Inject constructor(
         labelsDao.update(label)
     }
 
-    override suspend fun deleteLabel(label: Label) {
+    override suspend fun deleteLabel(label: Label) = withContext(NonCancellable) {
         labelsDao.delete(label)
     }
 
-    override suspend fun deleteLabels(labels: List<Label>) {
+    override suspend fun deleteLabels(labels: List<Label>) = withContext(NonCancellable) {
         labelsDao.deleteAll(labels)
     }
 
@@ -45,7 +45,7 @@ class DefaultLabelsRepository @Inject constructor(
 
     override fun getAllLabelsByUsage() = labelsDao.getAllByUsage()
 
-    override suspend fun clearAllData() {
+    override suspend fun clearAllData() = withContext(NonCancellable) {
         labelsDao.clear()
     }
 }

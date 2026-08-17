@@ -78,7 +78,7 @@ class DefaultNotesRepository @Inject constructor(
         }
     }
 
-    override suspend fun deleteOldNotesInTrash() {
+    override suspend fun deleteOldNotesInTrash() = withContext(NonCancellable) {
         val delay = PrefsManager.TRASH_AUTO_DELETE_DELAY.inWholeMilliseconds
         val minDate = System.currentTimeMillis() - delay
         notesDao.deleteNotesByStatusAndDate(NoteStatus.DELETED, minDate)
@@ -87,7 +87,7 @@ class DefaultNotesRepository @Inject constructor(
         RecentNotesWidget.updateAllWidgets(context)
     }
 
-    override suspend fun clearAllData() {
+    override suspend fun clearAllData() = withContext(NonCancellable) {
         notesDao.clear()
         NoteCountWidget.updateAllWidgets(context)
         RecentNotesWidget.updateAllWidgets(context)
