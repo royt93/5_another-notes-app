@@ -10,7 +10,7 @@ Common Gradle tasks (run from repo root):
 
 ```bash
 ./gradlew assembleDevDebug                 # primary dev build (debug AdMob test IDs)
-./gradlew assembleProductionRelease        # signed release; needs KS_PW/KS_ALIAS in gradle.properties
+./gradlew assembleProductionRelease        # signed release; needs keystore.properties at repo root (gitignored, not KS_PW/KS_ALIAS in gradle.properties anymore)
 ./gradlew installDevDebug                  # install to connected device/emulator
 ./gradlew detekt                           # static analysis (config/detekt/detekt.yml, autoCorrect=true)
 ./gradlew test                             # unit tests for the JVM
@@ -27,7 +27,7 @@ APKs are renamed on output to `com.mckimquyen.notes<buildType>_<versionName>_<ve
 Two product flavors × two build types:
 
 - `dev` / `production` (flavor dimension `type`) — both share `applicationId = com.mckimquyen.notes`; only `app_name` and `FLAVOR_buildEnv` differ.
-- `debug` / `release` — debug uses Google's sample AdMob unit IDs; release wires real IDs and enables `minifyEnabled` + `shrinkResources` + signing via `keystore.jks` (passwords from `KS_PW`/`KS_ALIAS` properties — do not commit real values).
+- `debug` / `release` — debug uses Google's sample AdMob unit IDs; release wires real IDs and enables `minifyEnabled` + `shrinkResources` + signing via `keystore.properties` (gitignored, repo root; loaded in `app/build.gradle` as `storeFile`/`storePassword`/`keyAlias`/`keyPassword`). The actual `.jks` lives outside this repo in the private `myKeyStore` repo (`com.mckimquyen.notes/keystore.jks`) — never commit the keystore file or its passwords here.
 
 `BuildConfig.ENABLE_DEBUG_FEATURES` is overridden to `false` when env var `taking_screenshots=true` is set (used by `app/screenshots.sh`).
 

@@ -11,6 +11,12 @@ plugins {
     id "com.google.devtools.ksp"
 }
 
+def keystorePropsFile = rootProject.file("keystore.properties")
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+}
+
 android {
     namespace "com.mckimquyen.notes"
 
@@ -62,17 +68,11 @@ android {
 
     signingConfigs {
         release {
-//            if (project.hasProperty("releaseKeyStoreFile")) {
-//                storeFile file(releaseKeyStoreFile)
-//                storePassword releaseKeyStorePassword
-//                keyAlias releaseKeyStoreKey
-//                keyPassword releaseKeyStoreKeyPassword
-//            }
-            release {
-                storeFile file("keystore.jks")
-                storePassword KS_PW
-                keyAlias KS_ALIAS
-                keyPassword KS_PW
+            if (keystorePropsFile.exists()) {
+                storeFile file(keystoreProps["storeFile"])
+                storePassword keystoreProps["storePassword"]
+                keyAlias keystoreProps["keyAlias"]
+                keyPassword keystoreProps["keyPassword"]
             }
         }
     }

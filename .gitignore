@@ -10,6 +10,12 @@ local.properties
 .gradle
 build/
 
+# Signing secrets — keystore lives in myKeyStore private repo (see keystore.properties)
+keystore.properties
+keystore.jks
+app/keystore.jks
+gradle.properties.bak
+
 # OS files
 Thumbs.db
 .DS_Store
