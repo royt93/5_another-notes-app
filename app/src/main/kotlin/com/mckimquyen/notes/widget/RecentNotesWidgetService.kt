@@ -53,9 +53,12 @@ class RecentNotesRemoteViewsFactory(
         val views = RemoteViews(context.packageName, R.layout.widget_recent_notes_item)
 
         // Set text
+        // Hide the real title too, not just the content — a locked note's title is otherwise
+        // shown in the clear on the home screen, a surface with a bigger exposure than in-app
+        // (no device unlock or app auth needed to see it). FIX-M13.
         val isLocked = note.isLocked
         val titleText = if (isLocked) {
-            "🔒 " + note.title.ifEmpty { "Locked Note" }
+            "🔒 Locked Note"
         } else {
             note.title.ifEmpty { "Untitled Note" }
         }
