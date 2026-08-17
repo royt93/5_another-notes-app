@@ -93,21 +93,27 @@ class MainVM @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            if (prefsManager.shouldAutoExport && prefsManager.autoExportUri == PrefsManager.AUTO_EXPORT_NO_URI) {
-                // Auto export was enabled, but setup was not completed, disable it.
-                prefsManager.disableAutoExport()
-            }
+            try {
+                if (prefsManager.shouldAutoExport && prefsManager.autoExportUri == PrefsManager.AUTO_EXPORT_NO_URI) {
+                    // Auto export was enabled, but setup was not completed, disable it.
+                    prefsManager.disableAutoExport()
+                }
 
-            // Update all alarms for recurring reminders in case the previous alarm wasn't triggered.
-            // This shouldn't technically happen, but there have been cases where recurring reminders failed.
-            reminderAlarmManager.updateAllAlarms()
+                // Update all alarms for recurring reminders in case the previous alarm wasn't triggered.
+                // This shouldn't technically happen, but there have been cases where recurring reminders failed.
+                reminderAlarmManager.updateAllAlarms()
 
-            // Check if last added note is blank, in which case delete it.
-            val lastCreatedNote = notesRepository.getLastCreatedNote()
-            if (lastCreatedNote?.isBlank == true) {
-                notesRepository.deleteNote(lastCreatedNote)
+                // Check if last added note is blank, in which case delete it.
+                val lastCreatedNote = notesRepository.getLastCreatedNote()
+                if (lastCreatedNote?.isBlank == true) {
+                    notesRepository.deleteNote(lastCreatedNote)
+                }
+            } finally {
+                // Must run even if the block above throws (e.g. Room exception on a
+                // corrupted DB) — otherwise createNote()'s withLock{} hangs forever,
+                // since this mutex starts locked and this is the only unlock(). FIX-P01.
+                _deletionFinishedMutex.unlock()
             }
-            _deletionFinishedMutex.unlock()
 
             // Periodically remove old notes in trash, and auto export if needed.
             while (true) {
