@@ -8,6 +8,7 @@
 
 package com.mckimquyen.notes.model
 
+import android.content.Context
 import android.util.Base64
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
@@ -25,6 +26,8 @@ import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.model.entity.NoteType
 import com.mckimquyen.notes.model.entity.PinnedStatus
 import com.mckimquyen.notes.model.entity.Reminder
+import com.mckimquyen.notes.widget.NoteCountWidget
+import com.mckimquyen.notes.widget.RecentNotesWidget
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -42,6 +45,7 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
 
 class DefaultJsonManager @Inject constructor(
+    private val context: Context,
     private val notesDb: NotesDb,
     private val notesDao: NotesDao,
     private val labelsDao: LabelsDao,
@@ -171,6 +175,13 @@ class DefaultJsonManager @Inject constructor(
 
         // Update all reminders
         reminderAlarmManager.updateAllAlarms()
+
+        // Import writes directly through notesDao/labelsDao, bypassing DefaultNotesRepository
+        // (the only other place these widgets get refreshed) — without this, NoteCountWidget
+        // stays wrong for up to its 30-minute update period and RecentNotesWidget (which has
+        // no periodic update at all) never refreshes until some other note action happens. FIX-M05.
+        NoteCountWidget.updateAllWidgets(context)
+        RecentNotesWidget.updateAllWidgets(context)
 
         return if (notesData.version > VERSION) {
             // data comes from future version of app
