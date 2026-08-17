@@ -60,10 +60,32 @@ Mỗi fix: 1 commit riêng, compile xác nhận (`compileDevDebugKotlin` + `comp
 **Đã verify:** `compileDevDebugKotlin` + `compileProductionReleaseKotlin` PASS sau fix cuối cùng. `detekt` fail nhưng do lỗi config có sẵn từ trước (`config/detekt/detekt.yml` có property `formatting` không hợp lệ với version detekt hiện tại) — không liên quan tới sprint này, chưa sửa (ngoài phạm vi).
 **Chưa làm:** chưa chạy `./gradlew test`/instrumented test, chưa cài lên device thật để smoke-test — cần làm trước khi merge/release.
 
-**Sprint kế tiếp (19 task P1, gợi ý gom theo khu vực code để giảm context-switch):**
-- Nhóm import/export (chung `DefaultJsonManager.kt`/`SettingsVM.kt`): H05, H06(đã làm ở sprint 1, bỏ qua), M05, M11
-- Nhóm EditFrm/checklist: H10, M07, M17, M18
-- Nhóm reminder/alarm: M20, P01 (MainVM mutex, khác file nhưng cùng chủ đề "tạo note/reminder ổn định")
-- Nhóm lẻ còn lại: M01, M02, M03, M04, M13, M14, M15, M23, L04, L08
+## Sprint 2 — ✅ HOÀN TẤT 2026-08-17 — 19/19 task P1
+
+**Sprint Goal:** Dọn hết toàn bộ backlog P1 — leak/crash risk còn sót lại, DiffUtil/animation glitch trong EditFrm, atomicity import, widget đồng bộ.
+
+Mỗi fix: 1 commit riêng, `compileDevDebugKotlin` PASS trước khi commit. `./gradlew test` PASS (14 test suite, 0 failure) + `compileProductionReleaseKotlin` PASS sau fix cuối cùng (H05/M05 đổi constructor `DefaultJsonManager`, chạm DI graph).
+
+| # | Task | Commit | Ghi chú |
+|---|---|---|---|
+| 1 | FIX-M01 — enum pref crash → fallback default | `e2d0bec` | |
+| 2 | FIX-M02 — labelAddEventNav observer đăng ký 1 lần | `6d8cac2` | |
+| 3 | FIX-L08 — Share intent NoSuchElementException/NPE | `3ccd139` | |
+| 4 | FIX-M20 — AlarmReceiver thêm nhánh QUICKBOOT_POWERON | `2a7db3e` | |
+| 5 | FIX-M11 — release URI permission khi auto-export lỗi | `fbead2d` | |
+| 6 | FIX-L04 — thêm `@Keep` cho `HomeDestination.Reminders` | `19c79b4` | |
+| 7 | FIX-M04 — `NoteCountWidget` dùng `goAsync()` | `4a11dd5` | |
+| 8 | FIX-M13 — ẩn title note khoá trong widget | `535da8f` + `4d7ef30` (cập nhật test) | Phát hiện lúc code: có unit test cũ assert đúng hành vi lộ title — đã sửa test theo behavior mới |
+| 9 | FIX-M14 — PDF export title thiếu `canvas.translate` | `6a9d090` | |
+| 10 | FIX-M23 — `NonCancellable` cho các method còn thiếu | `d016cfd` | |
+| 11 | FIX-P01 — `MainVM` mutex bọc try/finally | `10a081a` | |
+| 12 | FIX-M03 — `EditFrm` back-callback dùng `viewLifecycleOwner` | `a5ea2a5` | |
+| 13 | FIX-M07 — cancel ViewPropertyAnimator trong `onDestroyView()` | `40ae8f6` | |
+| 14 | FIX-M18 — giữ trạng thái checked khi paste multi-line | `5989ec3` | |
+| 15 | FIX-H10 — TextWatcher detach khi RecyclerView recycle | `3ef6af8` | |
+| 16 | FIX-M17 — `uncheckAllItems()` mutate in-place thay vì `.copy()` | `61fc3d4` | Effort thực tế thấp hơn ước lượng (XS thay vì M) — root cause là 1 dòng, không cần refactor diffing |
+| 17 | FIX-M15 — disambiguate Timeline header trùng ID | `107562e` | |
+| 18 | FIX-H05 — bọc import trong `db.withTransaction{}` + catch bad data | `37b7d7e` | Inject thêm `NotesDb` vào `DefaultJsonManager` |
+| 19 | FIX-M05 — refresh widget sau import JSON | `228b0ed` | Inject thêm `Context` vào `DefaultJsonManager` |
 
 **Không đưa vào 2 sprint đầu:** FIX-H04 (exact alarm — cần thiết kế UI xin quyền, effort M), toàn bộ 23 mục P2 (để backlog, xem chi tiết từng mục trong FIX.md).
