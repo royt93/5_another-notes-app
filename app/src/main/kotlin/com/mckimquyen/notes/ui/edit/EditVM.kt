@@ -1047,7 +1047,11 @@ class EditVM @AssistedInject constructor(
                 listItems.add(
                     pos + i, EditItemItem(
                         DefaultEditableText(text = lines[i]),
-                        checked = item.checked && moveCheckedToBottom, editable = true, item.actualPos + i
+                        // Preserve the original item's checked state regardless of the
+                        // unrelated "move checked to bottom" setting — pasting into a
+                        // checked item used to silently uncheck the split-off items
+                        // whenever that setting was off. FIX-M18.
+                        checked = item.checked, editable = true, item.actualPos + i
                     )
                 )
             }
