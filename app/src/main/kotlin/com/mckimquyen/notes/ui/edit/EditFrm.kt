@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Browser
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -178,15 +179,26 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
         val layoutManager = LinearLayoutManager(context)
         rcv.adapter = adapter
         rcv.layoutManager = layoutManager
-        // Feature 1+3: Live word/char count — attach text watcher to EditTexts as they appear
+        // Feature 1+3: Live word/char count — attach text watcher to EditTexts as they appear.
+        // R.id.contentEdt is reused by both the content row and every checklist row, and
+        // RecyclerView recycles those Views on scroll — without detaching on
+        // onChildViewDetachedFromWindow, each attach/detach cycle piled another watcher onto
+        // the same View, so a keystroke later fired updateLiveStats() once per accumulated
+        // watcher. FIX-H10.
         rcv.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewAttachedToWindow(view: View) {
                 val contentEdt = view.findViewById<android.widget.EditText>(R.id.contentEdt)
                 val titleEdt = view.findViewById<android.widget.EditText>(R.id.titleEdt)
-                contentEdt?.doAfterTextChanged { viewModel.updateLiveStats() }
-                titleEdt?.doAfterTextChanged { viewModel.updateLiveStats() }
+                contentEdt?.let { attachLiveStatsWatcher(it) }
+                titleEdt?.let { attachLiveStatsWatcher(it) }
             }
-            override fun onChildViewDetachedFromWindow(view: View) {}
+
+            override fun onChildViewDetachedFromWindow(view: View) {
+                val contentEdt = view.findViewById<android.widget.EditText>(R.id.contentEdt)
+                val titleEdt = view.findViewById<android.widget.EditText>(R.id.titleEdt)
+                contentEdt?.let { detachLiveStatsWatcher(it) }
+                titleEdt?.let { detachLiveStatsWatcher(it) }
+            }
         })
         rcv.itemAnimator = object : DefaultItemAnimator() {
             override fun animateAppearance(
@@ -719,6 +731,16 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             binding.colorPickerScroll.isVisible = true
             binding.charLimitRing.alpha = 1f
         }
+    }
+
+    private fun attachLiveStatsWatcher(editText: android.widget.EditText) {
+        detachLiveStatsWatcher(editText) // guard against a duplicate attach with no detach in between
+        editText.tag = editText.doAfterTextChanged { viewModel.updateLiveStats() }
+    }
+
+    private fun detachLiveStatsWatcher(editText: android.widget.EditText) {
+        (editText.tag as? TextWatcher)?.let { editText.removeTextChangedListener(it) }
+        editText.tag = null
     }
 
     override fun onDestroyView() {
