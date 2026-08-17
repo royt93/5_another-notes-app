@@ -25,6 +25,7 @@ import com.mckimquyen.notes.model.entity.NoteStatus
 import com.mckimquyen.notes.model.entity.NoteType
 import com.mckimquyen.notes.model.entity.PinnedStatus
 import com.mckimquyen.notes.model.entity.Reminder
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
@@ -41,6 +42,7 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
 
 class DefaultJsonManager @Inject constructor(
+    private val notesDb: NotesDb,
     private val notesDao: NotesDao,
     private val labelsDao: LabelsDao,
     private val json: Json,
@@ -152,9 +154,20 @@ class DefaultJsonManager @Inject constructor(
             return ImportResult.BAD_DATA
         }
 
-        // Import all data
-        val newLabelsMap = importLabels(notesData)
-        importNotes(notesData, newLabelsMap)
+        // Import all data. Wrapped in one transaction — importNotes() collects labelRefs into
+        // a local list and only flushes them in a single insertRefs() call at the very end, so
+        // without a transaction, a process kill partway through left already-inserted notes
+        // permanently orphaned from their labels. A bad note also throws inside the Note
+        // constructor's invariant checks (see debugRequire) with nothing catching it before
+        // this point, crashing the app mid-import instead of failing cleanly. FIX-H05.
+        try {
+            notesDb.withTransaction {
+                val newLabelsMap = importLabels(notesData)
+                importNotes(notesData, newLabelsMap)
+            }
+        } catch (e: Exception) {
+            return ImportResult.BAD_DATA
+        }
 
         // Update all reminders
         reminderAlarmManager.updateAllAlarms()
