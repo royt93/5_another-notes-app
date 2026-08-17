@@ -117,6 +117,7 @@ class VipFrm : Fragment() {
                     if (hasEarnedReward) return  // dedupe with showRewarded callback
                     hasEarnedReward = true
                     isWaitingForAdReward = false
+                    if (_binding == null) return  // fragment view destroyed before reward landed
                     val ctx = context ?: return
                     grantVip3Days(ctx)
                 }
@@ -128,6 +129,7 @@ class VipFrm : Fragment() {
                 AdManager.rewardedListener = NO_OP_REWARDED_LISTENER
                 if (hasEarnedReward) return@showRewarded
                 isWaitingForAdReward = false
+                if (_binding == null) return@showRewarded  // fragment view destroyed before ad closed
                 val ctx = context ?: return@showRewarded
 
                 if (rewardedSuccess) {
