@@ -139,6 +139,11 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
         setupViewModelObservers()
     }
 
+    // Class-level (not local to setupViewModelObservers()) so the dedup below survives
+    // re-registration when the view is recreated but the Fragment instance isn't — e.g.
+    // Navigation Component dropping HomeFrm's view to CREATED and back. See FIX-H09.
+    private var lastAdEvent: Any? = null
+
     private fun setupViewModelObservers() {
         viewModel.messageEvent.observeEvent(viewLifecycleOwner) { messageId ->
             Snackbar.make(requireView(), messageId, Snackbar.LENGTH_SHORT)
@@ -214,8 +219,7 @@ class HomeFrm : NoteFrm(), Toolbar.OnMenuItemClickListener {
 
         // Feature 4: Use plain observe + peekContent() so we can read the event
         // even after NoteFrm's EventObserver has already consumed it (hasBeenHandled=true).
-        // Guard with a local reference to prevent re-firing on lifecycle resume.
-        var lastAdEvent: Any? = null
+        // Guard with lastAdEvent (class-level, see above) to prevent re-firing on lifecycle resume.
         viewModel.statusChangeEvent.observe(viewLifecycleOwner) { event ->
             if (event === lastAdEvent) return@observe  // already handled this exact event
             lastAdEvent = event
