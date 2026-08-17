@@ -77,8 +77,9 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     private val exitHandler = Handler(Looper.getMainLooper())
     private val resetExitRunnable = Runnable { doubleBackToExitPressedOnce = false }
 
-    //set to false to make it work, but i do not like
-    private var doubleBackToExitPressedOnce = true
+    // false = not yet armed: first back press at Home shows the "press again to exit" toast
+    // instead of exiting immediately. See FIX-H02 in doc/task/todo/FIX.md.
+    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_DayNight)
@@ -313,10 +314,10 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     override fun onStop() {
         super.onStop()
         // Fix LOW-1: Remove pending callbacks early so the Runnable cannot hold MainAct in memory.
-        // Also reset the flag to its safe initial value (true = requires double-press), because
+        // Also reset the flag to its safe initial value (false = not armed), because
         // cancelling the runnable means the scheduled reset will never fire.
         exitHandler.removeCallbacksAndMessages(null)
-        doubleBackToExitPressedOnce = true
+        doubleBackToExitPressedOnce = false
     }
 
     override fun onDestroy() {
