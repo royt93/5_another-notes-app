@@ -40,5 +40,6 @@ sealed interface HomeDestination : NavigationDestination, Parcelable {
      * Destination to view all notes with a reminder.
      */
     @Parcelize
+    @Keep
     object Reminders : HomeDestination
 }
