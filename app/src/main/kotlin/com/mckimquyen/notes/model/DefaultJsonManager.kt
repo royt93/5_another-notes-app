@@ -56,7 +56,7 @@ class DefaultJsonManager @Inject constructor(
             val note = noteWithLabels.note
             notesMap[note.id] = NoteSurrogate(note.type, note.title, note.content,
                 note.metadata, note.addedDate, note.lastModifiedDate, note.status, note.pinned,
-                note.reminder, noteWithLabels.labels.map { it.id })
+                note.reminder, noteWithLabels.labels.map { it.id }, note.color, note.mood, note.isLocked)
         }
 
         // Map labels by ID
@@ -219,7 +219,10 @@ class DefaultJsonManager @Inject constructor(
                 lastModifiedDate = ns.lastModifiedDate,
                 status = ns.status,
                 pinned = ns.pinned,
-                reminder = ns.reminder
+                reminder = ns.reminder,
+                color = ns.color,
+                mood = ns.mood,
+                isLocked = ns.isLocked
             )
             val oldNote = existingNotes[noteId]
 
@@ -318,6 +321,12 @@ private data class NoteSurrogate(
     val reminder: Reminder? = null,
     @SerialName("labels")
     val labels: List<Long> = emptyList(),
+    @SerialName("color")
+    val color: Int = 0,
+    @SerialName("mood")
+    val mood: Int = 0,
+    @SerialName("locked")
+    val isLocked: Boolean = false,
 )
 
 @Serializable
