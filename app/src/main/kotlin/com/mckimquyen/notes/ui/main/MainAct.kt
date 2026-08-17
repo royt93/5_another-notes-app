@@ -81,6 +81,10 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
     // instead of exiting immediately. See FIX-H02 in doc/task/todo/FIX.md.
     private var doubleBackToExitPressedOnce = false
 
+    // Guards the labelAddEventNav observer in onStart() against re-registering every
+    // foreground/background cycle. See FIX-M02 in doc/task/todo/FIX.md.
+    private var labelAddObserverRegistered = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_DayNight)
 
@@ -272,16 +276,6 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
                 )
             )
         }
-
-        // Go to label, if it has been newly created. Registered here (once, from onCreate)
-        // rather than in onStart() — MainAct is a single long-lived Activity instance that
-        // isn't recreated on every stop/start cycle like a Fragment, so registering this in
-        // onStart() piled up a new Observer on every foreground/background cycle. FIX-M02.
-        sharedViewModel.labelAddEventNav.observeEvent(this) { label ->
-            if (navController.previousBackStackEntry?.destination?.id == R.id.fragment_home) {
-                viewModel.selectLabel(label)
-            }
-        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -308,6 +302,23 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
 
     override fun onStart() {
         super.onStart()
+
+        // Go to label, if it has been newly created. Guarded to register only once: MainAct
+        // is a single long-lived Activity instance that isn't recreated on every stop/start
+        // cycle like a Fragment, so registering unconditionally here piled up a new Observer
+        // on every foreground/background cycle. Can't move this to onCreate() instead — accessing
+        // sharedViewModel (a navGraphViewModel) that early crashes with "Activity does not have
+        // a NavController set", since the NavHostFragment's view tag isn't attached yet at that
+        // point in the lifecycle. FIX-M02.
+        if (!labelAddObserverRegistered) {
+            labelAddObserverRegistered = true
+            sharedViewModel.labelAddEventNav.observeEvent(this) { label ->
+                if (navController.previousBackStackEntry?.destination?.id == R.id.fragment_home) {
+                    viewModel.selectLabel(label)
+                }
+            }
+        }
+
         viewModel.onStart()
     }
 
