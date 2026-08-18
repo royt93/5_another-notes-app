@@ -56,10 +56,11 @@ interface LabelsDao {
     suspend fun getById(id: Long): Label?
 
     /**
-     * Get a label by its name, or `null` if none exists. Name must match exactly.
+     * Get a label by its name, or `null` if none exists. Case-insensitive, so "Work" and
+     * "work" are treated as the same label for uniqueness/dedup purposes. FIX-M26.
      * Used to ensure name uniqueness and for searching by label.
      */
-    @Query("SELECT * FROM labels WHERE name == :name")
+    @Query("SELECT * FROM labels WHERE name == :name COLLATE NOCASE")
     suspend fun getLabelByName(name: String): Label?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

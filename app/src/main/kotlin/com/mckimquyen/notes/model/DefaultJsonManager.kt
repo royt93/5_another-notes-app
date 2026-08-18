@@ -209,7 +209,10 @@ class DefaultJsonManager @Inject constructor(
     private suspend fun importLabels(notesData: NotesData): Map<Long, Long> {
         val existingLabels = labelsDao.getAll()
         val existingLabelsIdMap = existingLabels.associateBy { it.id }
-        val existingLabelsNameMap = existingLabels.associateBy { it.name }
+        // Lowercased keys so import dedup matches getLabelByName()'s case-insensitive lookup —
+        // otherwise "Work" and "work" would both survive as separate labels through import.
+        // FIX-M26.
+        val existingLabelsNameMap = existingLabels.associateBy { it.name.lowercase() }
         val newLabelsMap = mutableMapOf<Long, Long>()
         for ((id, label) in notesData.labels) {
             val name = label.name.trim().replace("""\s+""".toRegex(), " ")
@@ -222,7 +225,7 @@ class DefaultJsonManager @Inject constructor(
                     newLabelsMap[id] = id
                 }
             } else {
-                val existingLabelByName = existingLabelsNameMap[name]
+                val existingLabelByName = existingLabelsNameMap[name.lowercase()]
                 if (existingLabelByName != null) {
                     // Label name already exists, create a new one.
                     var newName: String
@@ -230,7 +233,7 @@ class DefaultJsonManager @Inject constructor(
                     do {
                         newName = "$name ($num)"
                         num++
-                    } while (newName in existingLabelsNameMap)
+                    } while (newName.lowercase() in existingLabelsNameMap)
                     newLabelsMap[id] = labelsDao.insert(Label(id = id, name = newName, hidden = false))
                 } else {
                     newLabelsMap[id] = labelsDao.insert(Label(id = id, name = name, hidden = label.hidden))
