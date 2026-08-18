@@ -38,7 +38,7 @@ import com.mckimquyen.notes.ui.SharedViewModel
 import com.mckimquyen.notes.ui.common.ConfirmDlg
 import com.mckimquyen.notes.ui.navGraphViewModel
 import com.mckimquyen.notes.ui.observeEvent
-import debugCheck
+import com.maltaisn.notes.debugCheck
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.TimeZone

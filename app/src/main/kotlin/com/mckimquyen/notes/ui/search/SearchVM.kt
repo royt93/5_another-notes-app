@@ -19,7 +19,7 @@ import com.mckimquyen.notes.ui.note.adt.NoteAdt
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import debugCheck
+import com.maltaisn.notes.debugCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

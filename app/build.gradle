@@ -227,7 +227,11 @@ tasks.named("build") {
 }
 
 allOpen {
-    annotation "com.mckimquyen.notes.OpenClass"
+    // ENH-A01: was "com.mckimquyen.notes.OpenClass", a custom annotation that never
+    // resolved anywhere in the codebase — this plugin was silently a no-op. The classes
+    // that actually need to be open for testing (PrefsManager, ReminderAlarmManager) use
+    // the real androidx.annotation.OpenForTesting marker; point allOpen at that instead.
+    annotation "androidx.annotation.OpenForTesting"
 }
 
 play {

@@ -1,6 +1,4 @@
-
-
-package com.mckimquyen.debug.notes
+package com.maltaisn.notes
 
 import com.mckimquyen.notes.model.entity.BlankNoteMetadata
 import com.mckimquyen.notes.model.entity.ListNoteMetadata
@@ -93,6 +91,6 @@ object DebugUtils {
          habitasse platea dictumst. Pellentesque et turpis vitae sapien fermentum facilisis.
          Pellentesque aliquet ex mi, sit amet finibus erat euismod id. Fusce ac tortor nec libero
          feugiat lacinia nec vitae nibh. Praesent dictum ligula eros, sit amet sollicitudin magna
-         dapibus a. 
+         dapibus a.
     """.trimIndent().replace('\n', ' ')
 }

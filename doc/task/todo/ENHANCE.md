@@ -10,8 +10,8 @@ Priority: P0/P1/P2. Effort: XS/S/M/L.
 
 ## Kiến trúc / nền tảng (nên làm trước vì nhiều bug FIX phụ thuộc vào đây)
 
-**ENH-A01 — Dọn source-set debug/release rebrand (`com.mckimquyen.notes` ↔ `com.maltaisn.notes`)**
-Gộp 1 epic sửa: `DebugExtensions.kt` (2 bản, xem FIX-C04), `BuildTypeModule` (2 bản, xem FIX-H01), `allOpen` annotation FQN trong `app/build.gradle` (nếu trỏ sai package `OpenClass`). Việc migrate rebrand chưa hoàn tất đúng cấu trúc source-set Android chuẩn — sửa 1 lần thay vì vá từng triệu chứng.
+**ENH-A01 — ✅ HOÀN TẤT 2026-08-18 — Dọn source-set debug/release rebrand (`com.mckimquyen.notes` ↔ `com.maltaisn.notes`)**
+Thử lần 2, thành công (lần 1 ở Sprint 1 bị bỏ vì tưởng nhầm là hard blocker — xem BACKLOG.md). Đã điều tra lại bằng agent, phát hiện: "blocker" gốc không phải giới hạn Dagger/Kotlin/Gradle thật — chỉ do lần code đầu đặt file debug-side sai chỗ (`src/main` thay vì `src/debug/kotlin`) với package khác `com.maltaisn.notes` (package release-side dùng), khiến `AppModule.kt` phải import cứng đường dẫn `src/main` luôn compile mọi variant. Đã sửa: chuyển `DebugExtensions.kt`/`DebugUtils.kt`/`DebugBuildTypeBehavior.kt`/`di/BuildTypeModule.kt` vào `app/src/debug/kotlin/com/maltaisn/notes/**` (khớp package release-side dùng), xoá guard `BuildConfig.ENABLE_DEBUG_FEATURES` khỏi `debugCheck`/`debugRequire` (không cần nữa, đã tách compile-time), sửa 6 call site import `debugCheck`/`debugRequire`, xoá luôn `allOpen` custom `OpenClass`/`OpenForTesting` chết (không ai dùng) và trỏ `allOpen` sang `androidx.annotation.OpenForTesting` thật (đang dùng ở `PrefsManager`/`ReminderAlarmManager`). Verify bằng cách đọc bytecode `classes.dex`: `DebugBuildTypeBehavior` có trong APK dev debug, **hoàn toàn không có** trong APK production release. Xem chi tiết `CLAUDE.md` mục "Build-variant source sets".
 Effort: M. Priority: P0.
 
 **ENH-A02 — Refactor `EditListItem` sang content-equality diffing thay vì identity (`===`)**

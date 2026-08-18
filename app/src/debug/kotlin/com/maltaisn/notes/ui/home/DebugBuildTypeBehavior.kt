@@ -1,8 +1,6 @@
+package com.maltaisn.notes.ui.home
 
-
-package com.mckimquyen.debug.notes.ui.home
-
-import com.mckimquyen.debug.notes.DebugUtils
+import com.maltaisn.notes.DebugUtils
 import com.mckimquyen.notes.BuildConfig
 import com.mckimquyen.notes.model.LabelsRepository
 import com.mckimquyen.notes.model.NotesRepository
@@ -19,8 +17,10 @@ class DebugBuildTypeBehavior @Inject constructor(
 ) : BuildTypeBehavior {
 
     override suspend fun doExtraAction(viewModel: HomeVM) {
-        // This class is wired in for every build type (see FIX-H01 in doc/task/todo/FIX.md) —
-        // guard at runtime so a release build never inserts placeholder notes into a real DB.
+        // This class only compiles into debug build types now (ENH-A01) — the
+        // ENABLE_DEBUG_FEATURES guard stays as defense-in-depth for the
+        // taking_screenshots=true devDebug mode, where the menu item that triggers this
+        // is hidden but this class is still the one wired in via Dagger.
         if (!BuildConfig.ENABLE_DEBUG_FEATURES) return
 
         // Add a few random notes of the currently selected status.

@@ -33,9 +33,14 @@ Two product flavors × two build types:
 
 ## Build-variant source sets (important)
 
-There is a separate `src/release/kotlin` source root that **only** the release variant compiles. It contains a parallel `BuildTypeBehavior` implementation under the legacy package `com.maltaisn.notes` (the project is a fork of maltaisn/notes). Anything in `app/src/release/kotlin/com/maltaisn/notes/` (`OpenForTesting.kt`, `ReleaseBuildTypeBehavior.kt`, `BuildTypeModule.kt`, `DebugExtensions.kt`) ships only in release builds. There is **no equivalent debug Kotlin source set** today — if you add a `debug` variant of `BuildTypeBehavior` you must mirror the file under `app/src/debug/kotlin/...` or the debug build will fail to find the Dagger binding.
+`app/src/release/kotlin` and `app/src/debug/kotlin` are real, mutually-exclusive Kotlin source sets (ENH-A01, 2026-08-18) — only one is ever on the compile classpath per build type, both wired via `sourceSets { debug { java.srcDirs += "src/debug/kotlin" } ... }` in `app/build.gradle`. Each provides a parallel `BuildTypeBehavior` implementation and `debugCheck`/`debugRequire` under the shared legacy package `com.maltaisn.notes` (the project is a fork of maltaisn/notes — this package is the intentional debug/release DI seam, not a stray reference to fix):
 
-`app/src/debug/` currently holds resources only (manifest overrides, debug strings, debug shortcut XML).
+- `app/src/release/kotlin/com/maltaisn/notes/`: `ReleaseBuildTypeBehavior.kt` (`doExtraAction()` no-ops), `DebugExtensions.kt` (`debugCheck`/`debugRequire` no-op), `di/BuildTypeModule.kt` (binds the release behavior; declares `package com.mckimquyen.notes.di`, not `com.maltaisn.notes.di` — matches the debug-side module below so `AppModule.kt` needs one unqualified import for both).
+- `app/src/debug/kotlin/com/maltaisn/notes/`: `DebugBuildTypeBehavior.kt` (`doExtraAction()` inserts 3 placeholder notes, still gated by `BuildConfig.ENABLE_DEBUG_FEATURES` as defense-in-depth for `taking_screenshots=true`), `DebugExtensions.kt` (`debugCheck`/`debugRequire` really `check`/`require`), `DebugUtils.kt` (random note generator), `di/BuildTypeModule.kt` (binds the debug behavior).
+
+`AppModule.kt` (`di/AppModule.kt`, in `src/main`, compiles for every variant) references `BuildTypeModule::class` by its shared FQN (`com.mckimquyen.notes.di.BuildTypeModule`) — it never imports either variant's concrete `*BuildTypeBehavior` class directly, which is what makes the split actually work. If you add a new variant-specific binding, give both sides the **same FQN** (mirroring this pattern) rather than inventing a new package per variant — that's what broke this the first time (see git history around commit `2867827` for the abandoned first attempt, which put the debug half in `src/main` under a divergent package and papered over it with a runtime `BuildConfig` guard instead).
+
+`app/src/debug/` also holds resources (manifest overrides, debug strings, debug shortcut XML) alongside the Kotlin above.
 
 ## Architecture
 
@@ -45,7 +50,7 @@ The codebase is a fork/rebrand: runtime package is `com.mckimquyen.notes` but a 
 
 `RApp` constructs `DaggerAppComponent` via `appComponent.create(applicationContext)`. **Every injectable activity/fragment/dialog/receiver must be listed explicitly in `AppComponent`'s `inject(...)` overloads** (see `di/AppComponent.kt`). When you add a new `@Inject`-using class, add a matching `inject()` line there or it will fail at runtime, not compile time.
 
-`@OpenClass` (custom annotation) drives the `kotlin-allopen` plugin so DI/test classes can be opened without `open` keyword on every class. The annotation lives in `com.mckimquyen.debug.notes.OpenForTesting` (debug variant) and `com.maltaisn.notes.OpenForTesting` (release variant) — note the dual-package shape.
+`kotlin-allopen` targets `androidx.annotation.OpenForTesting` (see `allOpen { annotation "..." }` in `app/build.gradle`) — classes like `PrefsManager`/`ReminderAlarmManager` marked `@OpenForTesting` get opened for mocking without needing `open` on every member. (A custom `com.mckimquyen.notes.OpenClass`/`OpenForTesting` pair used to exist per-variant for this but was dead — nothing referenced it — and was removed as part of ENH-A01.)
 
 Modules:
 

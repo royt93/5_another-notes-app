@@ -3,7 +3,6 @@ package com.mckimquyen.notes.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.mckimquyen.debug.notes.di.BuildTypeModule
 import com.mckimquyen.notes.model.DefaultJsonManager
 import com.mckimquyen.notes.model.DefaultLabelsRepository
 import com.mckimquyen.notes.model.DefaultNotesRepository
