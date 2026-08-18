@@ -607,10 +607,18 @@ class EditVM @AssistedInject constructor(
     }
 
     fun deleteNoteForeverAndExit() {
+        // Was: launch a coroutine for deleteNoteInternal(), then immediately call exit() —
+        // exit() launches its OWN coroutine that also calls deleteNoteInternal() if
+        // note.isBlank (unrelated to whether this permanent delete already ran), racing two
+        // independent coroutines against the same note. Doing the delete and exit sequentially
+        // in one coroutine avoids that, and also picks up exit()'s updateNoteJob?.join() —
+        // without waiting for a pending debounced auto-save first, that save could write the
+        // note back to the DB right after this permanent delete removes it. FIX-L07.
         viewModelScope.launch {
+            updateNoteJob?.join()
             deleteNoteInternal()
+            _exitEvent.send()
         }
-        exit()
     }
 
     fun uncheckAllItems() {
