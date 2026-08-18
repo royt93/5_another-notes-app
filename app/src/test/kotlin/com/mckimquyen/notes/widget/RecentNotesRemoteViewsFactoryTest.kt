@@ -60,8 +60,8 @@ class RecentNotesRemoteViewsFactoryTest {
             )
         )
 
-        // Setup mock repository behavior for getRecentNotes(5)
-        coEvery { mockRepository.getRecentNotes(5) } returns notesList
+        // Setup mock repository behavior for getRecentNotes()
+        coEvery { mockRepository.getRecentNotes() } returns notesList
 
         val factory = RecentNotesRemoteViewsFactory(mockContext)
         factory.repository = mockRepository // Manually inject mocked repository
@@ -123,7 +123,7 @@ class RecentNotesRemoteViewsFactoryTest {
             )
         )
 
-        coEvery { mockRepository.getRecentNotes(5) } returns notesList
+        coEvery { mockRepository.getRecentNotes() } returns notesList
 
         val factory = RecentNotesRemoteViewsFactory(mockContext)
         factory.repository = mockRepository
