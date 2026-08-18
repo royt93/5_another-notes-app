@@ -1228,8 +1228,12 @@ class EditVM @AssistedInject constructor(
             if (lastUncheckedPos != -1) {
                 lastUncheckedPos++
                 val firstUncheckedPos = listItems.indexOfFirst { it is EditItemItem }
+                // subList() is expected to hold only EditItemItem here (all checked items,
+                // the header and the add-item row were just removed above), but sortBy on a
+                // raw `as` cast would crash on any future item type slipping in — use
+                // filterIsInstance's comparator-safe cast instead. FIX-P02.
                 listItems.subList(fromIndex = firstUncheckedPos, toIndex = lastUncheckedPos)
-                    .sortBy { (it as EditItemItem).actualPos }
+                    .sortBy { (it as? EditItemItem)?.actualPos ?: 0 }
             } else {
                 lastUncheckedPos = findItemPos<EditTitleItem>() + 1
             }
