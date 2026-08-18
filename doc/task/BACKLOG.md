@@ -106,3 +106,33 @@ Cài `devDebug` lên TECNO BG6 (Android 13, thiết bị thật), theo dõi logc
 - Không có `FATAL EXCEPTION` nào trong logcat từ sau khi sửa 2 regression trên tới cuối phiên test.
 
 **Chưa test được live** (do giới hạn automation qua adb, không phải nghi ngờ code sai): H10 (stress-scroll checklist dài), M04/M05/M13 (cần add widget thật lên home-screen), M07 (cần trúng đúng race ~200-400ms), M11 (cần simulate lỗi `openOutputStream`), M20 (cần reboot thật hoặc broadcast `QUICKBOOT_POWERON` giả lập), M01 (cần corrupt pref value), M23/P01 (cần trúng đúng thời điểm coroutine bị cancel) — các mục này đã được verify qua đọc code + biên dịch + unit test, chưa qua device.
+
+## Sprint 3 — ✅ HOÀN TẤT 2026-08-18 — 16/23 task P2 (còn FIX-H04 để riêng)
+
+**Sprint Goal:** Dọn backlog P2 — leak nhỏ, race hiếm gặp, edge case UX, data-integrity gap — cùng kỷ luật 1 commit/fix như 2 sprint trước.
+
+Mỗi fix: 1 commit riêng, `compileDevDebugKotlin` PASS trước khi commit. `./gradlew test` + `compileProductionReleaseKotlin` PASS sau fix cuối cùng (14 test suite ban đầu, phát hiện 2 unit test stale từ FIX-M12 sprint trước — đã sửa riêng, xem ghi chú # 17).
+
+| # | Task | Commit | Ghi chú |
+|---|---|---|---|
+| 1 | FIX-L07 — `deleteNoteForeverAndExit()` chạy tuần tự thay vì race với `exit()` | `ea87d64` | |
+| 2 | FIX-L09 — không xoá file export vừa tạo trong 5 phút gần nhất | `c792c28` | |
+| 3 | FIX-L10 — safe-cast `toolbarLayout.background as MaterialShapeDrawable` | `e0b9e79` | `NoteFrm.kt` + `LabelFrm.kt` |
+| 4 | FIX-L11 — null `importDataLauncher` trong `onDestroy()` | `8ed5692` | |
+| 5 | FIX-L12 — mở rộng action shorthand `.CREATE`/`.EDIT`/... thành fully-qualified trong Manifest | `d0db28b` | |
+| 6 | FIX-P02 — safe-cast thay `as EditItemItem` thô trong `sortBy` | `a6fd3a5` | |
+| 7 | FIX-M06 — dismiss `AlertDialog` thường của `VipFrm` trong `onDestroyView()` | `cdbb586` | |
+| 8 | FIX-M08 — cancel coroutine validate tên label cũ trước khi launch cái mới | `40b3f3e` | |
+| 9 | FIX-M09 — chỉ deselect label sau khi rename thật sự xong (so tên cũ/mới), không phải ở bất kỳ emission tiếp theo nào | `f76bdb9` | Đổi từ boolean flag sang so sánh nội dung — sửa tận gốc thay vì chỉ patch triệu chứng |
+| 10 | FIX-M10 — luôn re-push sort prefs hiện tại khi `SortDialog` view được tạo lại | `118a843` | |
+| 11 | FIX-M19 — reschedule alarm khi đổi timezone/giờ hệ thống | `36c75b8` | Thêm `ACTION_TIMEZONE_CHANGED`/`ACTION_TIME_CHANGED` vào Manifest + `AlarmReceiver` |
+| 12 | FIX-M21 — Undo-xoá reminder định kỳ tính lại lần lặp quá hạn thay vì dùng `reminder.next` cũ | `2187126` | |
+| 13 | FIX-M22 — không stack nhiều `fragment_edit` cho cùng 1 note khi tap notification lặp lại | `52b4109` | |
+| 14 | FIX-M24 — đồng bộ default `strikethroughChecked` giữa Kotlin và `prefs.xml` | `0c84d3a` | |
+| 15 | FIX-M25 — xoá password khỏi bộ nhớ sau khi dùng (`PBEKeySpec.clearPassword()` + `SavedStateHandle`) | `db23b8b` | |
+| 16 | FIX-M26 — dedup tên label không phân biệt hoa-thường (`COLLATE NOCASE` + import merge) | `130bfed` | |
+| 17 | *(ngoài backlog)* Sửa 2 unit test stale còn dùng `getRecentNotes(5)` từ FIX-M12 sprint trước | `82c9a84` | Phát hiện khi chạy `./gradlew test` cuối sprint — không phải regression từ sprint này |
+
+**Không đưa vào sprint này:** FIX-H04 (exact alarm — cần thiết kế UI xin quyền trước, effort M, không phải 1-dòng-sửa — để riêng chờ quyết định UX).
+
+**Device smoke test:** chưa chạy lại trên device thật cho batch này — toàn bộ 16 fix đều nhỏ hơn/rủi ro thấp hơn batch P0/P1 (leak nhỏ, race hiếm, edge-case UX), đã verify qua đọc code + biên dịch + unit test đầy đủ.
