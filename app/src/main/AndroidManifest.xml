@@ -56,6 +56,12 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <!-- For HTC devices, apparently (https://stackoverflow.com/a/46294732/5288316) -->
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <!-- Reschedule alarms after timezone/clock changes so recurring reminders don't
+                     fire at the wrong local time (e.g. after flying to a new timezone). Both are
+                     on Android's implicit-broadcast exception list, so they still reach a
+                     manifest-declared receiver on API 26+. FIX-M19. -->
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
         <!-- FEATURE 5 (Quick Note Widget) -->

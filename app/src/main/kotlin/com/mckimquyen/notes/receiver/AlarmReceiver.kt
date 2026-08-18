@@ -53,6 +53,12 @@ class AlarmReceiver : BroadcastReceiver() {
                     Intent.ACTION_BOOT_COMPLETED,
                     "android.intent.action.QUICKBOOT_POWERON",
                     "com.htc.intent.action.QUICKBOOT_POWERON",
+                    // Recurring reminders store their next fire time as absolute millis, so a
+                    // timezone/clock change alone doesn't move it — but the alarm was scheduled
+                    // relative to the OLD local time. Rescheduling recomputes it against the
+                    // new clock/timezone. FIX-M19.
+                    Intent.ACTION_TIMEZONE_CHANGED,
+                    Intent.ACTION_TIME_CHANGED,
                     -> reminderAlarmManager.updateAllAlarms()
                     ACTION_ALARM -> showNotificationForReminder(context, noteId)
                     ACTION_MARK_DONE -> markReminderAsDone(context, noteId)
