@@ -362,6 +362,7 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     override fun onDestroy() {
         super.onDestroy()
         exportDataLauncher = null
+        importDataLauncher = null
         autoExportLauncher = null
     }
 
