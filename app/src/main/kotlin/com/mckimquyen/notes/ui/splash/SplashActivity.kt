@@ -39,6 +39,8 @@ class SplashActivity : BaseAct() {
         }
     }
 
+    private var onDoneRunnable: Runnable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_DayNight)
         super.onCreate(savedInstanceState)
@@ -77,8 +79,11 @@ class SplashActivity : BaseAct() {
 
             val currentLocales = AppCompatDelegate.getApplicationLocales()
             if (currentLocales == locales) {
-                // No recreation will happen, safely call onDone
-                handler.post { onDone() }
+                // No recreation will happen, safely call onDone. Named+stored (not an inline
+                // lambda) so onDestroy() can remove it if the user exits right after picking a
+                // language that happens to equal the current one. FIX-L06.
+                onDoneRunnable = Runnable { onDone() }
+                handler.post(onDoneRunnable!!)
             } else {
                 // This triggers recreation. The new activity will see hasPickedFirstRunLanguage = true
                 // and will automatically call startAdFlow() in onCreate(). 
@@ -127,5 +132,6 @@ class SplashActivity : BaseAct() {
         super.onDestroy()
         handler.removeCallbacks(safetyTimeoutRunnable)
         handler.removeCallbacks(finishRunnable)
+        onDoneRunnable?.let { handler.removeCallbacks(it) }
     }
 }
