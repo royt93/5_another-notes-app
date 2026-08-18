@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Run
 
-The project is a single-module Android app (`:app`) using the Gradle wrapper. The Gradle daemon expects Java 17 (`toolchain.languageVersion = 17`); `gradle.properties` pins `org.gradle.java.home` to a local JDK 20 install — adjust that line if your machine has a different JDK path.
+The project is a single-module Android app (`:app`) using the Gradle wrapper. The Gradle daemon expects Java 17 (`toolchain.languageVersion = 17`); `gradle.properties` pins `org.gradle.java.home` to a local JDK 17 install (JetBrains Runtime) — adjust that line if your machine has a different JDK path. Note: `assembleProductionRelease`'s `lintVitalAnalyzeProductionRelease` task currently crashes (`NoSuchMethodError: List.removeLast()`) on this JDK 17 setup — a known AGP-lint-vs-JDK mismatch, not a code bug. Use `-x lintVitalAnalyzeProductionRelease` to build a release APK/AAB anyway.
 
 Common Gradle tasks (run from repo root):
 
@@ -53,24 +53,24 @@ Modules:
 - `DbModule` — Room database singleton (`notes_db`) with migrations, exposes `notesDao()` / `labelsDao()`.
 - `BuildTypeModule` — variant-specific bindings; only the release-variant version exists today.
 
-### Data layer — Room v5 + repositories + Json
+### Data layer — Room v8 + repositories + Json
 
-`NotesDb` (`model/NotesDb.kt`) is at version `5` with hand-written migrations 1→2, 2→3, 3→4, 4→5. **When you change an entity you must:** bump `VERSION`, add a `Migration(N, N+1)` to `ALL_MIGRATIONS`, and let Room export the new schema to `app/schemas/` (configured via `RoomSchemaArgProvider` in `app/build.gradle`). Schemas are committed and used as `androidTest` assets for migration tests.
+`NotesDb` (`model/NotesDb.kt`) is at version `8` with hand-written migrations 1→2 through 7→8 (`color` column at 4→5, `mood` at 5→6, `is_locked` at 6→7, new `note_history` table at 7→8). **When you change an entity you must:** bump `VERSION`, add a `Migration(N, N+1)` to `ALL_MIGRATIONS`, and let Room export the new schema to `app/schemas/` (configured via `RoomSchemaArgProvider` in `app/build.gradle`). Schemas are committed and used as `androidTest` assets for migration tests.
 
-Entities: `Note`, `NoteFts` (FTS4 search index), `Label`, `LabelRef` (many-to-many), plus value enums `NoteStatus`, `NoteType`, `PinnedStatus`. Custom `TypeConverters` cover dates, status enums, JSON metadata, and `Recurrence` (from `com.maltaisn:recurpicker`). FTS means search queries go through `NotesDao` FTS-bound queries — don't bypass it with `LIKE` joins.
+Entities: `Note`, `NoteFts` (FTS4 search index), `Label`, `LabelRef` (many-to-many), `NoteHistory` (via `NoteHistoryDao`, added migration 7→8), plus value enums `NoteStatus`, `NoteType`, `PinnedStatus`. Custom `TypeConverters` cover dates, status enums, JSON metadata, and `Recurrence` (from `com.maltaisn:recurpicker`). FTS means search queries go through `NotesDao` FTS-bound queries — don't bypass it with `LIKE` joins.
 
 Repositories follow `Default<X>Repository` (impl) + `<X>Repository` (interface) pairing. `JsonManager` handles import/export of notes (used by Settings → password-protected import/export dialogs).
 
 ### Reminder/alarm system
 
-`ReminderAlarmManager` schedules alarms; `AlarmReceiver` (registered in manifest with `BOOT_COMPLETED` to reschedule after reboot) wakes up and routes through `ReceiverAlarmCallback` → `ReminderAlarmCallback` (DI-bound). Receiver creates a coroutine scope **per broadcast** and cancels it in `finally` after `pendingResult.finish()` — preserve that pattern (see `doc/memory_leak.md` HIGH-1) when editing.
+`ReminderAlarmManager` schedules alarms; `AlarmReceiver` (registered in manifest with `BOOT_COMPLETED`/`QUICKBOOT_POWERON`/`TIMEZONE_CHANGED`/`TIME_SET` to reschedule after reboot or a clock/timezone change) wakes up and routes through `ReceiverAlarmCallback` → `ReminderAlarmCallback` (DI-bound). Receiver creates a coroutine scope **per broadcast** and cancels it in `finally` after `pendingResult.finish()` — preserve that pattern (see `doc/memory_leak.md` HIGH-1) when editing. `ReceiverAlarmCallback` deliberately uses `alarmManager.setAndAllowWhileIdle()`, not `setExactAndAllowWhileIdle()` — the exact-alarm variant needs `SCHEDULE_EXACT_ALARM`, a Play Console "sensitive permission" gated behind a core-functionality declaration (alarm clock/calendar) this notes app doesn't qualify for. Don't reintroduce it without discussing the Play Store risk first.
 
 ### UI — single-Activity + Navigation Component
 
-- `SplashAct` is the launcher (`MAIN`/`LAUNCHER`); after a short delay it routes to `MainAct`.
+- `SplashActivity` is the launcher (`MAIN`/`LAUNCHER`); after a short delay it routes to `MainAct`. Kept as `SplashActivity` — not shortened to `SplashAct` like the other `*Act` classes — because `AdManager`'s `ProcessLifecycle` matches on `simpleName == "SplashActivity"` to skip showing App Open Resume while the splash's own App Open flow is running.
 - `MainAct` hosts `nav_graph_main.xml` via `NavHostFragment` and owns the drawer. It implements `NavController.OnDestinationChangedListener` to swap toolbars/FABs as fragments change.
 - `NotificationAct` is a transparent activity hosting `nav_graph_notification.xml` for postpone/snooze flows from notifications.
-- Fragments per feature: `home`, `search`, `edit`, `labels`, `reminder`, `sort`, `setting`, `noti`, `guide`, plus `navigation/` for drawer destination model classes.
+- Fragments per feature: `home`, `search`, `edit`, `labels`, `reminder`, `sort`, `setting`, `noti`, `guide`, `vip` (Premium/VIP screen), plus `navigation/` for drawer destination model classes.
 - ViewModels are obtained through helpers in `ui/ViewModels.kt`: `viewModel { factory.create(savedStateHandle) }` and `navGraphViewModel(R.id.nav_graph_main) { ... }`. Use `navGraphViewModel` to share state across fragments inside the same nav graph (e.g. `SharedViewModel`).
 - `SharedViewModel` carries cross-fragment events (status changes, share data) via the `Event` wrapper — observe with `observeEvent(...)` to consume once.
 - View binding is enabled (`buildFeatures.viewBinding = true`); generated classes follow `<LayoutName>Binding` (e.g. `f_edit.xml` → `FEditBinding`). Layout file prefixes: `a_` activity, `f_` fragment, `dlg_` dialog, `i_` item, `v_` view, `widget_` app widget.
@@ -79,28 +79,29 @@ Repositories follow `Default<X>Repository` (impl) + `<X>Repository` (interface) 
 
 Four `AppWidgetProvider` receivers in `widget/` (also registered in `AndroidManifest.xml`): `QuickNoteWidget`, `NoteCountWidget`, `QuickListWidget`, `RecentNotesWidget` (+ its `RecentNotesWidgetService` for `RemoteViewsFactory`). The widget service is `inject`ed via Dagger — see `AppComponent.inject(factory: RecentNotesRemoteViewsFactory)`.
 
-### Ads — AdMob (+ AppLovin mediation)
+### Ads — external SDK, not in this repo
 
-`sdkadbmob/AdMobManager` is a `object` singleton initialized from `RApp.setupAdmob()`. AdMob unit IDs come from `BuildConfig` fields injected per build type (test IDs in debug, real IDs in release). The manager has been hardened against the leaks documented in `doc/memory_leak.md` — keep `WeakReference` usage on listeners/activities and the `appScope` pattern in `RApp` when modifying.
+Ad logic (`AdMobManager`, a 729-line singleton that used to live under `sdkadbmob/`) was fully removed and replaced by the closed-source library `com.roy.sdkadbmob` (`com.github.royt93:AdmobApplovinWrapper`, `AdManager`/`AdSdkConfig`), initialized from `RApp.setupAds()` (`RApp.kt`). **There is no ad-SDK source in this repo to audit or modify** — `RApp.setupAds()` just builds an `AdSdkConfig` from `BuildConfig` fields (`ADMOB_*`/`APPLOVIN_*` IDs, `IS_ENABLE_ADMOB` — currently `false`, AppLovin MAX is the active provider) and calls `AdManager.initialize()`. Any WeakReference/leak-safety pattern for ad listeners now lives inside that external library and can't be verified from here — see `doc/memory_leak.md` and `doc/AD.MD` for the historical migration record and what's still knowable. `RApp` itself has **no `appScope`/`CoroutineScope`** anymore — don't assume one exists when adding app-scoped coroutine work; name and scope it explicitly per the memory-leak conventions below. The VIP/Premium screen (`ui/vip/VipFrm.kt`) does have a real rewarded-ad touchpoint (`AdManager.loadRewarded`/`showRewarded`) — see `doc/AD.MD` §19.
 
 ## Memory-leak conventions (codified in this codebase)
 
 `doc/memory_leak.md` is the historical record of fixes. The patterns established there are still live constraints:
 
 - Activities/fragments must clear handler callbacks in `onStop`/`onDestroyView` (`exitHandler.removeCallbacksAndMessages(null)`, `binding.recyclerView.setOnTouchListener(null)`, etc.).
-- Application-scoped coroutines use a named `appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)` — do **not** create anonymous `CoroutineScope(...)` at field-init time.
-- `BroadcastReceiver` coroutine scopes must be cancelled in `finally` after `goAsync()`/`pendingResult.finish()`.
-- AdMob singleton listeners hold Activity references via `WeakReference`; `SplashAct` ad-loading uses `EventBus.eventFlow.first {}` (not `collectLatest`) to avoid leaking the activity.
+- Any component-scoped coroutine (Application, widget provider, etc.) uses a named `CoroutineScope(SupervisorJob() + Dispatchers.X)` — do **not** create anonymous `CoroutineScope(...)` at field-init time. (`RApp` itself no longer has one — ad-SDK init moved to the external `com.roy.sdkadbmob` library; see `widget/NoteCountWidget.kt` for a live example of this pattern via `goAsync()`.)
+- `BroadcastReceiver`/`AppWidgetProvider` coroutine scopes must be cancelled in `finally` after `goAsync()`/`pendingResult.finish()`.
+- Ad-SDK singleton listeners holding Activity references via `WeakReference`, and `SplashActivity`'s `EventBus.eventFlow.first {}` (not `collectLatest`) pattern to avoid leaking the activity, both now live inside the external `com.roy.sdkadbmob` library — unverifiable from this repo (see `doc/memory_leak.md`).
+- Plain `AlertDialog`/`MaterialAlertDialogBuilder` (not a `DialogFragment`) shown from a Fragment/Activity must be tracked and `dismiss()`-ed in `onDestroyView()`/`onDestroy()`, or it leaks a window across configuration change (see `ui/vip/VipFrm.kt`'s `activeDialog` field for the established pattern).
 
 ## Translations
 
-Strings live in `app/src/main/res/values-<locale>/strings.xml` (ar, de, es, fr, it, nb, …). `TRANSLATING.md` is empty; treat `values/strings.xml` as the source of truth. The `aboutlibraries` plugin generates attribution at build time.
+Strings live in `app/src/main/res/values-<locale>/strings.xml` — ~30 locales shipped (ar, bg, cs, da, de, el, es, fi, fr, hi, hr, hu, id, it, ja, ko, ms, nb, nl, pl, pt, ro, ru, sk, sv, th, tr, uk, vi, zh; see `doc/multi_language.md` for the full generated table). `TRANSLATING.md` is empty; treat `values/strings.xml` as the source of truth. The `aboutlibraries` plugin generates attribution at build time.
 
 ## Things that look broken but aren't
 
 - Root `settings.gradle` includes only `:app` — `sharedTest/` is intentionally excluded (`//include "sharedTest"`).
 - `play { serviceAccountCredentials = file("fake-key.json") }` is a placeholder; real credentials are loaded by an optional `app/publishing.gradle` (gitignored).
-- `README.md`, `CHANGELOG.md`, `PRIVACY_POLICY.md`, `TRANSLATING.md` are all empty placeholders.
+- `README.md`, `PRIVACY_POLICY.md`, `TRANSLATING.md` are empty placeholders. `CHANGELOG.md` is **not** — it's a real per-release changelog (Vietnamese), maintained starting 2026.08.18.
 - The release source set lives under `com.maltaisn.notes` while runtime is `com.mckimquyen.notes`. This is the upstream-fork seam — leave it.
 
 ## Working language
