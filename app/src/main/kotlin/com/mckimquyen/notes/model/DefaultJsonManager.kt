@@ -252,9 +252,20 @@ class DefaultJsonManager @Inject constructor(
         newLabelsMap: Map<Long, Long>,
     ) {
         val existingNotes = notesDao.getAll().associateBy { it.note.id }
-        val labelRefs = mutableListOf<LabelRef>()
+
+        // ENH-A03: classify every note into an insert bucket (brand new, or an ID clash/
+        // merge-fallback needing a fresh auto-generated id) or an update bucket (merged into
+        // an unchanged existing note), then flush each bucket in a single batched DAO call
+        // instead of one insert()/update() round-trip per note. insertAll() returns the
+        // actually-assigned row ids in submission order (including for explicit, non-zero
+        // ids that survive unchanged) — that's what lets the insert bucket still build
+        // correct labelRefs without a per-note round trip back to the DB.
+        val notesToInsert = mutableListOf<Note>()
+        val insertLabelIds = mutableListOf<List<Long>>()
+        val notesToUpdate = mutableListOf<Note>()
+        val updateLabelIds = mutableListOf<List<Long>>()
+
         for ((id, ns) in notesData.notes) {
-            var noteId = id
             val newNote = Note(
                 id = id,
                 type = ns.type,
@@ -270,14 +281,15 @@ class DefaultJsonManager @Inject constructor(
                 mood = ns.mood,
                 isLocked = ns.isLocked
             )
-            val oldNote = existingNotes[noteId]
+            val oldNote = existingNotes[id]
 
             // Remap labels appropriately and discard unresolved label IDs.
             var labelIds = ns.labels.mapNotNull { newLabelsMap[it] }
 
             when {
                 oldNote == null -> {
-                    notesDao.insert(newNote)
+                    notesToInsert += newNote
+                    insertLabelIds += labelIds
                 }
 
                 oldNote.note.addedDate == newNote.addedDate &&
@@ -288,19 +300,34 @@ class DefaultJsonManager @Inject constructor(
                     val mergedNote = mergeNotes(oldNote.note, newNote)
                     if (mergedNote != null) {
                         labelIds = (labelIds union oldNote.labels.map { it.id }).toList()
-                        notesDao.update(mergedNote)
+                        notesToUpdate += mergedNote
+                        updateLabelIds += labelIds
                     } else {
-                        noteId = notesDao.insert(newNote.copy(id = Note.NO_ID))
+                        notesToInsert += newNote.copy(id = Note.NO_ID)
+                        insertLabelIds += labelIds
                     }
                 }
 
                 else -> {
                     // ID clash, assign new ID.
-                    noteId = notesDao.insert(newNote.copy(id = Note.NO_ID))
+                    notesToInsert += newNote.copy(id = Note.NO_ID)
+                    insertLabelIds += labelIds
                 }
             }
+        }
 
-            labelRefs += labelIds.map { LabelRef(noteId, it) }
+        val labelRefs = mutableListOf<LabelRef>()
+        if (notesToInsert.isNotEmpty()) {
+            val insertedIds = notesDao.insertAll(notesToInsert)
+            for (i in notesToInsert.indices) {
+                labelRefs += insertLabelIds[i].map { LabelRef(insertedIds[i], it) }
+            }
+        }
+        if (notesToUpdate.isNotEmpty()) {
+            notesDao.updateAll(notesToUpdate)
+            for (i in notesToUpdate.indices) {
+                labelRefs += updateLabelIds[i].map { LabelRef(notesToUpdate[i].id, it) }
+            }
         }
         labelsDao.insertRefs(labelRefs)
     }

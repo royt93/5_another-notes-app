@@ -23,8 +23,11 @@ interface NotesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(note: Note): Long
 
+    // Returns the row ID actually assigned to each note, in the same order as [notes] —
+    // needed by DefaultJsonManager.importNotes() (ENH-A03) to know which id a freshly
+    // auto-generated (Note.NO_ID) note ended up with, without a round-trip per note.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(notes: List<Note>)
+    suspend fun insertAll(notes: List<Note>): List<Long>
 
     @Update
     suspend fun update(note: Note)

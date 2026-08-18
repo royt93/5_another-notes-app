@@ -18,8 +18,9 @@ Effort: M. Priority: P0.
 Gốc rễ chung của FIX-M17 (uncheck-all nhấp nháy) và các bug DiffUtil liên quan checklist khác. Sửa 1 lần ở tầng diffing thay vì vá từng triệu chứng riêng lẻ.
 Effort: M. Priority: P1.
 
-**ENH-A03 — Batch insert khi import thay vì N round-trip DAO riêng lẻ**
-`importNotes`/`importLabels` gọi `insert`/`update` từng cái một dù `insertAll`/`updateAll` đã có sẵn trong `NotesDao`. Vừa nhanh hơn vừa là 1 phần cách giải quyết FIX-H05 (atomicity import).
+**ENH-A03 — ✅ HOÀN TẤT 2026-08-18 — Batch insert khi import thay vì N round-trip DAO riêng lẻ**
+`DefaultJsonManager.importNotes()` viết lại: phân loại từng note vào 2 nhóm (insert/update) thay vì gọi `notesDao.insert()`/`update()` riêng lẻ trong loop, rồi flush 1 lần bằng `insertAll()`/`updateAll()`. `NotesDao.insertAll()` đổi return type `Unit` → `List<Long>` (Room trả đúng row ID theo thứ tự submit, kể cả note giữ ID gốc lẫn note auto-generate ID mới) để vẫn build đúng `labelRefs` mà không cần round-trip riêng lấy ID. `labelsDao.insert()` (import labels) giữ nguyên per-item — không đổi, vì logic dedup tên nhãn (FIX-M26) chạy tuần tự theo state tích luỹ, batch sẽ phức tạp hoá không tương xứng effort S của item này.
+**Verify:** compile sạch cả 2 variant, `./gradlew test` PASS toàn bộ. **Chưa verify được round-trip Export→Import thật qua UI** — thử lại SAF automation qua adb (đã note lỗi ở BACKLOG.md Sprint 2) nhưng vẫn không tap trúng nút "LƯU" một cách ổn định qua uiautomator/toạ độ (grid layout DocumentsUI đổi vị trí liên tục). Đã trace kỹ logic thay thế branch-by-branch khớp code cũ, tự tin cao nhưng đây là giới hạn thật của môi trường test, không phải đã verify runtime đầy đủ.
 Effort: S. Priority: P1.
 
 **ENH-A04 — ❌ KHÔNG LÀM — Xin quyền `SCHEDULE_EXACT_ALARM` (đã thử và revert 2026-08-18)**
