@@ -1,6 +1,5 @@
 package com.mckimquyen.notes.receiver
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -20,26 +19,30 @@ class ReceiverAlarmCallback @Inject constructor(
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    @SuppressLint("ScheduleExactAlarm")
     override fun addAlarm(noteId: Long, time: Long) {
         val alarmIntent = getAlarmPendingIndent(noteId)
-        //TODO roy93~ co the chuyen sang dung alarm chinh xac setExactAndAllowWhileIdle trong tuong lai
-//        alarmManager.setExactAndAllowWhileIdle(
-//            /* type = */ AlarmManager.RTC_WAKEUP,
-//            /* triggerAtMillis = */ time,
-//            /* operation = */ alarmIntent,
-//        )
-//        alarmManager.setInexactRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            time,
-//            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-//            alarmIntent
-//        )
-        alarmManager.set(
-            AlarmManager.RTC_WAKEUP,
-            time,
-            alarmIntent
-        )
+        // setExactAndAllowWhileIdle() needs SCHEDULE_EXACT_ALARM on API 31+ (granted via a
+        // Settings screen, not a runtime dialog — see SettingsFrm's exact_alarm_permission
+        // preference). Below API 31 the permission doesn't exist and exact alarms are always
+        // allowed. Falls back to the inexact set() (can be delayed tens of minutes in Doze)
+        // when the user hasn't granted it. FIX-H04.
+        if (canScheduleExactAlarms()) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                time,
+                alarmIntent
+            )
+        } else {
+            alarmManager.set(
+                AlarmManager.RTC_WAKEUP,
+                time,
+                alarmIntent
+            )
+        }
+    }
+
+    private fun canScheduleExactAlarms(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()
     }
 
     override fun removeAlarm(noteId: Long) {

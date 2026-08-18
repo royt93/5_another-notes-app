@@ -186,6 +186,10 @@
     <string name="pref_behavior_swipe_action_right">Swipe right action</string>
     <string name="pref_behavior_move_checked">Move checked items to the bottom</string>
 
+    <string name="pref_exact_alarm_title">Exact reminders</string>
+    <string name="pref_exact_alarm_summary_granted">On — reminders fire at the exact time set</string>
+    <string name="pref_exact_alarm_summary_denied">Off — reminders may be delayed up to an hour while the device is idle. Tap to allow exact reminders.</string>
+
     <string name="pref_group_data">Data</string>
     <string name="pref_data_export">Export data</string>
     <string name="pref_data_export_summary">Export notes data as JSON</string>
