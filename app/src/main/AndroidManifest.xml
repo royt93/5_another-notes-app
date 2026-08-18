@@ -32,9 +32,9 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
-                <action android:name=".CREATE" />
-                <action android:name=".EDIT" />
-                <action android:name=".SHOW_REMINDERS" />
+                <action android:name="com.mckimquyen.notes.CREATE" />
+                <action android:name="com.mckimquyen.notes.EDIT" />
+                <action android:name="com.mckimquyen.notes.SHOW_REMINDERS" />
             </intent-filter>
 
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
@@ -42,7 +42,7 @@
 
         <activity android:name=".ui.noti.NotificationAct" android:excludeFromRecents="true" android:exported="false" android:label="@string/app_name_short" android:screenOrientation="portrait" android:taskAffinity="" android:theme="@style/TransparentActivity">
             <intent-filter>
-                <action android:name=".reminder.POSTPONE" />
+                <action android:name="com.mckimquyen.notes.reminder.POSTPONE" />
             </intent-filter>
         </activity>
 
@@ -50,8 +50,8 @@
              This is for simplicity, shouldn't be a concern for battery life. -->
         <receiver android:name=".receiver.AlarmReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
-                <action android:name=".reminder.ALARM" />
-                <action android:name=".reminder.MARK_DONE" />
+                <action android:name="com.mckimquyen.notes.reminder.ALARM" />
+                <action android:name="com.mckimquyen.notes.reminder.MARK_DONE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <!-- For HTC devices, apparently (https://stackoverflow.com/a/46294732/5288316) -->
