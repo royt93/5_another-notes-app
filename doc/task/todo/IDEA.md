@@ -3,7 +3,7 @@
 > **Tạo:** 2026-08-17 | Gộp từ audit agy + claude-bypass, khử trùng. Đây là các ý tưởng chưa chắc khả thi/chưa nên cam kết ngay — ghi lại để cân nhắc sau, không có estimate effort chính thức.
 
 - **IDEA-01 — Undo/redo per-keystroke thật trong editor.** Khác Time Travel (snapshot debounce ~10s) — đây là undo/redo tức thời chuẩn text-editor. Cần nghiên cứu chi phí bộ nhớ cho note dài (tới 100k ký tự) và tương tác với `BulletTextWatcher`/autolink.
-- **IDEA-02 — Widget khoá màn hình (always-on-display) hiện reminder ưu tiên cao nhất.** Cần nghiên cứu API AOD giới hạn nhiều theo OEM, và giải quyết trước vấn đề riêng tư ở FIX-M13 (không nên hiện tiêu đề note khoá trên bề mặt còn công khai hơn cả home-screen widget).
+- **IDEA-02 — Widget khoá màn hình (always-on-display) hiện reminder ưu tiên cao nhất.** Cần nghiên cứu API AOD giới hạn nhiều theo OEM. Vấn đề riêng tư ở FIX-M13 ✅ đã vá 2026-08-17 (widget đã ẩn tiêu đề note khoá) — không còn là blocker, nhưng cùng nguyên tắc "không hiện nội dung khoá trên bề mặt công khai" vẫn phải áp dụng cho widget AOD mới nếu làm.
 - **IDEA-03 — Nested/phân cấp Label (label cha-con).** Cần nghiên cứu UX cho tập label lớn, migration schema `Label` phức tạp hơn NEW-10.
 - **IDEA-04 — Rate-limit/lockout khi nhập sai password import nhiều lần.** Rủi ro thực tế thấp (kẻ tấn công cần có sẵn file export local), nhưng đáng cân nhắc cho nhất quán UX bảo mật.
 - **IDEA-05 — Multi-window/freeform chính thức.** Cả 3 activity hiện khoá `screenOrientation="portrait"`, không khai báo `resizeableActivity`. FIX-M22/FIX-H07 (onNewIntent) dễ tái hiện nhất qua split-screen — cần quyết định rõ: hỗ trợ chính thức (fix toàn bộ gap liên quan) hay khoá cứng `resizeableActivity="false"`.

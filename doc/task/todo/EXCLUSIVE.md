@@ -15,7 +15,7 @@ Pipeline export/import hiện tại (AES-GCM/PBKDF2WithHmacSHA512 120.000 vòng 
 Effort: S (sau khi vá bug) + marketing. Priority: P0 (vì phụ thuộc bug Critical).
 
 **EXC-A03 — Reminder định kỳ mạnh ngang app lịch, gắn trực tiếp vào note**
-Dùng `com.maltaisn:recurpicker` — mạnh hơn Keep (chỉ nhắc 1 lần/lặp cơ bản) và Samsung Notes (gần như không có reminder định kỳ thật). Sau khi vá FIX-C03 (bug ngày cuối tháng) + FIX-H04 (exact alarm) và bổ sung NEW-07 (preset), đây là tính năng lõi đã mạnh sẵn, chỉ cần hoàn thiện để thành điểm bán hàng rõ ràng.
+Dùng `com.maltaisn:recurpicker` — mạnh hơn Keep (chỉ nhắc 1 lần/lặp cơ bản) và Samsung Notes (gần như không có reminder định kỳ thật). FIX-C03 (bug ngày cuối tháng) ✅ đã vá; FIX-H04 ✅ đã vá — nhưng theo hướng `setAndAllowWhileIdle()` (không xin quyền exact-alarm, tránh rủi ro Play Store — xem BACKLOG.md), không phải "exact alarm" đúng nghĩa như dự tính ban đầu. Sau khi bổ sung NEW-07 (preset), đây là tính năng lõi đã mạnh sẵn, chỉ cần hoàn thiện để thành điểm bán hàng rõ ràng.
 Effort: M (sau khi vá bug). Priority: P1.
 
 **EXC-A04 — Note mood như metadata hạng nhất (nhật ký cảm xúc nhẹ)**

@@ -22,9 +22,8 @@ Effort: M. Priority: P1.
 `importNotes`/`importLabels` gọi `insert`/`update` từng cái một dù `insertAll`/`updateAll` đã có sẵn trong `NotesDao`. Vừa nhanh hơn vừa là 1 phần cách giải quyết FIX-H05 (atomicity import).
 Effort: S. Priority: P1.
 
-**ENH-A04 — Xin quyền `SCHEDULE_EXACT_ALARM` đúng cách + toggle trong Settings**
-Bổ sung UI cho user chọn đánh đổi pin vs. đúng giờ, fallback `setAndAllowWhileIdle` khi từ chối. Giải quyết trọn vẹn FIX-H04.
-Effort: M. Priority: P1.
+**ENH-A04 — ❌ KHÔNG LÀM — Xin quyền `SCHEDULE_EXACT_ALARM` (đã thử và revert 2026-08-18)**
+Đã triển khai thật (permission + toggle UI trong Settings + `setExactAndAllowWhileIdle`), nhưng **user chặn ngay sau khi push**: `SCHEDULE_EXACT_ALARM`/`USE_EXACT_ALARM` là "sensitive permission" của Play Console, chỉ app khai báo đúng core-functionality (alarm clock/calendar) mới được duyệt — notes app không đủ điều kiện, dùng vào rủi ro bị từ chối/gỡ khỏi Store. Đã revert về `setAndAllowWhileIdle()` (không cần permission đặc biệt, vẫn tốt hơn `set()` gốc qua Doze). Xem `doc/task/BACKLOG.md` mục FIX-H04 (2 lần code, có link commit cả 2 chiều) và `doc/AD.MD`/`CLAUDE.md` phần reminder/alarm. **Đừng làm lại item này trừ khi có kế hoạch pháp lý rõ ràng để khai báo core-functionality với Google Play.**
 
 **ENH-A05 — Thêm index composite cho bảng `notes` theo `(status, pinned, modified_date)`**
 `NotesDao.getByStatus`/`search` filter/sort đúng các cột này mỗi lần render list/search nhưng schema hiện chỉ có PK.

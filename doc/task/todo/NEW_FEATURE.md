@@ -16,7 +16,7 @@ Audit lần này xác nhận qua code thật: **mood tag, note color, khoá note
 | NEW-04 | Note template có sẵn | "Biên bản họp", "Kế hoạch tuần", "Danh sách mua sắm"... `EditVM.start()` đã nhận sẵn tham số title/content/type — chỉ cần màn hình chọn template | S | P1 | `ui/edit/EditVM.kt`, `ui/edit/EditFrm.kt` |
 | NEW-05 | Gán màu/mood hàng loạt trong multi-select | Action bar multi-select đã có pin/reminder/labels/move/delete — chỉ thiếu action màu/mood hàng loạt | S | P2 | `ui/note/NoteFrm.kt`, `ui/note/NoteVM.kt` |
 | NEW-06 | App-link/deep link trỏ thẳng tới note | Chưa có `<data android:scheme>` intent-filter nào ngoài action nội bộ; tận dụng lại `INTENT_ACTION_EDIT` | M | P2 | `AndroidManifest.xml`, `ui/main/MainAct.kt` |
-| NEW-07 | Recurring reminder preset 1-chạm | "Mỗi thứ 2 9h", "ngày 1 hàng tháng" — hạ tầng `Recurrence`/`RecurrenceFinder` đã đủ mạnh (xem FIX-C03 cần sửa trước) | S | P2 | `ui/reminder/ReminderDlg.kt` |
+| NEW-07 | Recurring reminder preset 1-chạm | "Mỗi thứ 2 9h", "ngày 1 hàng tháng" — hạ tầng `Recurrence`/`RecurrenceFinder` đã đủ mạnh (FIX-C03 ✅ đã vá 2026-08-17, không còn là blocker) | S | P2 | `ui/reminder/ReminderDlg.kt` |
 | NEW-08 | Quick-add inline ngay trên widget | `QuickNoteWidget`/`QuickListWidget` hiện chỉ deep-link vào app, chưa nhập liệu trực tiếp trên widget | L | P2 | `widget/QuickNoteWidget.kt`, `widget/QuickListWidget.kt` |
 | NEW-09 | Digest tổng hợp reminder quá hạn | Thông báo tóm tắt hàng ngày các reminder quá hạn chưa xong, bổ sung cho luồng thông báo từng note | M | P2 | mới, tích hợp `receiver/AlarmReceiver.kt` |
 | NEW-10 | Màu sắc/icon cho Label | `Label` entity hiện chỉ có `id/name/hidden` — cần thêm cột `color` + migration | M | P1 | `model/entity/Label.kt`, `NotesDb.kt`, `ui/labels/` |

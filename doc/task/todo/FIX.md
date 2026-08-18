@@ -1,5 +1,7 @@
 # FIX Backlog — Another Notes App
 
+> ✅ **ĐÃ ĐÓNG 2026-08-18 — toàn bộ 56 item (P0/P1/P2 + 4 mục xác minh thêm) đã fix/quyết định xong.** File này giữ nguyên làm hồ sơ audit gốc (nguồn phát hiện, độ tin cậy, kịch bản tái hiện). Xem `doc/task/BACKLOG.md` để có bảng đầy đủ Sprint 1/2/3 kèm commit hash từng fix — đó mới là nguồn xác nhận trạng thái hiện tại, không phải file này.
+
 > **Tạo:** 2026-08-17 | **Phương pháp:** Audit độc lập song song bằng 6 nguồn (4 subagent nội bộ chia theo tầng kiến trúc + agy CLI + Claude CLI `--dangerously-skip-permissions`, mỗi nguồn đọc toàn bộ source code từ đầu, không tham khảo backlog cũ), sau đó **dedup + xác minh chéo bằng cách đọc lại code thật** cho các item quan trọng nhất trước khi đưa vào đây. Codex CLI hết quota (usage limit tới 2026-08-20), không có kết quả.
 >
 > Nguồn thô: [audit_agy.md](../audit_raw/audit_agy.md), [audit_claude_bypass.md](../audit_raw/audit_claude_bypass.md).
