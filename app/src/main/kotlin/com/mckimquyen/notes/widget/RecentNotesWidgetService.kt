@@ -34,7 +34,7 @@ class RecentNotesRemoteViewsFactory(
     override fun onDataSetChanged() {
         // This is called synchronously to fetch data.
         runBlocking {
-            recentNotes = repository.getRecentNotes(5)
+            recentNotes = repository.getRecentNotes()
         }
     }
 
