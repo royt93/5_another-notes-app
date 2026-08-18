@@ -88,7 +88,14 @@ class LabelVM @AssistedInject constructor(
     private val selectedLabelIds = mutableSetOf<Long>()
     private val selectedLabels = mutableSetOf<Label>()
 
-    private var renamingLabel = false
+    // ID of the label being renamed via renameSelection(), or Label.NO_ID when not renaming.
+    // Paired with renamingLabelOriginalName so the next label-list emission can tell a
+    // completed rename (name actually changed) apart from an unrelated emission that happens
+    // to land while a rename dialog was open and then cancelled — the old boolean flag treated
+    // ANY next emission as "rename just happened" and silently cleared the current selection,
+    // even when the user backed out of the dialog without saving. FIX-M09.
+    private var renamingLabelId = Label.NO_ID
+    private var renamingLabelOriginalName = ""
 
     private var labelsListJob: Job? = null
     private var restoreStateJob: Job? = null
@@ -99,7 +106,7 @@ class LabelVM @AssistedInject constructor(
             noteIds = savedStateHandle.get<List<Long>>(KEY_NOTE_IDS).orEmpty()
             selectedLabelIds += savedStateHandle.get<List<Long>>(KEY_SELECTED_IDS).orEmpty()
             selectedLabels += selectedLabelIds.mapNotNull { labelsRepository.getLabelById(it) }
-            renamingLabel = savedStateHandle[KEY_RENAMING_LABEL] ?: false
+            renamingLabelId = savedStateHandle[KEY_RENAMING_LABEL] ?: Label.NO_ID
             restoreStateJob = null
         }
     }
@@ -131,12 +138,18 @@ class LabelVM @AssistedInject constructor(
                 // (e.g. selection) before setting list items, or selection may be lost.
                 restoreStateJob?.join()
 
-                if (renamingLabel) {
-                    // List was updated after renaming label, this can only be due to label rename.
-                    // Deselect label since it was probably selected only for renaming.
-                    renamingLabel = false
-                    selectedLabelIds.clear()
-                    selectedLabels.clear()
+                if (renamingLabelId != Label.NO_ID) {
+                    val renamedLabel = labels.find { it.id == renamingLabelId }
+                    if (renamedLabel != null && renamedLabel.name != renamingLabelOriginalName) {
+                        // The label's name actually changed since the rename dialog was
+                        // opened — deselect it now that the rename completed. If the dialog
+                        // was instead cancelled, the name is unchanged and we keep waiting
+                        // (harmless: the selection stays intact through unrelated list
+                        // updates instead of being cleared out from under the user).
+                        renamingLabelId = Label.NO_ID
+                        selectedLabelIds.clear()
+                        selectedLabels.clear()
+                    }
                 }
                 listItems = labels.mapTo(mutableListOf()) { label ->
                     LabelListItem(id = label.id, label = label, checked = label.id in selectedLabelIds)
@@ -174,12 +187,10 @@ class LabelVM @AssistedInject constructor(
     }
 
     fun renameSelection() {
-        if (selectedLabels.size != 1) {
-            // Renaming multiple or no labels, abort.
-            return
-        }
-        renamingLabel = true
-        _showRenameDialogEvent.send(selectedLabelIds.first())
+        val label = selectedLabels.singleOrNull() ?: return  // renaming multiple or no labels, abort
+        renamingLabelId = label.id
+        renamingLabelOriginalName = label.name
+        _showRenameDialogEvent.send(label.id)
     }
 
     fun deleteSelectionPre() {
