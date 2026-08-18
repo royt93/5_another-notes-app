@@ -357,44 +357,6 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
 
         // Set version name as summary text for version preference
         requirePreference<Preference>(PrefsManager.VERSION).summary = com.mckimquyen.notes.BuildConfig.VERSION_NAME
-
-        requirePreference<Preference>("exact_alarm_permission").apply {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                // SCHEDULE_EXACT_ALARM doesn't exist below API 31 — exact alarms are always
-                // allowed there, nothing for the user to grant.
-                isVisible = false
-            } else {
-                setOnPreferenceClickListener {
-                    startActivity(
-                        Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                            .setData(Uri.parse("package:${context.packageName}"))
-                    )
-                    true
-                }
-            }
-        }
-    }
-
-    // Tracked across onResume() calls so we can tell "user just granted it in Settings" (worth
-    // rescheduling already-set inexact alarms) apart from "already granted last time too".
-    private var wasExactAlarmGranted: Boolean? = null
-
-    override fun onResume() {
-        super.onResume()
-        updateExactAlarmPrefSummary()
-    }
-
-    private fun updateExactAlarmPrefSummary() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
-        val alarmManager = requireContext().getSystemService(android.app.AlarmManager::class.java)
-        val granted = alarmManager.canScheduleExactAlarms()
-        requirePreference<Preference>("exact_alarm_permission").summary = getString(
-            if (granted) R.string.pref_exact_alarm_summary_granted else R.string.pref_exact_alarm_summary_denied
-        )
-        if (granted && wasExactAlarmGranted == false) {
-            viewModel.rescheduleAllAlarms()
-        }
-        wasExactAlarmGranted = granted
     }
 
     override fun onDestroy() {

@@ -4,12 +4,11 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- "Alarms & reminders" special permission (API 31+). No runtime dialog — user grants it
-         via Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM (see SettingsFrm). Falls back to
-         inexact alarm.set() when not granted; declaring it is a no-op below API 31. Deliberately
-         NOT declaring USE_EXACT_ALARM — that one requires a Play Store core-functionality
-         declaration (alarm clock / calendar app) this app doesn't qualify for. FIX-H04. -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Deliberately NOT declaring SCHEDULE_EXACT_ALARM/USE_EXACT_ALARM: both are Play Console
+         "sensitive permissions" gated behind a core-functionality declaration (alarm clock /
+         calendar app) this notes app doesn't qualify for — using them risks Store rejection or
+         removal. Reminders use alarmManager.setAndAllowWhileIdle() instead, which needs no
+         special permission. FIX-H04. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

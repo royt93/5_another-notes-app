@@ -92,13 +92,6 @@
             app:title="@string/pref_behavior_move_checked"
             app:widgetLayout="@drawable/ic_material_switch" />
 
-        <!-- Only shown on API 31+ (SCHEDULE_EXACT_ALARM is a no-op permission below that) —
-             visibility/summary/click set at runtime in SettingsFrm. FIX-H04. -->
-        <Preference
-            app:icon="@drawable/ic_alarm"
-            app:key="exact_alarm_permission"
-            app:title="@string/pref_exact_alarm_title" />
-
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_group_data">

@@ -237,16 +237,6 @@ class SettingsVM @AssistedInject constructor(
         }
     }
 
-    /**
-     * Called when the user comes back from the exact-alarm permission Settings screen having
-     * just granted it — upgrades any already-scheduled (inexact) reminder alarms to exact
-     * without waiting for each one to naturally fire and get rescheduled. FIX-H04.
-     */
-    fun rescheduleAllAlarms() {
-        viewModelScope.launch {
-            reminderAlarmManager.updateAllAlarms()
-        }
-    }
 
     private fun showMessage(messageId: Int) {
         _messageEvent.postValue(Event(messageId))

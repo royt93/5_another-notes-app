@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import com.mckimquyen.notes.model.ReminderAlarmCallback
 import com.mckimquyen.notes.model.ReminderAlarmManager
 import javax.inject.Inject
@@ -21,28 +20,18 @@ class ReceiverAlarmCallback @Inject constructor(
 
     override fun addAlarm(noteId: Long, time: Long) {
         val alarmIntent = getAlarmPendingIndent(noteId)
-        // setExactAndAllowWhileIdle() needs SCHEDULE_EXACT_ALARM on API 31+ (granted via a
-        // Settings screen, not a runtime dialog — see SettingsFrm's exact_alarm_permission
-        // preference). Below API 31 the permission doesn't exist and exact alarms are always
-        // allowed. Falls back to the inexact set() (can be delayed tens of minutes in Doze)
-        // when the user hasn't granted it. FIX-H04.
-        if (canScheduleExactAlarms()) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                time,
-                alarmIntent
-            )
-        } else {
-            alarmManager.set(
-                AlarmManager.RTC_WAKEUP,
-                time,
-                alarmIntent
-            )
-        }
-    }
-
-    private fun canScheduleExactAlarms(): Boolean {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()
+        // Deliberately NOT setExactAndAllowWhileIdle(): that needs SCHEDULE_EXACT_ALARM (API
+        // 31+), a Play Console "sensitive permission" gated behind a core-functionality
+        // declaration (alarm clock / calendar) this notes app doesn't qualify for — using it
+        // risks rejection or removal from the Store. setAndAllowWhileIdle() needs no special
+        // permission and still lets the alarm through Doze (rate-limited to roughly once per 9
+        // minutes per app), instead of being deferred to the next maintenance window like
+        // plain set(). FIX-H04 (reverted exact-alarm approach after review).
+        alarmManager.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            time,
+            alarmIntent
+        )
     }
 
     override fun removeAlarm(noteId: Long) {
