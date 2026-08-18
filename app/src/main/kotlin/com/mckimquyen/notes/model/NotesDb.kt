@@ -45,7 +45,7 @@ abstract class NotesDb : RoomDatabase() {
 
     @Suppress("MagicNumber")
     companion object {
-        const val VERSION = 8
+        const val VERSION = 9
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -138,6 +138,17 @@ abstract class NotesDb : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // ENH-A05: composite index matching NotesDao.getByStatus()/search()'s actual
+                // filter+order pattern (WHERE status, ORDER BY pinned, modified_date).
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_notes_status_pinned_modified_date` " +
+                        "ON `notes` (`status`, `pinned`, `modified_date`)"
+                )
+            }
+        }
+
         val ALL_MIGRATIONS = arrayOf(
             MIGRATION_1_2,
             MIGRATION_2_3,
@@ -146,6 +157,7 @@ abstract class NotesDb : RoomDatabase() {
             MIGRATION_5_6,
             MIGRATION_6_7,
             MIGRATION_7_8,
+            MIGRATION_8_9,
         )
     }
 }

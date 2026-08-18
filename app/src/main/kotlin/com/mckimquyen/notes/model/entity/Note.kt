@@ -4,6 +4,7 @@ import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
@@ -13,7 +14,10 @@ import com.maltaisn.notes.debugRequire
 import kotlinx.serialization.Transient
 import java.util.Date
 
-@Entity(tableName = "notes")
+// ENH-A05: NotesDao.getByStatus()/search() filter by status, order by pinned then (by
+// default) modified_date on every list render/search — this composite index covers that
+// exact access pattern instead of relying on a full table scan.
+@Entity(tableName = "notes", indices = [Index(value = ["status", "pinned", "modified_date"])])
 @Keep
 data class Note(
     /**
