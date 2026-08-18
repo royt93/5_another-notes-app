@@ -32,6 +32,15 @@ class ImportPasswordVM @AssistedInject constructor(
         this.password = password
     }
 
+    /**
+     * Wipe the plaintext password out of both the field and the SavedStateHandle bundle as
+     * soon as the dialog goes away, instead of leaving it there for however long this
+     * ViewModel happens to survive before onCleared(). FIX-M25.
+     */
+    fun clearPassword() {
+        password = ""
+    }
+
     fun start() {
         if (KEY_PASSWORD in savedStateHandle) {
             _setDialogDataEvent.send(this.password)

@@ -74,6 +74,7 @@ class ImportPasswordDlg : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         hideCursorInAllViews()
+        viewModel.clearPassword()
     }
 
     override fun onCancel(dialog: DialogInterface) {

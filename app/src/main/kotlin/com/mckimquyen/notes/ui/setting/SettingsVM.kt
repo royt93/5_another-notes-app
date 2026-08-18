@@ -217,10 +217,15 @@ class SettingsVM @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.M)
     private fun deriveKey(password: String, salt: ByteArray): SecretKey {
         val keySpec = PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH)
-        val secretKeyFactory = SecretKeyFactory.getInstance(KEY_DERIVATION_ALGORITHM)
-        val secretKey = secretKeyFactory.generateSecret(keySpec)
-
-        return SecretKeySpec(secretKey.encoded, KeyProperties.KEY_ALGORITHM_AES)
+        try {
+            val secretKeyFactory = SecretKeyFactory.getInstance(KEY_DERIVATION_ALGORITHM)
+            val secretKey = secretKeyFactory.generateSecret(keySpec)
+            return SecretKeySpec(secretKey.encoded, KeyProperties.KEY_ALGORITHM_AES)
+        } finally {
+            // PBEKeySpec keeps its own copy of the password as a char[] — zero it out now
+            // instead of leaving the plaintext sitting in the heap until GC. FIX-M25.
+            keySpec.clearPassword()
+        }
     }
 
     fun clearData() {
