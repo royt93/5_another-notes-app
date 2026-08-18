@@ -77,9 +77,12 @@ class SortDialog : BottomSheetDialogFragment() {
 
         setupViewModelObservers()
 
-        if (savedInstanceState == null) {
-            viewModel.start()
-        }
+        // Always re-push the current sort prefs, even after a config-change recreation —
+        // the Event wrapper is single-consumption, so skipping start() when
+        // savedInstanceState != null left the freshly recreated radio buttons at their XML
+        // default (unrelated to the user's actual saved sort settings) instead of the real
+        // current selection, risking Apply silently overwriting it. FIX-M10.
+        viewModel.start()
     }
 
     override fun onStart() {
