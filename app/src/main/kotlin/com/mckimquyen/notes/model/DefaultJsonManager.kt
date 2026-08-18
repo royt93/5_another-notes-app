@@ -29,7 +29,9 @@ import com.mckimquyen.notes.model.entity.Reminder
 import com.mckimquyen.notes.widget.NoteCountWidget
 import com.mckimquyen.notes.widget.RecentNotesWidget
 import androidx.room.withTransaction
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -169,19 +171,32 @@ class DefaultJsonManager @Inject constructor(
                 val newLabelsMap = importLabels(notesData)
                 importNotes(notesData, newLabelsMap)
             }
+        } catch (e: CancellationException) {
+            // CancellationException is a subtype of Exception on the JVM — rethrow it so
+            // structured concurrency isn't violated (e.g. ViewModel scope cancelled mid-import
+            // because the user backed out of Settings). A blanket catch(Exception) here would
+            // swallow the cancellation and misreport it as BAD_DATA. Found by review.
+            throw e
         } catch (e: Exception) {
             return ImportResult.BAD_DATA
         }
 
-        // Update all reminders
-        reminderAlarmManager.updateAllAlarms()
+        // Wrapped in NonCancellable for the same reason every DB-mutating method in
+        // DefaultNotesRepository/DefaultLabelsRepository is (see FIX-M23 in this same sprint):
+        // the transaction above already committed successfully, so a cancellation landing here
+        // shouldn't leave reminders unscheduled or widgets stale for imported notes. Found by
+        // review — this import path wasn't given the same treatment as the repositories.
+        withContext(NonCancellable) {
+            // Update all reminders
+            reminderAlarmManager.updateAllAlarms()
 
-        // Import writes directly through notesDao/labelsDao, bypassing DefaultNotesRepository
-        // (the only other place these widgets get refreshed) — without this, NoteCountWidget
-        // stays wrong for up to its 30-minute update period and RecentNotesWidget (which has
-        // no periodic update at all) never refreshes until some other note action happens. FIX-M05.
-        NoteCountWidget.updateAllWidgets(context)
-        RecentNotesWidget.updateAllWidgets(context)
+            // Import writes directly through notesDao/labelsDao, bypassing DefaultNotesRepository
+            // (the only other place these widgets get refreshed) — without this, NoteCountWidget
+            // stays wrong for up to its 30-minute update period and RecentNotesWidget (which has
+            // no periodic update at all) never refreshes until some other note action happens. FIX-M05.
+            NoteCountWidget.updateAllWidgets(context)
+            RecentNotesWidget.updateAllWidgets(context)
+        }
 
         return if (notesData.version > VERSION) {
             // data comes from future version of app

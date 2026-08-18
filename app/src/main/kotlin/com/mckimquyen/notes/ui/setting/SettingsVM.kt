@@ -116,8 +116,14 @@ class SettingsVM @AssistedInject constructor(
     }
 
     fun disableAutoExport() {
+        // Capture before clearing — prefsManager.disableAutoExport() resets autoExportUri to
+        // AUTO_EXPORT_NO_URI ("") as its last statement, so reading it afterward always sent
+        // the empty sentinel to the release event instead of the real URI whose persisted
+        // permission needs releasing. Found by review while verifying FIX-M11, which added the
+        // first call site where this actually mattered for permission cleanup.
+        val uriToRelease = prefsManager.autoExportUri
         prefsManager.disableAutoExport()
-        _releasePersistableUriEvent.send(prefsManager.autoExportUri)
+        _releasePersistableUriEvent.send(uriToRelease)
     }
 
     fun importData(input: InputStream) {
