@@ -256,7 +256,7 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
         mode.menuInflater.inflate(R.menu.menu_cab_label_selection, menu)
         if (Build.VERSION.SDK_INT >= 23) {
             switchStatusBarColor(
-                colorFrom = (binding.toolbarLayout.background as MaterialShapeDrawable).resolvedTintColor,
+                colorFrom = toolbarTintColor(),
                 colorTo = MaterialColors.getColor(requireView(), RMaterial.attr.colorSurfaceVariant),
                 duration = resources.getInteger(RMaterial.integer.material_motion_duration_long_2).toLong()
             )
@@ -272,11 +272,20 @@ class LabelFrm : DialogFragment(), Toolbar.OnMenuItemClickListener,
         if (Build.VERSION.SDK_INT >= 23) {
             switchStatusBarColor(
                 colorFrom = MaterialColors.getColor(requireView(), RMaterial.attr.colorSurfaceVariant),
-                colorTo = (binding.toolbarLayout.background as MaterialShapeDrawable).resolvedTintColor,
+                colorTo = toolbarTintColor(),
                 duration = resources.getInteger(RMaterial.integer.material_motion_duration_long_1).toLong(),
                 endAsTransparent = true
             )
         }
+    }
+
+    // toolbarLayout's background is normally a MaterialShapeDrawable (from the
+    // MaterialToolbar/AppBarLayout theme), but a customized ROM/theme could swap it for a
+    // plain ColorDrawable/GradientDrawable — fall back to the surface color instead of
+    // crashing the whole Action Mode transition. FIX-L10.
+    private fun toolbarTintColor(): Int {
+        return (binding.toolbarLayout.background as? MaterialShapeDrawable)?.resolvedTintColor
+            ?: MaterialColors.getColor(requireView(), RMaterial.attr.colorSurface)
     }
 
     override fun onDialogPositiveButtonClicked(tag: String?) {

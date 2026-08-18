@@ -620,7 +620,7 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
         mode.menuInflater.inflate(R.menu.menu_cab_note_selection, menu)
         if (Build.VERSION.SDK_INT >= 23) {
             switchStatusBarColor(
-                (binding.toolbarLayout.background as MaterialShapeDrawable).resolvedTintColor,
+                toolbarTintColor(),
                 MaterialColors.getColor(requireView(), RMaterial.attr.colorSurfaceVariant),
                 resources.getInteger(RMaterial.integer.material_motion_duration_long_2).toLong()
             )
@@ -638,13 +638,22 @@ abstract class NoteFrm : Fragment(), ActionMode.Callback, ConfirmDlg.Callback,
             if (Build.VERSION.SDK_INT >= 23) {
                 switchStatusBarColor(
                     MaterialColors.getColor(requireView(), RMaterial.attr.colorSurfaceVariant),
-                    (binding.toolbarLayout.background as MaterialShapeDrawable).resolvedTintColor,
+                    toolbarTintColor(),
                     resources.getInteger(RMaterial.integer.material_motion_duration_long_1).toLong(),
                     true
                 )
             }
         }
         hideActionMode = false
+    }
+
+    // toolbarLayout's background is normally a MaterialShapeDrawable (from the
+    // MaterialToolbar/AppBarLayout theme), but a customized ROM/theme could swap it for a
+    // plain ColorDrawable/GradientDrawable — fall back to the surface color instead of
+    // crashing the whole Action Mode transition. FIX-L10.
+    private fun toolbarTintColor(): Int {
+        return (binding.toolbarLayout.background as? MaterialShapeDrawable)?.resolvedTintColor
+            ?: MaterialColors.getColor(requireView(), RMaterial.attr.colorSurface)
     }
 
     override fun onDestinationChanged(
