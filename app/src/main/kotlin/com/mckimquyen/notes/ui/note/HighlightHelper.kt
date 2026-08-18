@@ -16,7 +16,11 @@ object HighlightHelper {
     fun findHighlightsInString(text: String, query: String, max: Int = Int.MAX_VALUE): MutableList<IntRange> {
         val highlights = mutableListOf<IntRange>()
         var queryClean = query
-        if (query.first() == '"' && query.last() == '"') {
+        // Guard against empty query (query.first()/.last() throw NoSuchElementException) and a
+        // 1-char query of just '"' (substring(1, 0) throws StringIndexOutOfBoundsException).
+        // Currently unreachable from the UI since FTS4 rejects empty/degenerate MATCH queries
+        // before this runs, but the utility itself was one caller-change away from crashing. FIX-L01.
+        if (query.length >= 2 && query.first() == '"' && query.last() == '"') {
             queryClean = queryClean.substring(1, queryClean.length - 1)
         }
         if (max > 0) {
