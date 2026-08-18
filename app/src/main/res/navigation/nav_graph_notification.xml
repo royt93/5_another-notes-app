@@ -4,31 +4,13 @@
     android:id="@+id/nav_graph_notification"
     app:startDestination="@id/fragment_notification">
 
+    <!-- Postpone date/time picking is handled directly in NotificationAct via
+         MaterialDatePicker/MaterialTimePicker (no dedicated destination needed) —
+         ReminderPostponeDateDialog/ReminderPostponeTimeDialog below don't exist in the
+         codebase. Safe Args still generated an action pointing at a nonexistent class;
+         removed as dead nav graph nodes. FIX-L02. -->
     <fragment
         android:id="@+id/fragment_notification"
-        android:name="com.mckimquyen.notes.ui.noti.NotificationFrm">
-        <action
-            android:id="@+id/action_reminder_postpone_date"
-            app:destination="@id/dialog_reminder_postpone_date" />
-        <action
-            android:id="@+id/action_reminder_postpone_time"
-            app:destination="@id/dialog_reminder_postpone_time" />
-    </fragment>
-
-    <dialog
-        android:id="@+id/dialog_reminder_postpone_date"
-        android:name="com.mckimquyen.notes.ui.noti.ReminderPostponeDateDialog">
-        <argument
-            android:name="date"
-            app:argType="long" />
-    </dialog>
-
-    <dialog
-        android:id="@+id/dialog_reminder_postpone_time"
-        android:name="com.mckimquyen.notes.ui.noti.ReminderPostponeTimeDialog">
-        <argument
-            android:name="date"
-            app:argType="long" />
-    </dialog>
+        android:name="com.mckimquyen.notes.ui.noti.NotificationFrm" />
 
 </navigation>
