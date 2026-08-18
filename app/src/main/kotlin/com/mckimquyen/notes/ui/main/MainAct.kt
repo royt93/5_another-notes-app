@@ -250,9 +250,17 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
         }
 
         viewModel.editItemEvent.observeEvent(this) { noteId ->
-            // Allow navigating to same destination, in case notification is clicked while already editing a note.
-            // In this case the EditFrm will be opened multiple times.
-            navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), true)
+            // Allow navigating to fragment_edit again even while already on it, so tapping a
+            // DIFFERENT note's reminder notification while one is already open still opens
+            // that note. But if it's the SAME note's notification tapped repeatedly, skip
+            // navigating again — otherwise every tap stacked a fresh fragment_edit instance
+            // for the identical note onto the back stack. FIX-M22.
+            val currentEntry = navController.currentBackStackEntry
+            val alreadyOnSameNote = currentEntry?.destination?.id == R.id.fragment_edit &&
+                currentEntry.arguments?.getLong("noteId") == noteId
+            if (!alreadyOnSameNote) {
+                navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), true)
+            }
         }
 
         viewModel.autoExportEvent.observeEvent(this) { uri ->
