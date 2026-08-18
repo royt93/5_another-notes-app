@@ -13,6 +13,7 @@ import com.mckimquyen.notes.ui.send
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class LabelEditVM @AssistedInject constructor(
@@ -92,8 +93,14 @@ class LabelEditVM @AssistedInject constructor(
         }
     }
 
+    // Cancelled and replaced on every call — without this, a fast typist could fire several
+    // overlapping getLabelByName() lookups whose completion order isn't guaranteed, letting a
+    // stale (now-outdated) result win and leave a duplicate name marked as valid. FIX-M08.
+    private var updateErrorJob: Job? = null
+
     private fun updateError() {
-        viewModelScope.launch {
+        updateErrorJob?.cancel()
+        updateErrorJob = viewModelScope.launch {
             // Label name must not be empty and must not exist.
             // Ignore name clash if label is the one being edited.
             _labelError.value = if (labelName.isEmpty()) {
