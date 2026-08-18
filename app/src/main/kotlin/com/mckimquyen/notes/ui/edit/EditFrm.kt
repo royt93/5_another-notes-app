@@ -313,6 +313,14 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
 
         viewModel.focusEvent.observeEvent(viewLifecycleOwner, adapter::setItemFocus)
 
+        // ENH-A02: items mutated in place by the VM (identity preserved on purpose) so
+        // DiffUtil/submitList() can't detect the change — force-rebind those specific rows.
+        viewModel.itemsChangedInPlaceEvent.observeEvent(viewLifecycleOwner) { positions ->
+            for (pos in positions) {
+                adapter.notifyItemChanged(pos)
+            }
+        }
+
         viewModel.isReadingMode.observe(viewLifecycleOwner) { isReadingMode ->
             adapter.isReadingMode = isReadingMode
             if (isReadingMode) {

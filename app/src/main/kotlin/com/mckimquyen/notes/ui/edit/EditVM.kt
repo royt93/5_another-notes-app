@@ -173,6 +173,17 @@ class EditVM @AssistedInject constructor(
     val focusEvent: LiveData<Event<FocusChange>>
         get() = _focusEvent
 
+    // ENH-A02: EditDiffCallback.areItemsTheSame() is identity-only (old === new) — see the
+    // FIX-M17 postmortem on uncheckAllItems() for why content-equality diffing isn't safe
+    // here (EditableText is deliberately mutated in place for performance, so a content
+    // comparison would never see title/content text changes either). For mutations that
+    // change a field DiffUtil can't observe (because identity — and therefore "content" as
+    // DiffUtil sees it — is unchanged on purpose), this event lets the VM ask the adapter to
+    // force-rebind specific rows directly, without going through submitList()/DiffUtil at all.
+    private val _itemsChangedInPlaceEvent = MutableLiveData<Event<List<Int>>>()
+    val itemsChangedInPlaceEvent: LiveData<Event<List<Int>>>
+        get() = _itemsChangedInPlaceEvent
+
     private val _messageEvent = MutableLiveData<Event<EditMessage>>()
     val messageEvent: LiveData<Event<EditMessage>>
         get() = _messageEvent
@@ -622,32 +633,26 @@ class EditVM @AssistedInject constructor(
     }
 
     fun uncheckAllItems() {
-        // REVERTED (device smoke test caught a worse regression from the in-place-mutate
-        // attempt below — see doc/task/todo/FIX.md FIX-M17 postmortem):
-        //
-        //     for (item in listItems) {
-        //         if (item is EditItemItem && item.checked) item.checked = false
-        //     }
-        //
-        // EditDiffCallback.areItemsTheSame() is IDENTITY-only (old === new). Mutating in
-        // place means the object AsyncListDiffer holds as "the current list" and the object
-        // in the newly submitted list are the exact same instance — there is no before/after
-        // snapshot for DiffUtil to diff, so it reports zero changes and RecyclerView never
-        // rebinds. On device this looked like nothing happened at all: checkboxes stayed
-        // visually checked. The underlying ViewModel state WAS correct (confirmed by leaving
-        // the note and reopening it), only the RecyclerView never re-rendered. That's a worse
-        // outcome than the original bug this was meant to fix — the original .copy() causes
-        // DiffUtil to treat the row as a brand-new item (remove+insert instead of an in-place
-        // update), which does flicker and drops row focus, but at least the checklist visibly
-        // and reliably updates. Fixing this properly needs either a stable id-based
-        // areItemsTheSame() (so DiffUtil can match "same logical row, different content") or
-        // an explicit notifyItemChanged() call from the adapter side — out of scope for a
-        // one-line P1 fix. Reverted to .copy(), the correctness-preserving option.
-        // FIX-M17.
+        // ENH-A02: mutate in place (preserving identity) instead of the .copy() this used
+        // after the FIX-M17 revert. .copy() forced EditDiffCallback's identity-only
+        // areItemsTheSame() to treat every unchecked row as a brand-new item — a spurious
+        // remove+insert (flicker, dropped row focus) for what's actually just a field flip.
+        // Mutating in place keeps the object identity DiffUtil relies on, but that also means
+        // DiffUtil can no longer see the change at all (see FIX-M17 postmortem) — so instead
+        // of relying on submitList()/DiffUtil for these rows, explicitly tell the adapter
+        // which positions to rebind via itemsChangedInPlaceEvent. moveCheckedItemsToBottom()
+        // below still goes through the normal submitList()/DiffUtil path for the actual
+        // reordering — and because identity is now preserved, DiffUtil can recognize that as
+        // a genuine move instead of another remove+insert.
+        val changedPositions = mutableListOf<Int>()
         for ((i, item) in listItems.withIndex()) {
             if (item is EditItemItem && item.checked) {
-                listItems[i] = item.copy(checked = false)
+                item.checked = false
+                changedPositions += i
             }
+        }
+        if (changedPositions.isNotEmpty()) {
+            _itemsChangedInPlaceEvent.send(changedPositions)
         }
         moveCheckedItemsToBottom()
     }
