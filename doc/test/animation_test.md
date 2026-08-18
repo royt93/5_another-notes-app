@@ -1,6 +1,6 @@
 # Animation Test Cases — Another Notes App
 
-> **Created:** 2026-06-22 | **Version:** 2026.06.22
+> **Created:** 2026-06-22 | **Version:** 2026.06.22 | **Audit lại:** 2026-08-18 (sửa vài trích dẫn file:line sai, E-1/E-2 mô tả code đã đổi)
 > **Mục đích:** Kiểm tra toàn bộ animation/transition trong app trước mỗi release
 > **Phạm vi:** Fragment transitions, shared element, local animators, swipe, RecyclerView
 
@@ -42,7 +42,7 @@
 | A-2-5 | Scroll list → tap note gần đáy màn hình | Transition chạy đúng, không clip cứng |
 | A-2-6 | Tap note → ngay lập tức nhấn Back (trước khi transition xong) | Không crash, transition reverse gracefully |
 
-**Implementation:** `NoteFrm.kt:81-86` — `sharedElementEnterTransition = MaterialContainerTransform`; `transitionName = "noteContainer$noteId"`
+**Implementation:** `EditFrm.kt:92-101` — `sharedElementEnterTransition = MaterialContainerTransform`. `transitionName = "noteContainer$noteId"` được set từ phía gọi (`NoteFrm.kt:249`, `FragmentNavigatorExtras`). *(Sửa 2026-08-18 — trước ghi nhầm `NoteFrm.kt:81-86`, dòng đó thực ra là field `actionMode`/`drawerLayout`/`handler`/`statusBarAnimator`, không liên quan transition.)*
 **Priority:** CRITICAL
 
 ---
@@ -161,7 +161,7 @@
 | D-2-2 | Navigate ra khỏi | Transition mượt về màu default |
 | D-2-3 | Animate đang chạy → Back nhanh | `statusBarAnimator?.cancel()` trước khi null — không crash |
 
-**File:** `NoteFrm.kt:230-234`
+**File:** `NoteFrm.kt:586-601` (cụ thể `ValueAnimator.ofObject(ArgbEvaluator())` ở dòng 595) — *(Sửa 2026-08-18, trước ghi nhầm dòng 230-234)*
 **Priority:** MEDIUM
 
 ---
@@ -170,28 +170,32 @@
 
 ### E-1: HomeFrm / NoteFrm item animator
 
+> ⚠️ **Sửa 2026-08-18:** `NoteFrm` là **abstract base class** (`abstract class NoteFrm`, `NoteFrm.kt:64`) được `HomeFrm`/`SearchFrm` kế thừa, không phải màn note-list-theo-label độc lập như ghi trước đây. `supportsChangeAnimations = false` KHÔNG còn tồn tại trong `NoteFrm.kt` — dòng 132 hiện gán `rcv.itemAnimator = SpringItemAnimator()`, custom `DefaultItemAnimator` subclass (`app/src/main/kotlin/com/mckimquyen/notes/ui/note/adt/SpringItemAnimator.kt`) thêm hiệu ứng overshoot-bounce khi pin/di chuyển note lên đầu.
+
 | Bước | Hành động | Kỳ vọng |
 |---|---|---|
 | E-1-1 | Tạo note mới → quay về Home | Note mới xuất hiện ở đầu list (nếu mới nhất) với fade-in animation |
-| E-1-2 | Pin 1 note | Note jump lên đầu list; các note khác trượt xuống với animate |
+| E-1-2 | Pin 1 note | `SpringItemAnimator` overshoot-bounce; note jump lên đầu list; các note khác trượt xuống với animate |
 | E-1-3 | Unpin 1 note | Note trượt xuống đúng vị trí |
 | E-1-4 | Change status note (archive) | Note fade-out và remove khỏi list với animation |
-| E-1-5 | Đổi layout Grid ↔ List | Không có animation bị duplicate; `supportsChangeAnimations = false` đảm bảo không blink |
+| E-1-5 | Đổi layout Grid ↔ List | Không có animation bị duplicate/blink |
 
-**File:** `NoteFrm.kt:165` — custom `DefaultItemAnimator` với `supportsChangeAnimations = false`
+**File:** `NoteFrm.kt:132` — `rcv.itemAnimator = SpringItemAnimator()`
 **Priority:** MEDIUM
 
 ---
 
 ### E-2: SearchFrm item animator
 
+> ⚠️ **Sửa 2026-08-18:** `supportsChangeAnimations = false` không tồn tại ở đây. `SearchFrm.kt:61` hiện là `rcv.itemAnimator = DefaultItemAnimator().apply { changeDuration = 120 }` — crossfade 120ms khi item thay đổi (highlight kết quả search), không phải tắt hẳn change-animation.
+
 | Bước | Hành động | Kỳ vọng |
 |---|---|---|
-| E-2-1 | Gõ 1 ký tự vào search box | Kết quả update — không có blink/flash trên items (vì `supportsChangeAnimations = false`) |
+| E-2-1 | Gõ 1 ký tự vào search box | Kết quả update — crossfade 120ms mượt, không blink/flash cứng |
 | E-2-2 | Xóa từng ký tự | Kết quả update mượt, không jumpy |
 | E-2-3 | Clear search text | List về rỗng hoặc all notes, không crash |
 
-**File:** `SearchFrm.kt:61` — `(rcv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false`
+**File:** `SearchFrm.kt:61` — `rcv.itemAnimator = DefaultItemAnimator().apply { changeDuration = 120 }`
 **Priority:** LOW
 
 ---

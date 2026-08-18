@@ -2,7 +2,9 @@
 
 > Scanned: `app/src/main/kotlin/com/mckimquyen/notes/`
 > Sorted: mức độ nghiêm trọng **tăng dần** (LOW → MEDIUM → HIGH → CRITICAL)
-> **Updated 2026-02-20: Tất cả đã được FIX ✅**
+> **Cập nhật 2026-08-18:** đã audit lại toàn bộ, sửa file/dòng bị lệch, thêm mục "Fix mới" bên dưới.
+
+> ⚠️ **4 mục dưới đây (MEDIUM-1 phần ads, MEDIUM-3, HIGH-2, CRITICAL-1) trỏ vào `AdMobManager.kt` — file này ĐÃ BỊ XOÁ khỏi repo.** Toàn bộ logic AdMob/AppLovin đã được tách ra thư viện ngoài closed-source `com.roy.sdkadbmob` (dùng qua `AdManager`/`AdSdkConfig`), không còn source để audit lại từ repo này. Giữ các mục này lại như tư liệu lịch sử (bug từng tồn tại, cách nghĩ khi sửa), nhưng **không thể xác nhận trạng thái fix hiện tại** — nếu nghi ngờ leak liên quan ads, phải hỏi bên giữ thư viện `com.roy.sdkadbmob`.
 
 ---
 
@@ -12,25 +14,26 @@
 
 ### ✅ [FIXED] LOW-1 — `MainAct` — `exitHandler` giữ Activity qua Runnable
 
-**File:** [`MainAct.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt) — line 279
+**File:** `app/src/main/kotlin/com/mckimquyen/notes/ui/main/MainAct.kt` — field khai báo dòng 78, cleanup dòng 345
 
-**Vấn đề:** `resetExitRunnable` lambda giữ strong reference tới `MainAct`. Trong 2s sau khi user nhấn back, handler giữ activity không được GC.
+**Vấn đề:** `resetExitRunnable` lambda giữ strong reference tới `MainAct`. Trong 2.5s sau khi user nhấn back, handler giữ activity không được GC.
 
 **Fix đã áp dụng:**
 
 ```kotlin
 override fun onStop() {
     super.onStop()
-    // Fix LOW-1: Remove pending callbacks early so the Runnable cannot hold MainAct in memory
     exitHandler.removeCallbacksAndMessages(null)
 }
 ```
 
 ---
 
-### ✅ [FIXED] LOW-2 — `SplashAct` — `finishRunnable` có thể crash khi Activity đã destroyed
+### ✅ [FIXED] LOW-2 — `SplashActivity` — `finishRunnable` có thể crash khi Activity đã destroyed
 
-**File:** [`SplashAct.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashAct.kt) — line 21
+**File:** `app/src/main/kotlin/com/mckimquyen/notes/ui/splash/SplashActivity.kt` — dòng 36-40
+
+> Tên class thực tế là `SplashActivity`, không phải `SplashAct` — **cố ý giữ nguyên** vì `AdManager`'s ProcessLifecycle match theo `simpleName == "SplashActivity"` để biết khi nào bỏ qua App Open Resume (xem comment đầu file).
 
 **Vấn đề:** `Runnable { finish() }` không kiểm tra trạng thái activity trước khi gọi `finish()` trong 300ms delay window.
 
@@ -38,9 +41,8 @@ override fun onStop() {
 
 ```kotlin
 private val finishRunnable = Runnable {
-    val act = this@SplashAct
-    if (!act.isDestroyed && !act.isFinishing) {
-        act.finish()
+    if (!isDestroyed && !isFinishing) {
+        finish()
     }
 }
 ```
@@ -51,37 +53,27 @@ private val finishRunnable = Runnable {
 
 ---
 
-### ✅ [FIXED] MEDIUM-1 — `RApp.setupAdmob()` — `CoroutineScope` ẩn danh, không track được
+### ⚠️ [UNAUDITABLE] MEDIUM-1 — `RApp.setupAdmob()` (nay là `setupAds()`) — `CoroutineScope` ẩn danh, không track được
 
-**File:** [`RApp.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/RApp.kt) — line 41
+**File:** `app/src/main/kotlin/com/mckimquyen/notes/RApp.kt` — hàm `setupAds()` dòng 88
 
-**Vấn đề:** `CoroutineScope(Dispatchers.IO).launch { }` được tạo và không có tham chiếu nào giữ lại để cancel.
+**Vấn đề gốc:** `CoroutineScope(Dispatchers.IO).launch { }` được tạo và không có tham chiếu nào giữ lại để cancel.
 
-**Fix đã áp dụng:**
-
-```kotlin
-// Fix MEDIUM-1: Named scope so it is trackable and cancellable
-private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-private fun setupAdmob() {
-    appScope.launch { ... }
-}
-```
+**Trạng thái hiện tại:** `RApp.kt` hiện **không còn bất kỳ `CoroutineScope`/`appScope` nào** — `setupAds()` chỉ gọi thẳng `AdManager.setConfig(...)`/`AdManager.initialize(...)` (SDK ngoài tự quản lý coroutine scope của nó). Không thể xác nhận SDK ngoài có áp dụng pattern `appScope` (`SupervisorJob() + Dispatchers.IO`) hay không.
 
 ---
 
 ### ✅ [FIXED] MEDIUM-2 — `EditFrm` — `setOnTouchListener` không được xóa trong `onDestroyView`
 
-**File:** [`EditFrm.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt) — line 399
+**File:** `app/src/main/kotlin/com/mckimquyen/notes/ui/edit/EditFrm.kt` — `onDestroyView()` dòng 746-760 (đã dịch chuyển so với dòng 399 ghi trước đây)
 
 **Vấn đề:** Lambda trong `setOnTouchListener` capture `binding.viewBackground`, binding null sau `onDestroyView` nhưng listener không được remove.
 
-**Fix đã áp dụng:**
+**Fix đã áp dụng:** (giữ nguyên logic, chỉ dịch dòng)
 
 ```kotlin
 override fun onDestroyView() {
     super.onDestroyView()
-    // Fix MEDIUM-2: Remove TouchListener to release the lambda that captures binding.viewBackground
     binding.recyclerView.setOnTouchListener(null)
     (sharedElementReturnTransition as? MaterialContainerTransform)?.removeListener(transitionListener)
     _binding = null
@@ -90,27 +82,9 @@ override fun onDestroyView() {
 
 ---
 
-### ✅ [FIXED] MEDIUM-3 — `AdMobManager.getGAID()` — Raw `Thread` không timeout, không cancel
+### ⚠️ [UNAUDITABLE] MEDIUM-3 — `AdMobManager.getGAID()` — Raw `Thread` không timeout, không cancel
 
-**File:** [`AdMobManager.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/sdkadbmob/AdMobManager.kt) — line 163
-
-**Vấn đề:** Raw `Thread` không thể cancel, có thể block vô thời hạn nếu Play Services không phản hồi.
-
-**Fix đã áp dụng:**
-
-```kotlin
-// Fix MEDIUM-3: Replace raw Thread with coroutine + 5s timeout
-fun getGAID(context: Context, callback: (String) -> Unit) {
-    adManagerScope.launch(Dispatchers.IO) {
-        val id = try {
-            withTimeout(5_000L) {
-                AdvertisingIdClient.getAdvertisingIdInfo(context).id ?: ""
-            }
-        } catch (e: Exception) { "" }
-        withContext(Dispatchers.Main) { callback(id) }
-    }
-}
-```
+File `AdMobManager.kt` đã bị xoá khỏi repo (xem cảnh báo đầu file). Không thể audit lại.
 
 ---
 
@@ -120,44 +94,29 @@ fun getGAID(context: Context, callback: (String) -> Unit) {
 
 ### ✅ [FIXED] HIGH-1 — `AlarmReceiver` — CoroutineScope tạo mới mỗi broadcast, không bao giờ cancel
 
-**File:** [`AlarmReceiver.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/receiver/AlarmReceiver.kt) — line 44
+**File:** `app/src/main/kotlin/com/mckimquyen/notes/receiver/AlarmReceiver.kt`
 
 **Vấn đề:** `CoroutineScope(SupervisorJob() + Dispatchers.Main)` tạo mới mỗi broadcast. Nhiều alarm → nhiều scope tích lũy.
 
 **Fix đã áp dụng:**
 
 ```kotlin
-// Fix HIGH-1: Save scope reference and cancel it after work is done
 val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 scope.launch {
     try {
         ...
     } finally {
         pendingResult.finish()
-        scope.cancel()   // ← scope được cancel sau khi xong
+        scope.cancel()
     }
 }
 ```
 
 ---
 
-### ✅ [FIXED] HIGH-2 — `AdMobManager.interstitialListener` — Singleton giữ strong ref tới Activity
+### ⚠️ [UNAUDITABLE] HIGH-2 — `AdMobManager.interstitialListener` — Singleton giữ strong ref tới Activity
 
-**File:** [`AdMobManager.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/sdkadbmob/AdMobManager.kt) — line 88
-
-**Vấn đề:** `object AdMobManager` là singleton. `interstitialListener` public var giữ anonymous inner class từ Activity → Activity không bao giờ được GC.
-
-**Fix đã áp dụng:**
-
-```kotlin
-// Fix HIGH-2: Use WeakReference so listener cannot prevent Activity from being GC'd
-private var _interstitialListenerRef: WeakReference<InterstitialAdListener>? = null
-var interstitialListener: InterstitialAdListener?
-    get() = _interstitialListenerRef?.get()
-    set(value) {
-        _interstitialListenerRef = value?.let { WeakReference(it) }
-    }
-```
+File `AdMobManager.kt` đã bị xoá khỏi repo (xem cảnh báo đầu file). Không thể audit lại.
 
 ---
 
@@ -165,47 +124,42 @@ var interstitialListener: InterstitialAdListener?
 
 ---
 
-### ✅ [FIXED] CRITICAL-1 — `AdMobManager.initSplashScreen()` — `collectLatest` vô hạn capture `SplashAct`
+### ⚠️ [UNAUDITABLE] CRITICAL-1 — `AdMobManager.initSplashScreen()` — `collectLatest` vô hạn capture `SplashAct`
 
-**File:** [`AdMobManager.kt`](file:///Users/loitran/AndroidStudioProjects/@mckimquyen/@playstore/@prodution/@ad/260426_another-notes-app/app/src/main/kotlin/com/mckimquyen/notes/sdkadbmob/AdMobManager.kt) — line 538
-
-**Vấn đề:** `adManagerScope` (singleton scope) dùng `collectLatest` → loop vô tận, giữ strong reference tới `activity: SplashAct`. Mỗi lần mở app → 1 `SplashAct` instance bị leak vĩnh viễn.
-
-**Fix đã áp dụng:**
-
-```kotlin
-// Fix CRITICAL-1: WeakReference + first{} thay vì collectLatest vô hạn
-val weakActivity = WeakReference(activity)
-val weakCallback = WeakReference(onAdLoaded)
-adManagerScope.launch(Dispatchers.Default) {
-    // first{} dừng sau khi nhận 1 event — không loop vô hạn
-    val value = EventBus.eventFlow.first { it }
-    withContext(Dispatchers.Main) {
-        val act = weakActivity.get()
-        val callback = weakCallback.get()
-        if (act == null || act.isDestroyed || callback == null) return@withContext
-        loadAppOpenAd(context = act, ...) { result ->
-            val currentAct = weakActivity.get()
-            val cb = weakCallback.get()
-            if (currentAct == null || currentAct.isDestroyed || cb == null) return@loadAppOpenAd
-            if (result) showAppOpenAd(currentAct) { cb.invoke() }
-            else cb.invoke()
-        }
-    }
-}
-```
+File `AdMobManager.kt` đã bị xoá khỏi repo (xem cảnh báo đầu file). Không thể audit lại. Ghi chú lịch sử: fix gốc dùng `EventBus.eventFlow.first {}` (không phải `collectLatest`) + `WeakReference` để tránh leak `SplashActivity` — pattern này vẫn được nhắc lại trong `CLAUDE.md` như quy ước bắt buộc khi có ai chạm lại vào code load App Open ad trong `SplashActivity`, dù bản thân code đó giờ nằm trong thư viện ngoài.
 
 ---
 
-## 📊 Tổng kết — Tất cả đã FIXED ✅
+## 📊 Tổng kết (bản gốc, tới 2026-02-20)
 
 | # | File | Loại | Severity | Status |
 |---|------|-------|----------|--------|
-| LOW-1 | `MainAct.kt` | Handler/Runnable giữ Activity 2s | 🟡 LOW | ✅ FIXED |
-| LOW-2 | `SplashAct.kt` | Runnable không guard isDestroyed | 🟡 LOW | ✅ FIXED |
-| MEDIUM-1 | `RApp.kt` | CoroutineScope ẩn danh, không track/cancel | 🟠 MEDIUM | ✅ FIXED |
+| LOW-1 | `MainAct.kt` | Handler/Runnable giữ Activity 2.5s | 🟡 LOW | ✅ FIXED |
+| LOW-2 | `SplashActivity.kt` | Runnable không guard isDestroyed | 🟡 LOW | ✅ FIXED |
+| MEDIUM-1 | `RApp.kt` | CoroutineScope ẩn danh, không track/cancel | 🟠 MEDIUM | ⚠️ Đã đổi kiến trúc, không audit lại được |
 | MEDIUM-2 | `EditFrm.kt` | TouchListener không remove onDestroyView | 🟠 MEDIUM | ✅ FIXED |
-| MEDIUM-3 | `AdMobManager.kt` | Raw Thread không cancel, không timeout | 🟠 MEDIUM | ✅ FIXED |
+| MEDIUM-3 | `AdMobManager.kt` | Raw Thread không cancel, không timeout | 🟠 MEDIUM | ⚠️ File đã xoá, không audit lại được |
 | HIGH-1 | `AlarmReceiver.kt` | CoroutineScope tạo mới mỗi broadcast | 🔴 HIGH | ✅ FIXED |
-| HIGH-2 | `AdMobManager.kt` | Singleton giữ strong InterstitialListener ref | 🔴 HIGH | ✅ FIXED |
-| CRITICAL-1 | `AdMobManager.kt` | collectLatest vô hạn capture SplashAct | 🔴 CRITICAL | ✅ FIXED |
+| HIGH-2 | `AdMobManager.kt` | Singleton giữ strong InterstitialListener ref | 🔴 HIGH | ⚠️ File đã xoá, không audit lại được |
+| CRITICAL-1 | `AdMobManager.kt` | collectLatest vô hạn capture SplashAct | 🔴 CRITICAL | ⚠️ File đã xoá, không audit lại được |
+
+---
+
+## 🆕 Fix mới phát hiện — Sprint 1-3 (2026-08-17 → 2026-08-18)
+
+Phát hiện qua audit toàn diện source code + code review, xem chi tiết đầy đủ ở `doc/task/BACKLOG.md` và `doc/task/todo/FIX.md`.
+
+| FIX-ID | File | Vấn đề | Commit |
+|---|---|---|---|
+| FIX-H09 | `ui/home/HomeFrm.kt` | Sticky LiveData redeliver khi fragment recreate → double interstitial ad sau khi xoá note; dedup guard `lastAdEvent` bị đặt local trong hàm nên mất mỗi lần view tạo lại | `8653f03` |
+| FIX-M04 | `widget/NoteCountWidget.kt` | `onUpdate()` dùng `CoroutineScope(Dispatchers.IO).launch{}` không `goAsync()`, không huỷ — cùng anti-pattern với HIGH-1 gốc nhưng tái diễn ở widget | `4a11dd5` |
+| FIX-M23 | `model/DefaultNotesRepository.kt`, `model/DefaultLabelsRepository.kt` | Một số method ghi DB thiếu bọc `withContext(NonCancellable)`, có thể bị huỷ giữa chừng khi `onPause`/scope cancel, để dữ liệu dở dang | `d016cfd` |
+| FIX-L03 | `ui/vip/VipFrm.kt` | Animation one-shot (confetti, celebrate, `postDelayed` 1700ms) không bị huỷ trong `onDestroyView()` — chỉ animator lặp mới được cancel trước đó | `e8d8a6b` |
+| FIX-M06 | `ui/vip/VipFrm.kt` | Dialog thường (không phải `DialogFragment`) trong `showActivateDialog()`/`showResetConfirm()`/nhánh "ad not ready" leak window nếu Activity recreate khi đang mở | `cdbb586` |
+
+**Quy ước memory-leak hiện hành (trích từ `CLAUDE.md`, vẫn còn hiệu lực):**
+- Activity/fragment phải clear handler callback trong `onStop`/`onDestroyView`.
+- Coroutine scope cấp Application phải đặt tên (`appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)`), không tạo `CoroutineScope(...)` ẩn danh tại field-init.
+- `BroadcastReceiver` dùng `goAsync()` phải cancel scope trong `finally` sau `pendingResult.finish()`.
+- Listener singleton (AdMob/AppLovin, hiện nằm trong thư viện ngoài `com.roy.sdkadbmob`) phải giữ Activity qua `WeakReference`.
+- Dialog thường (`AlertDialog`/`MaterialAlertDialogBuilder`, không phải `DialogFragment`) mở trong Fragment/Activity phải được track và `dismiss()` trong `onDestroyView()`/`onDestroy()` — quy ước mới thêm sau FIX-M06.

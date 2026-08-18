@@ -44,6 +44,8 @@ These tests ensure database integrity, offline capability, and seamless updates 
 | **DB-007** | Migration | Migrate DB from schema v5 to v6 | Database upgrades successfully without losing existing notes. All existing notes receive default `mood` value of `0`. |
 | **DB-008** | Backup | Backup database files | DB files copy successfully to external storage, validating integrity. |
 | **DB-009** | Restore | Restore database from backup file | Original notes are recovered, hashes match pre-backup state. |
+| **DB-010** | Migration | Migrate DB from schema v6 to v7 | `ALTER TABLE notes ADD COLUMN is_locked INTEGER NOT NULL DEFAULT 0` — existing notes upgrade unlocked by default. *(Added 2026-08-18 — schema was v5 as of this doc's last full review; current `NotesDb.VERSION = 8`.)* |
+| **DB-011** | Migration | Migrate DB from schema v7 to v8 | Creates new `note_history` table (FK `noteId` → `notes.id`, `ON DELETE CASCADE`) + index on `noteId`. No existing note data touched. *(Added 2026-08-18)* |
 
 ---
 
@@ -53,19 +55,21 @@ These tests check state processing, data mapping, filtering, and the stable ID g
 | TC ID | Category | Test Scenario | Expected Result |
 | :--- | :--- | :--- | :--- |
 | **VM-001** | NoteVM | Toggle layout mode list/grid/timeline | Layout mode updates in preferences and triggers list rebuilding. |
-| **VM-002** | NoteVM | Rebuild list with stable IDs in timeline mode | Date headers get stable negative IDs based on date string hashcode: `-(dateLabel.hashCode() and 0xFFFFFFFFL) - 1000L`. No duplicates or collisions. |
+| **VM-002** | NoteVM | Rebuild list with stable IDs in timeline mode | Date headers get stable negative IDs: `-(dateLabel.hashCode().toLong() and 0xFFFFFFFFL) - 1000L - occurrence * 100_000L`. No duplicates or collisions. *(Corrected 2026-08-18 — formula was missing the `occurrence` disambiguation term added by FIX-M15/commit `107562e`; the pre-fix formula quoted here previously could actually collide, which is exactly the bug FIX-M15 fixed.)* |
 | **VM-003** | NoteVM | Search notes by plain text keyword | Returns only notes whose title or content matches keyword (case-insensitive). |
 | **VM-004** | NoteVM | Search notes by Vietnamese Unicode (diacritics) | Typing "tiếng việt" successfully matches notes containing "tiếng việt" or "Tiếng Việt". |
 | **VM-005** | NoteVM | Sort notes by date added | Notes list is sorted chronologically descending. |
 | **VM-006** | NoteVM | Sort notes alphabetically | Notes list is sorted lexicographically by title. |
 | **VM-007** | EditVM | Word count logic on fast typing | Word count changes cleanly. Any active counter animations are cancelled instantly, returning exact word/char count. |
-| **VM-008** | EditVM | Autosave on ViewModel clear | Triggers database update with latest text content when screen finishes or ViewModel is cleared. |
+| **VM-008** | EditFrm | Autosave on fragment stop | `EditVM` has no `onCleared()` override — autosave is triggered by `EditFrm.onStop()` calling `viewModel.saveNote()`. Triggers database update with latest text content when the fragment stops (backgrounded or navigated away), not on ViewModel clear. *(Corrected 2026-08-18 — mechanism previously described here doesn't exist in code.)* |
 | **VM-009** | EditVM | Mood badge selection | Setting mood value `1..5` saves the integer in the database note object. |
 
 ---
 
 ### 📂 Module C: Ads Integration & Safety Capping
 Verifies ad delivery safety limits to prevent Google Play policy violations, check user experience, and VIP state logic.
+
+> ⚠️ **Không audit lại được từ repo này (2026-08-18):** toàn bộ logic ads (AdSafetyLimits, cap 5000ms, VIP bypass, UMP flow) nằm trong thư viện ngoài closed-source `com.roy.sdkadbmob.AdManager` — repo hiện tại không còn source code của các con số/behavior này (xem `doc/memory_leak.md`). Các con số dưới đây (5000ms, session cap...) không thể xác nhận còn đúng, chỉ giữ lại như spec kỳ vọng cần test tay qua QA/behavior thật của SDK.
 
 | TC ID | Category | Test Scenario | Expected Result |
 | :--- | :--- | :--- | :--- |

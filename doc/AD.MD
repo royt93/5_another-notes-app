@@ -11,14 +11,14 @@
 | # | Vị trí | Loại ad | TRƯỚC migrate | SAU migrate | Note |
 |---|---|---|---|---|---|
 | 1 | `RApp.onCreate` | Init SDK | `MobileAds.initialize` + `AdMobManager.init` (2 lệnh, manual scope) | `AdManager.setConfig` + `AdManager.initialize` (1 facade) | SDK orchestrate `earlyInit → MobileAds/AppLovinSdk init → init (GAID/VIP) → registerAppOpenAdLifecycle` |
-| 2 | `SplashAct.onCreate` | App Open (splash) | `AdMobManager.initSplashScreen(this, onAdLoaded)` | `AdManager.initSplashScreen(this, onAdLoaded)` | API signature giữ nguyên — drop-in. SDK có HARD CAP 8s + AtomicBoolean callback fire 1 lần |
+| 2 | `SplashActivity.onCreate` (tên class thực tế, không phải `SplashAct`) | App Open (splash) | `AdMobManager.initSplashScreen(this, onAdLoaded)` | `AdManager.initSplashScreen(this, onAdLoaded)` | API signature giữ nguyên — drop-in. SDK có HARD CAP 8s + AtomicBoolean callback fire 1 lần |
 | 3 | `RApp.onCreate` (auto) | App Open (resume from background) | ❌ Không có (block `AppLifecycleListener` đã bị comment) | ✅ Auto qua `ProcessLifecycle` (SDK đăng ký bên trong `initialize()`) | 3 lớp gate: cold-start skip + ≥5s background + rapid-resume detect. **Auto skip nếu top activity là `AppLovinFullscreenActivity` / `AdActivity`** (fix 1.1.3 cho fullscreen-collision khi user click ad → quay lại app) |
 | 4 | `HomeFrm.onCreate` | Interstitial preload | `AdMobManager.loadInterstitial(ctx, BuildConfig.ADMOB_INTERSTITIAL_ID)` | `AdManager.loadInterstitial(ctx)` (ID lấy từ `AdSdkConfig`) | Auto-preload sau dismiss |
 | 5 | `HomeFrm` FAB click → tạo note | Interstitial show | `AdMobManager.showInterstitial(act) { ok -> viewModel.createNote() }` | `AdManager.showInterstitial(act) { ok -> viewModel.createNote() }` | Callback fire LUÔN 1 lần (success / fail / skip) |
 | 6 | `HomeFrm` quan sát `statusChangeEvent.DELETED` | Interstitial show | `AdMobManager.showInterstitial(act) { … }` | `AdManager.showInterstitial(act) { … }` | Same |
 | 7 | `SettingsFrm.onViewCreated` | Banner | `AdMobManager.loadBanner(ctx, ADMOB_BANNER_ID, container, tvLabelAd, AdSize.LARGE_BANNER)` + manual `adView.resume/pause/destroy` | `AdManager.loadBanner(ctx, container, tvLabelAd, AdManager.getAdaptiveBannerSize(act))` + `AdManager.bannerDestroy(adView)` trong `onDestroyView` | **Auto-lifecycle** (`autoManageLifecycle=true` mặc định) — SDK tự hook `ActivityLifecycleCallbacks` cho resume/pause. Adaptive banner thay LARGE_BANNER cố định |
 
-> **Reward ad** — config ID đã thêm sẵn (`APPLOVIN_REWARDED_ID = 8eecf725822d50b7`) nhưng **KHÔNG có touchpoint** trong code (theo yêu cầu user). SDK sẽ không load/show reward.
+> **Reward ad** — ⚠️ **LỖI THỜI, xem mục 19 Round-5 (2026-08-18).** Dòng này đúng tại thời điểm viết (2026-04-26), nhưng `ui/vip/VipFrm.kt` sau đó đã thêm touchpoint reward ad thật (`AdManager.loadRewarded`/`showRewarded`, nút "Watch Ad → 3 ngày VIP").
 
 ---
 
@@ -175,7 +175,7 @@ Còn warning deprecation (statusBarColor, overridePendingTransition, setRemoteAd
 | 2 | Background App Open auto-wired qua `AdManager.initialize()` ProcessLifecycle hook | ✅ |
 | 3 | Banner touchpoint giữ nguyên (`SettingsFrm.onViewCreated`); auto-lifecycle thay manual resume/pause/destroy | ✅ |
 | 4 | Interstitial touchpoint giữ nguyên (HomeFrm FAB click + delete event) | ✅ |
-| 5 | Reward ad: config có (theo SDK requires field), KHÔNG có code call → đúng yêu cầu "chỉ thay touchpoint sẵn" | ✅ |
+| 5 | Reward ad: config có (theo SDK requires field), KHÔNG có code call → đúng yêu cầu "chỉ thay touchpoint sẵn" | ⚠️ Lỗi thời — xem mục 19, `VipFrm` đã thêm touchpoint reward thật |
 | 6 | `AdMobManager` (file 729 dòng) đã xoá; toàn bộ caller trỏ về `com.roy.sdkadbmob.AdManager` | ✅ |
 | 7 | Build success `:app:assembleDevDebug` | ✅ |
 | 8 | Provider AppLovin (IS_ENABLE_ADMOB=false), 5 ID + SDK key đã đặt | ✅ |
@@ -205,7 +205,7 @@ Những thứ user **không** yêu cầu nhưng có thể bật khi cần:
 2. **Build config Java 8** vs SDK compiled với Java 17 toolchain: SDK module cần JVM 17 lúc compile/build artifact — nhưng artifact đã được publish pre-built ở JitPack với target `1.8`/`17` (compatible). Project compileOptions vẫn `JavaVersion.VERSION_1_8` + Java toolchain 17 → OK.
 3. **App Open Resume lần đầu kích hoạt** sau migrate (cũ chưa có) — user sẽ thấy ad mỗi lần resume từ background ≥5s. Nếu UX không muốn, gọi `AdManager.appOpenListener` để theo dõi hoặc disable bằng cách xoá `registerAppOpenAdLifecycle` (cần sửa SDK, không khuyến nghị).
 4. **Production release variant chưa verify build**: cần keystore.jks thật. ProGuard rules đã có nhưng release-only failure mode chỉ phát hiện sau khi build/sign thật.
-5. **Reward ad ID đã set** dù không dùng: nếu sau này thêm reward, đã sẵn. Nếu muốn chắc chắn không load, set `applovinRewardedId = ""`.
+5. ~~**Reward ad ID đã set** dù không dùng: nếu sau này thêm reward, đã sẵn.~~ Đã dùng — xem mục 19, `VipFrm` (`ui/vip/VipFrm.kt`) gọi `AdManager.loadRewarded`/`showRewarded` thật cho nút "Watch Ad → 3 ngày VIP".
 
 ---
 
@@ -565,4 +565,17 @@ User trả lời 4 câu hỏi: (1) global → cần UMP, (2) chưa có Firebase 
 
 ### Build
 `./gradlew :app:assembleDevDebug` → BUILD SUCCESSFUL in 5s.
+
+---
+
+## 19. Round-5 correction (2026-08-18) — Reward ad touchpoint đã có thật
+
+Doc gốc (mục 1, 9, 11) khẳng định "reward ad KHÔNG có touchpoint" — điều này **không còn đúng**. `ui/vip/VipFrm.kt` (màn Premium) đã triển khai đầy đủ flow rewarded ad:
+
+- `setupWatchAdButton()`: `AdManager.loadRewarded(requireContext())` preload khi vào màn (nếu chưa VIP).
+- Nút "Watch Ad (Get 3 Days Premium)" → `AdManager.showRewarded(requireActivity()) { rewardedSuccess -> ... }`.
+- `AdManager.rewardedListener = object : RewardedAdListener { onUserEarnedReward(...) { grantVip3Days(ctx) } }` — listener được set `null`/swap sang no-op sau mỗi lần dùng để tránh giữ tham chiếu `VipFrm` qua singleton `AdManager` (xem `doc/memory_leak.md` mục FIX-M06 cho phần dialog liên quan cùng file).
+- Nếu ad chưa sẵn sàng: dialog "Hold on a second — The ad is not ready yet" (không fallback sang interstitial, đúng chính sách AdMob "incentivized non-rewarded").
+
+Kết luận: `APPLOVIN_REWARDED_ID` không còn là "config thừa" — đang được dùng thật. Các mục 1/9/11 ở trên đã được đánh dấu ⚠️ trỏ về mục này.
 

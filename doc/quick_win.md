@@ -1,6 +1,6 @@
 # Quick Wins — Another Notes App
 
-> Updated: 2026-06-22 | Tất cả 5 tính năng đã được implement ✅
+> Updated: 2026-08-18 | Tất cả 5 tính năng đã được implement ✅ (audit lại, đúng tại thời điểm này)
 
 | # | Feature | Files changed | Status |
 |---|---------|--------------|--------|
@@ -33,9 +33,10 @@
 
 ### Feature 4 — Ad After Delete
 
-- `HomeFrm.setupViewModelObservers()` — observe `sharedViewModel.statusChangeEvent`
+- `HomeFrm.setupViewModelObservers()` — observe `viewModel.statusChangeEvent` (LiveData của `HomeVM`, không phải `sharedViewModel` — sửa nhầm 2026-08-18)
 - Nếu `newStatus == DELETED` → `AdManager.showInterstitial()` (fire-and-forget)
 - ⚠️ **Đã migrate:** `AdMobManager` → `com.roy.sdkadbmob.AdManager` (AdmobApplovinWrapper 1.1.3, 2026-04-26)
+- ⚠️ **FIX-H09 (2026-08-17, commit `8653f03`):** LiveData sticky-event bị redeliver mỗi lần fragment recreate → gọi `showInterstitial()` 2 lần cho cùng 1 lần xoá. Đã thêm guard `lastAdEvent` promote thành field cấp class (không phải local trong hàm quan sát) để dedup — nếu sửa lại observer này, PHẢI giữ field-level guard, không hạ về local var.
 
 ### Feature 5 — Quick Note Widget
 

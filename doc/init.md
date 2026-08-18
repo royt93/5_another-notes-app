@@ -1,7 +1,7 @@
 # Init — Another Notes App
 
-> **Updated:** 2026-06-22 | **Version:** 2026.06.22 (versionCode 20260622)
-> **Package:** `com.mckimquyen.notes` | **minSdk:** 24 | **targetSdk:** 36
+> **Updated:** 2026-08-18 | **Version:** 2026.08.18 (versionCode 20260818)
+> **Package:** `com.mckimquyen.notes` | **minSdk:** 24 | **targetSdk:** 37
 
 ---
 
@@ -19,7 +19,7 @@
 |---|---|
 | UI | Single-Activity + Navigation Component + Fragment |
 | DI | Dagger 2 (kapt) |
-| DB | Room v5 (migrations 1→5, FTS4) |
+| DB | Room v8 (migrations 1→8, FTS4) — 5→6 mood tag, 6→7 `is_locked`, 7→8 bảng `note_history` |
 | Ads | AdmobApplovinWrapper 1.1.3 (`com.roy.sdkadbmob.AdManager`) |
 | Alarm | AlarmManager + BroadcastReceiver |
 | Theming | Material3 DayNight |
@@ -48,7 +48,7 @@ Xem chi tiết trong `doc/AD.MD`. Tóm tắt:
 | # | Vị trí | Loại |
 |---|---|---|
 | 1 | `RApp.onCreate` | SDK init |
-| 2 | `SplashAct.onCreate` | App Open |
+| 2 | `SplashActivity.onCreate` (tên class thực tế, không phải `SplashAct`) | App Open |
 | 3 | Auto (background resume) | App Open |
 | 4 | `HomeFrm` — FAB tạo note | Interstitial |
 | 5 | `HomeFrm` — swipe delete | Interstitial |
@@ -63,7 +63,8 @@ Xem chi tiết trong `doc/AD.MD`. Tóm tắt:
 - `doc/AD.MD` — migration AdMob → AdmobApplovinWrapper 1.1.3
 - `doc/multi_language.md` — hỗ trợ ngôn ngữ
 - `doc/test/animation_test.md` — bộ test case animation
-- `doc/task/todo/` — backlog chưa làm
+- `doc/task/todo/` — backlog chưa làm (ENHANCE/NEW_FEATURE/IDEA/EXCLUSIVE; `FIX.md` đã đóng — xem `doc/task/BACKLOG.md`)
+- `doc/task/BACKLOG.md` — nhật ký Sprint 1-3 (2026-08-17/18): 39 bug fix + 1 revert (exact-alarm permission bị rút vì rủi ro Play Store), có commit hash từng fix
 - `doc/task/done/sprint_2026_06_22.md` — sprint 2026-06-22: 9 animation enhancements + 3 new features, build PASS
 
 ## Features nổi bật đã implement (sprint 2026-06-22)
