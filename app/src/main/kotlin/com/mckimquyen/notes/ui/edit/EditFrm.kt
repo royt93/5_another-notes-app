@@ -888,8 +888,11 @@ class EditFrm : Fragment(), Toolbar.OnMenuItemClickListener, ConfirmDlg.Callback
             if (!exportDir.exists()) {
                 exportDir.mkdirs()
             }
-            // Clear previous exports to save space
-            exportDir.listFiles()?.forEach { it.delete() }
+            // Clear old exports to save space, but skip anything from the last few
+            // minutes — a just-shared file may still be open for reading in another
+            // app (Gmail, etc.) via the FileProvider uri. FIX-L09.
+            val staleBeforeMs = System.currentTimeMillis() - 5 * 60 * 1000L
+            exportDir.listFiles()?.forEach { if (it.lastModified() < staleBeforeMs) it.delete() }
 
             val file = java.io.File(exportDir, filename)
             if (isPdf) {
