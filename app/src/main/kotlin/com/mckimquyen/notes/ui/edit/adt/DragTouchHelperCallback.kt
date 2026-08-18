@@ -13,7 +13,11 @@ import com.mckimquyen.notes.R
  */
 class DragTouchHelperCallback(
     context: Context,
-    private val moveCheckedToBottom: Boolean,
+    // A supplier, not a snapshot value — moveCheckedToBottom reads a live preference in
+    // EditVM, but this callback instance lives for the whole EditFrm view lifetime, so a
+    // captured Boolean would go stale if the setting changed without recreating the view.
+    // FIX-L05.
+    private val moveCheckedToBottom: () -> Boolean,
     private val onMove: (from: Int, to: Int) -> Unit,
 ) : ItemTouchHelper.Callback() {
 
@@ -35,7 +39,7 @@ class DragTouchHelperCallback(
         current: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder,
     ): Boolean {
-        return if (moveCheckedToBottom) {
+        return if (moveCheckedToBottom()) {
             // Only unchecked items are moveable, and can't move into checked group.
             current is EditItemViewHolder && target is EditItemViewHolder &&
                     !current.isChecked && !target.isChecked

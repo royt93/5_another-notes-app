@@ -24,7 +24,7 @@ class EditAdt(val context: Context, val callback: Callback) :
     private var recyclerView: RecyclerView? = null
 
     private val itemTouchHelper = ItemTouchHelper(DragTouchHelperCallback(
-        context, callback.moveCheckedToBottom
+        context, { callback.moveCheckedToBottom }
     ) { from, to ->
         // submitList is not used here, since it results in a very unresponsive design.
         // Adapter and dataset are updated manually.
