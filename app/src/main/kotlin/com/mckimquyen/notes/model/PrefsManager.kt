@@ -28,7 +28,11 @@ class PrefsManager @Inject constructor(
 
     val theme: AppTheme by enumPreference(THEME, AppTheme.SYSTEM)
     val dynamicColors: Boolean by preference(DYNAMIC_COLORS, true)
-    val strikethroughChecked: Boolean by preference(STRIKETHROUGH_CHECKED, false)
+    // Default must match res/xml/prefs.xml's android:defaultValue for the same key — RApp
+    // always calls setDefaults() before this is ever read in production, so a mismatch here
+    // is invisible there, but a test that builds its own in-memory SharedPreferences (bypassing
+    // setDefaults()) would silently see the wrong default. FIX-M24.
+    val strikethroughChecked: Boolean by preference(STRIKETHROUGH_CHECKED, true)
     val moveCheckedToBottom: Boolean by preference(MOVE_CHECKED_TO_BOTTOM, false)
     var listLayoutMode: NoteListLayoutMode by enumPreference(LIST_LAYOUT_MODE, NoteListLayoutMode.LIST)
     val swipeActionLeft: SwipeAction by enumPreference(SWIPE_ACTION_LEFT, SwipeAction.ARCHIVE)
