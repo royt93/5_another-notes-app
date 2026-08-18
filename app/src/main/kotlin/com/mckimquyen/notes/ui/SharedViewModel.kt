@@ -83,13 +83,18 @@ class SharedViewModel @Inject constructor(
         val change = lastStatusChange ?: return
         viewModelScope.launch {
             notesRepository.updateNotes(change.oldNotes)
-        }
 
-        if (change.newStatus == NoteStatus.DELETED) {
-            // Notes were deleted, removing any reminder alarm that had been set. Set them back.
-            for (note in change.oldNotes) {
-                if (note.reminder != null) {
-                    reminderAlarmManager.setNoteReminderAlarm(note)
+            if (change.newStatus == NoteStatus.DELETED) {
+                // Notes were deleted, removing any reminder alarm that had been set. Restore
+                // them via setNextNoteReminderAlarm() (not the plain setNoteReminderAlarm())
+                // so an already-overdue recurring reminder gets its next occurrence
+                // recomputed against the current time, instead of scheduling straight off
+                // the stale reminder.next captured before the delete — which could fire the
+                // notification almost immediately after Undo. FIX-M21.
+                for (note in change.oldNotes) {
+                    if (note.reminder != null) {
+                        reminderAlarmManager.setNextNoteReminderAlarm(note)
+                    }
                 }
             }
         }
