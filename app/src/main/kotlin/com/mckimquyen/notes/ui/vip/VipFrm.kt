@@ -48,6 +48,12 @@ class VipFrm : Fragment() {
     // Cleared in onDestroyView alongside `animators` — see FIX-L03.
     private var confettiClearRunnable: Runnable? = null
 
+    // showActivateDialog()/showResetConfirm() use a plain AlertDialog, not a DialogFragment,
+    // so nothing dismisses it automatically on configuration change — an open dialog would
+    // leak its window (bound to the now-destroyed fragment view's context) across rotation.
+    // Tracked here and dismissed in onDestroyView(). FIX-M06.
+    private var activeDialog: android.app.Dialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward = */ true)
@@ -164,6 +170,8 @@ class VipFrm : Fragment() {
         // up to ~1.7s after the view was gone. FIX-L03.
         confettiClearRunnable?.let { binding.confettiOverlay.removeCallbacks(it) }
         confettiClearRunnable = null
+        activeDialog?.dismiss()
+        activeDialog = null
         super.onDestroyView()
         _binding = null
     }
@@ -288,6 +296,7 @@ class VipFrm : Fragment() {
             }
             dialogBinding.keyInput.requestFocus()
         }
+        activeDialog = dialog
         dialog.show()
     }
 
@@ -327,7 +336,7 @@ class VipFrm : Fragment() {
     }
 
     private fun showResetConfirm() {
-        MaterialAlertDialogBuilder(requireContext())
+        activeDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.vip_reset_title)
             .setMessage(R.string.vip_reset_message)
             .setNegativeButton(R.string.vip_dialog_btn_cancel, null)
