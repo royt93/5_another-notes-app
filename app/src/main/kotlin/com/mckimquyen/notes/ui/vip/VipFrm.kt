@@ -45,6 +45,9 @@ class VipFrm : Fragment() {
 
     private val animators = mutableListOf<AnimatorSet>()
 
+    // Cleared in onDestroyView alongside `animators` — see FIX-L03.
+    private var confettiClearRunnable: Runnable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward = */ true)
@@ -155,6 +158,12 @@ class VipFrm : Fragment() {
         AdManager.rewardedListener = null
         animators.forEach { it.cancel() }
         animators.clear()
+        // celebrateActivation()/launchConfetti() are one-shot animations fired on successful
+        // activation, not tracked before — if the user backed out right after activating,
+        // these kept running (and this delayed cleanup runnable kept a pending callback) for
+        // up to ~1.7s after the view was gone. FIX-L03.
+        confettiClearRunnable?.let { binding.confettiOverlay.removeCallbacks(it) }
+        confettiClearRunnable = null
         super.onDestroyView()
         _binding = null
     }
@@ -341,6 +350,7 @@ class VipFrm : Fragment() {
         AnimatorSet().apply {
             playTogether(scaleX, scaleY, crownSpin)
             interpolator = OvershootInterpolator(2.5f)
+            animators += this // cancelled in onDestroyView if still running. FIX-L03.
             start()
         }
     }
@@ -404,12 +414,13 @@ class VipFrm : Fragment() {
                 playTogether(moveX, moveY, rotate, fade, scale)
                 duration = 1200
                 startDelay = i * 25L
+                animators += this // cancelled in onDestroyView if still running. FIX-L03.
                 start()
             }
         }
-        overlay.postDelayed({
-            overlay.removeAllViews()
-        }, 1700)
+        val clearRunnable = Runnable { overlay.removeAllViews() }
+        confettiClearRunnable = clearRunnable
+        overlay.postDelayed(clearRunnable, 1700)
     }
 
     private fun dp(value: Int): Int =
