@@ -88,14 +88,17 @@ class LabelVM @AssistedInject constructor(
     private val selectedLabelIds = mutableSetOf<Long>()
     private val selectedLabels = mutableSetOf<Label>()
 
-    // ID of the label being renamed via renameSelection(), or Label.NO_ID when not renaming.
-    // Paired with renamingLabelOriginalName so the next label-list emission can tell a
-    // completed rename (name actually changed) apart from an unrelated emission that happens
-    // to land while a rename dialog was open and then cancelled — the old boolean flag treated
-    // ANY next emission as "rename just happened" and silently cleared the current selection,
-    // even when the user backed out of the dialog without saving. FIX-M09.
-    private var renamingLabelId = Label.NO_ID
-    private var renamingLabelOriginalName = ""
+    // Label id -> name captured at the moment its rename dialog was opened via
+    // renameSelection(), so the next label-list emission can tell a completed rename (name
+    // actually changed) apart from an unrelated emission that happens to land while a rename
+    // dialog was open and then cancelled — a plain boolean flag treated ANY next emission as
+    // "rename just happened" and silently cleared the current selection, even when the user
+    // backed out of the dialog without saving. FIX-M09. A map (not a single id/name pair)
+    // because the rename dialog isn't modal to this ViewModel's coroutine: the DB write for
+    // one rename and this Flow's next re-collect are both async, so a second renameSelection()
+    // call for a different label can land before the first one's completion is observed —
+    // reviewer-caught gap in the original FIX-M09 single-field version.
+    private val pendingRenames = mutableMapOf<Long, String>()
 
     private var labelsListJob: Job? = null
     private var restoreStateJob: Job? = null
@@ -106,7 +109,6 @@ class LabelVM @AssistedInject constructor(
             noteIds = savedStateHandle.get<List<Long>>(KEY_NOTE_IDS).orEmpty()
             selectedLabelIds += savedStateHandle.get<List<Long>>(KEY_SELECTED_IDS).orEmpty()
             selectedLabels += selectedLabelIds.mapNotNull { labelsRepository.getLabelById(it) }
-            renamingLabelId = savedStateHandle[KEY_RENAMING_LABEL] ?: Label.NO_ID
             restoreStateJob = null
         }
     }
@@ -138,15 +140,17 @@ class LabelVM @AssistedInject constructor(
                 // (e.g. selection) before setting list items, or selection may be lost.
                 restoreStateJob?.join()
 
-                if (renamingLabelId != Label.NO_ID) {
-                    val renamedLabel = labels.find { it.id == renamingLabelId }
-                    if (renamedLabel != null && renamedLabel.name != renamingLabelOriginalName) {
-                        // The label's name actually changed since the rename dialog was
-                        // opened — deselect it now that the rename completed. If the dialog
-                        // was instead cancelled, the name is unchanged and we keep waiting
-                        // (harmless: the selection stays intact through unrelated list
-                        // updates instead of being cleared out from under the user).
-                        renamingLabelId = Label.NO_ID
+                if (pendingRenames.isNotEmpty()) {
+                    val completed = pendingRenames.filter { (id, originalName) ->
+                        labels.find { it.id == id }?.name?.let { it != originalName } ?: false
+                    }.keys
+                    if (completed.isNotEmpty()) {
+                        // At least one pending rename's name actually changed since its
+                        // dialog was opened — deselect now that it completed. Others still
+                        // pending (dialog cancelled, or not yet completed) are left alone:
+                        // the selection stays intact through unrelated list updates instead
+                        // of being cleared out from under the user.
+                        completed.forEach { pendingRenames.remove(it) }
                         selectedLabelIds.clear()
                         selectedLabels.clear()
                     }
@@ -188,8 +192,7 @@ class LabelVM @AssistedInject constructor(
 
     fun renameSelection() {
         val label = selectedLabels.singleOrNull() ?: return  // renaming multiple or no labels, abort
-        renamingLabelId = label.id
-        renamingLabelOriginalName = label.name
+        pendingRenames[label.id] = label.name
         _showRenameDialogEvent.send(label.id)
     }
 
@@ -302,6 +305,5 @@ class LabelVM @AssistedInject constructor(
     companion object {
         private const val KEY_NOTE_IDS = "note_ids"
         private const val KEY_SELECTED_IDS = "selected_ids"
-        private const val KEY_RENAMING_LABEL = "renaming_label"
     }
 }

@@ -149,7 +149,7 @@ class VipFrm : Fragment() {
                 // Rewarded ad wasn't ready or user dismissed early.
                 // Important: do NOT fall back to interstitial — granting VIP after a
                 // non-rewarded ad violates AdMob's "incentivized non-rewarded" policy.
-                MaterialAlertDialogBuilder(ctx)
+                activeDialog = MaterialAlertDialogBuilder(ctx)
                     .setTitle(R.string.vip_ad_not_ready_title)
                     .setMessage(R.string.vip_ad_not_ready_message)
                     .setPositiveButton(android.R.string.ok, null)

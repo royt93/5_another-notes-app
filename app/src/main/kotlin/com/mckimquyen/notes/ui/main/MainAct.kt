@@ -33,6 +33,7 @@ import com.mckimquyen.notes.RApp
 import com.mckimquyen.notes.databinding.AMainBinding
 import com.mckimquyen.notes.ext.TAG
 import com.mckimquyen.notes.ext.navigateSafe
+import com.mckimquyen.notes.ui.edit.EditFrmArgs
 import com.mckimquyen.notes.model.PrefsManager
 import com.mckimquyen.notes.model.converter.NoteTypeConverter
 import com.mckimquyen.notes.model.entity.Note
@@ -257,7 +258,7 @@ class MainAct : BaseAct(), NavController.OnDestinationChangedListener {
             // for the identical note onto the back stack. FIX-M22.
             val currentEntry = navController.currentBackStackEntry
             val alreadyOnSameNote = currentEntry?.destination?.id == R.id.fragment_edit &&
-                currentEntry.arguments?.getLong("noteId") == noteId
+                currentEntry.arguments?.let { EditFrmArgs.fromBundle(it).noteId } == noteId
             if (!alreadyOnSameNote) {
                 navController.navigateSafe(NavGraphMainDirections.actionEditNote(noteId), true)
             }

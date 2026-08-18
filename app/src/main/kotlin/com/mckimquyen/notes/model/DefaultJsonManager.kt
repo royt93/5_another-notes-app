@@ -218,8 +218,12 @@ class DefaultJsonManager @Inject constructor(
             val name = label.name.trim().replace("""\s+""".toRegex(), " ")
             val existingLabelById = existingLabelsIdMap[id]
             if (existingLabelById != null) {
-                // Label ID already exists, if name doesn't match assume this is a different label.
-                if (name != existingLabelById.name) {
+                // Label ID already exists, if name doesn't match (case-insensitively — same
+                // rule as getLabelByName()/existingLabelsNameMap above, see FIX-M26) assume
+                // this is a different label. A case-only difference (e.g. local label was
+                // renamed "Work" -> "work" after this export was made) is still the same
+                // label, not a new one — reviewer-caught gap in FIX-M26.
+                if (!name.equals(existingLabelById.name, ignoreCase = true)) {
                     newLabelsMap[id] = labelsDao.insert(Label(Label.NO_ID, name))
                 } else {
                     newLabelsMap[id] = id
