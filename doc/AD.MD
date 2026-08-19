@@ -579,3 +579,133 @@ Doc gốc (mục 1, 9, 11) khẳng định "reward ad KHÔNG có touchpoint" —
 
 Kết luận: `APPLOVIN_REWARDED_ID` không còn là "config thừa" — đang được dùng thật. Các mục 1/9/11 ở trên đã được đánh dấu ⚠️ trỏ về mục này.
 
+## 20. Round-6 (2026-08-19) — Chuyển provider active sang AdMob + nâng SDK 1.1.3 → 1.6.16
+
+**Provider active đổi từ AppLovin MAX → AdMob** (`IS_ENABLE_ADMOB` `false → true` ở cả `debug` +
+`release`, `app/build.gradle`). Debug tiếp tục dùng Google demo/test AdMob ID sẵn có; release đã có
+banner/interstitial/appopen ID thật (`ca-app-pub-3612191981543807/...`) nhưng **`ADMOB_REWARDED_ID`
+release còn rỗng `""`** — chờ user cung cấp, rewarded ad release sẽ fail-soft (log warning, callback
+`false`, không crash) cho tới lúc đó. `APPLOVIN_*` buildConfigField giữ nguyên (không xoá) — theo rule
+của `AD_PROMPT_AOS.MD`: giữ đủ 2 bộ ID dù chỉ 1 bên active, flip lại sau không cần đổi template.
+
+**SDK nâng `com.github.royt93:AdmobApplovinWrapper` `1.1.3 → 1.6.16`** (tag mới nhất, verify qua
+GitHub API tags — trước đó repo private nên `jitpack.io`/`api.github.com` đều chặn, user đã public
+repo lại giữa chừng để verify được). Diff API qua Phụ lục A của `AD_PROMPT_AOS.MD` + đọc trực tiếp
+source `AdSdkConfig.kt`/`AdManager.kt` ở tag 1.6.16:
+
+- Field cấu hình cốt lõi (`isEnableAdmob`, `admobXxxId`, `applovinXxxId`, `vipKeySecret`, `safety`)
+  không đổi tên — `RApp.setupAds()` không cần viết lại cấu trúc.
+- ⚠️ **Breaking thật sự cho app này**: `AdSdkConfig.allowLegacyPlaintextVipKey` (mới, default
+  `false` từ bản này) khoá nhánh `activateVipByKey` (plain-key). `VipFrm.kt` dùng đúng hàm này cho
+  **cả 2** luồng VIP (`showActivateDialog()` nhập key 30 ngày, VÀ `grantVip3Days()` sau khi xem
+  rewarded ad) — không bật cờ này thì cả màn VIP chết âm thầm (hàm trả `false`, không crash). Đã
+  thêm `allowLegacyPlaintextVipKey = true` vào `AdSdkConfig` trong `RApp.setupAds()`.
+- `appOpenExcludedActivities` set tường minh `listOf(SplashActivity::class.java)` — thay cho việc ăn
+  may nhờ default deprecated `appOpenExcludedActivityNames=["SplashActivity"]` (field này sẽ bị gỡ
+  dần theo doc).
+- `AdSafetyStatus.totalImpressions/fullscreenClicks` đổi tên (→ `ctrWindowImpressions`/
+  `ctrWindowClicks`) — grep xác nhận code không tham chiếu field nào trong 2 field cũ, an toàn.
+- `grantRewardOnEarn` default đổi `false→true` — verify `VipFrm.kt` đã dedupe thưởng qua cờ
+  `hasEarnedReward` dùng chung ở cả `rewardedListener.onUserEarnedReward` lẫn callback
+  `showRewarded`, nên an toàn, không sửa gì thêm.
+- ⚠️ **Bug thật bị miss ở lần audit đầu (2026-08-19), tự phát hiện khi user yêu cầu audit lại +
+  tải source thật để diff 1.1.3 vs 1.6.16** (field này không nằm trong `AD_PROMPT_AOS.MD`, chỉ thấy
+  khi đọc trực tiếp `AdManager.kt`): `activateVipByKey` bản 1.6.16 thêm cap
+  `days > MAX_VIP_DAYS (365, private const, không phải public API)` → trả `false` ngay, không throw.
+  `VipFrm.grantVip3Days()` tính `totalDays = remainingDays + REWARD_DAYS` rồi truyền thẳng — user
+  gắn bó xem reward ad tích luỹ tới gần 1 năm VIP sẽ bị chặn cứng ở lần xem tiếp theo, kèm Toast
+  **"Key không hợp lệ"** (sai — không phải key sai, là chạm trần). Đã verify
+  `AppPreferences.accumulateVipByKeyUntil()` dùng `maxOf` (không cộng dồn thật) nên loại trừ được
+  nghi ngờ double-count, chỉ riêng cap 365 là vấn đề. **Fix**: `VipFrm.kt` clamp
+  `totalDays.coerceAtMost(VIP_KEY_MAX_DAYS_CAP)` (hằng số local `365`, comment ghi rõ đây là con số
+  mirror từ SDK internal không public, cần re-verify nếu đổi version SDK sau này).
+  `showActivateDialog()` (key 30 ngày cố định) không dính lỗi này vì `days` không phụ thuộc số dư.
+- Đã cân nhắc đổi UI VIP sang `AdManager.showVipByKeyDialog()` (dialog có sẵn của SDK) nhưng **giữ
+  nguyên `VipFrm.kt`** theo quyết định của user — dialog có sẵn không đa ngôn ngữ, không match theme
+  app, còn `VipFrm.kt` đã có i18n vi/en + animation + confetti đầy đủ.
+- `ConsentBottomSheetDialog` (dialog consent có sẵn của SDK) chỉ dùng ở nhánh **nongms** (grep
+  `ConsentBridge.kt` bản `gms` = 0 match) — app build `gms`/AdMob nên không áp dụng; `SplashActivity`
+  tiếp tục dùng đúng Google UMP form chuẩn qua `requestConsentInfoUpdate()`, không đổi gì.
+
+**Manifest**: thêm `<attribution android:tag="ads" .../>` trước `<application>` — targetSdk 37 (≥31)
+nên thiếu tag này sinh warning `attributionTag not declared` liên tục trong logcat (Step 6 của
+`AD_PROMPT_AOS.MD`).
+
+**Build verify**: `assembleDevDebug` và `assembleProductionRelease -x lintVitalAnalyzeProductionRelease`
+đều `BUILD SUCCESSFUL` (kể cả R8 minify release) sau cả 2 thay đổi.
+
+**Còn thiếu từ user**: `ADMOB_REWARDED_ID` cho release (`app/build.gradle` dòng buildType `release`).
+
+## 21. Round-7 (2026-08-19) — Audit lại theo yêu cầu user: tìm + fix bug thật, verify runtime thật
+
+User yêu cầu audit lại Round-6 sau khi thấy điểm 6/10. Diff sâu source thật (không chỉ tin doc) +
+verify trên emulator thật (`Pixel_10_Pro_XL`) thay vì chỉ tin `./gradlew assemble*` xanh.
+
+### Bug thật tìm được (không nằm trong `AD_PROMPT_AOS.MD`)
+
+**`activateVipByKey` cap `days > 365` (private `MAX_VIP_DAYS`, không phải public API).**
+`VipFrm.grantVip3Days()` tính `totalDays = remainingDays + REWARD_DAYS` rồi truyền thẳng — user gắn
+bó xem reward ad tích luỹ gần 1 năm VIP sẽ bị chặn cứng, Toast sai ("Key không hợp lệ" thay vì "đã
+chạm trần"). Verify `AppPreferences.accumulateVipByKeyUntil()` dùng `maxOf` (loại trừ nghi ngờ
+double-count). **Fix**: tách `computeVipRewardTotalDays()` (top-level `internal`, pure function) +
+`.coerceAtMost(VIP_KEY_MAX_DAYS_CAP=365)`, có unit test `VipFrmTest.kt` (5 case) cover luôn.
+
+### Regression thật ở 2 test có sẵn (không phải false alarm)
+
+Chạy `./gradlew testDevDebugUnitTest` lần đầu trong session (trước đó CHƯA từng chạy) →
+`AdManagerUnitTest` vỡ 2 test:
+- `testVipActivationAndBypass`: thiếu `allowLegacyPlaintextVipKey=true` trong config test → fail
+  đúng như lo ngại ở Round-6.
+- `testAdSafetyLimitsConfiguration`: dùng positional args cho `AdSafetyLimits(...)` — SDK 1.6.x chèn
+  `ctrWindowMs`/`newSessionAfterBackgroundMs` vào giữa constructor, đẩy lệch vị trí
+  `maxRapidResumesPerMinute` sang `ctrWindowMs` (Long) một cách ÂM THẦM (compile qua vì Int literal
+  tự convert sang Long) — giá trị bị gán sai không lỗi compile, chỉ lỗi assertion.
+
+Cả 2 đã fix (named args cho `AdSafetyLimits`; thêm `allowLegacyPlaintextVipKey=true` +
+`AdManager.configureTestHooks(network = { true })` — SDK 1.6.x thêm gate mạng thật (V-03) cho
+`activateVipByKey`, Robolectric không có network nên cần seam này). `./gradlew test` (2 flavor) xanh
+37/37.
+
+### Bug thật chỉ lộ ra khi CÀI THẬT lên máy (build xanh không bắt được)
+
+`<attribution android:label="Ad Networks (...)">` ở Round-6 dùng string **literal** — biên dịch/merge
+manifest OK, nhưng **cài đặt fail**: `INSTALL_PARSE_FAILED_MANIFEST_MALFORMED: <attribution> does not
+specify android:label` (Package Manager runtime đòi resource reference, không nhận literal). Fix:
+thêm `R.string.ad_attribution_label` + trỏ `android:label="@string/ad_attribution_label"`.
+
+### Verify runtime thật trên emulator (Pixel_10_Pro_XL, API mới nhất)
+
+Cài `devDebug`, chạy full flow qua logcat + screenshot:
+- `setConfig: provider=AdMob` — xác nhận flip provider đúng lúc runtime, không chỉ đúng lúc compile.
+- Consent UMP resolve (`Publisher misconfiguration` warning — pre-existing do App ID
+  `ca-app-pub-3612191981543807~...` chưa Publish European regulations message trên AdMob Console,
+  KHÔNG phải lỗi do session này gây ra; UMP fail-open đúng thiết kế, `canRequestAds=true`).
+- Splash → MainAct, `loadInterstitial`/`loadRewarded`/`loadAppOpenAd` đều request đúng Google demo ID
+  cấu hình ở debug.
+- Mở VIP screen → bấm "Watch Ad" → xem hết ad demo thật (nhãn "Test Ad") →
+  `grantVip3Days: totalDays(clamped)=3` → `activateVipByKey ✅ legacy VIP 3 ngày` → UI hiện
+  "ACTIVE · 2026-08-22". Xác nhận sống cả 2 fix quan trọng nhất (`allowLegacyPlaintextVipKey` +
+  clamp 365 ngày) trên thiết bị thật, không chỉ suy luận từ source.
+- Quay lại Settings → `loadBanner` gọi đúng, tự skip vì vừa lên VIP (đúng behavior "No banner ads").
+
+### Phát hiện mới cần user biết, không phải bug (đã hỏi, user chấp nhận giữ nguyên)
+
+SDK từ 1.1.4 build-in **auto-trial 1 ngày VIP miễn phí cho MỌI user cài app lần đầu** (release build,
+qua Install Referrer, không có flag tắt). Bản 1.1.3 cũ KHÔNG có. Đã hỏi user — quyết định: chấp nhận,
+không hạ version (đổi lại mất các fix bảo mật S1-S9 + hardening 1.1.4→1.6.16).
+
+### detekt — fix 1 phần, phần lớn ngoài phạm vi
+
+`app/build.gradle` thiếu `detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8"` →
+`formatting:` section trong `detekt.yml` (từ 2021) bị coi "misspelled" → **toàn bộ** `./gradlew
+detekt` fail validation từ trước khi chạy bất kỳ rule nào (không riêng ad SDK — mọi rule, mọi file,
+có thể đã fail kiểu này rất lâu). Đã thêm dependency (user chọn fix), lỗi validation hết. Nhưng lộ ra
+**481 issue tồn đọng, ước tính 2 ngày 20 giờ debt** — toàn bộ codebase, hoàn toàn không liên quan ad
+SDK. Chỉ fix 4 dòng `MaxLineLength` trong `VipFrmTest.kt` (file mới của chính session này). 477 issue
+còn lại là nợ kỹ thuật có sẵn, để nguyên — cần task dọn dẹp riêng, không phải phạm vi ad SDK.
+
+### Build/test verify cuối
+
+`./gradlew test` (2 flavor) xanh · `assembleDevDebug` + `assembleProductionRelease
+-x lintVitalAnalyzeProductionRelease` xanh (kể cả R8) · cài + smoke-test thật trên emulator xanh.
+

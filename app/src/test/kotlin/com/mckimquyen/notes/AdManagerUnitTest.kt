@@ -7,6 +7,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.roy.sdkadbmob.AdManager
 import com.roy.sdkadbmob.AdSdkConfig
+import com.roy.sdkadbmob.InternalAdApi
+import com.roy.sdkadbmob.configureTestHooks
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -15,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
+@OptIn(InternalAdApi::class)
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])
 class AdManagerUnitTest {
@@ -41,9 +44,15 @@ class AdManagerUnitTest {
             applovinRewardedId = "test_lovin_rewarded",
             applovinSdkKey = "test_lovin_key",
             vipKeySecret = decodedKey,
+            // SDK 1.6.x defaults this off; production RApp.kt sets it too (same reason —
+            // VipFrm relies on the legacy activateVipByKey path for both VIP flows).
+            allowLegacyPlaintextVipKey = true,
             safety = com.roy.sdkadbmob.AdSafetyLimits.TEST
         )
         AdManager.setConfig(config)
+        // SDK 1.6.x gates activateVipByKey behind a real network check (V-03) — Robolectric has no
+        // network, so activation would fail regardless of allowLegacyPlaintextVipKey without this.
+        AdManager.configureTestHooks(network = { true })
         AdManager.initialize(app) { _, _ -> }
     }
 
@@ -88,17 +97,20 @@ class AdManagerUnitTest {
         // Construct AdSafetyLimits with custom values for interval and session caps
         // minTimeBetweenFullscreenAds = 5000L (AD-005)
         // maxFullscreenAdsPerSession = 3 (AD-006)
+        // Named args — SDK 1.6.x inserted new params (ctrWindowMs, newSessionAfterBackgroundMs,
+        // maxAppOpenAds*) ahead of where positional args used to end, which silently mis-bound
+        // maxRapidResumesPerMinute's value onto ctrWindowMs after the SDK bump.
         val safety = com.roy.sdkadbmob.AdSafetyLimits(
-            5000L,  // minTimeBetweenFullscreenAds
-            3,      // maxFullscreenAdsPerSession
-            10000L, // minTimeAppOpenResume
-            10,     // maxClicksPerMinute
-            15,     // maxFullscreenAdsPerDay
-            5,      // maxFullscreenAdsPerHour
-            2000L,  // minSessionDurationBeforeAd
-            0.05f,  // suspiciousCtrThreshold
-            100,    // minImpressionsForCtrCheck
-            2       // maxRapidResumesPerMinute
+            minTimeBetweenFullscreenAds = 5000L,
+            maxFullscreenAdsPerSession = 3,
+            minTimeAppOpenResume = 10000L,
+            maxClicksPerMinute = 10,
+            maxFullscreenAdsPerDay = 15,
+            maxFullscreenAdsPerHour = 5,
+            minSessionDurationBeforeAd = 2000L,
+            suspiciousCtrThreshold = 0.05f,
+            minImpressionsForCtrCheck = 100,
+            maxRapidResumesPerMinute = 2,
         )
 
         assertEquals(5000L, safety.minTimeBetweenFullscreenAds)

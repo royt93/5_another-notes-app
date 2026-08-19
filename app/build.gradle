@@ -84,7 +84,7 @@ android {
             buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/1033173712\""
             buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3940256099942544/9257395921\""
             buildConfigField "String", "ADMOB_REWARDED_ID", "\"ca-app-pub-3940256099942544/5224354917\""
-            buildConfigField "Boolean", "IS_ENABLE_ADMOB", "false"
+            buildConfigField "Boolean", "IS_ENABLE_ADMOB", "true"
 
 //            applicationIdSuffix ".debug"
             def takingScreenshots = System.getenv("taking_screenshots")
@@ -97,7 +97,7 @@ android {
             buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3612191981543807/4741213833\""
             buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3612191981543807/3703705586\""
             buildConfigField "String", "ADMOB_REWARDED_ID", "\"\""
-            buildConfigField "Boolean", "IS_ENABLE_ADMOB", "false"
+            buildConfigField "Boolean", "IS_ENABLE_ADMOB", "true"
 
 //            applicationIdSuffix ".sync"
             minifyEnabled true
@@ -201,7 +201,7 @@ dependencies {
 
     // AdmobApplovinWrapper SDK — AppLovin MAX + AdMob unified facade.
     // SDK pulls play-services-ads + AppLovin MAX + UMP transitively.
-    implementation("com.github.royt93:AdmobApplovinWrapper:1.1.3")
+    implementation("com.github.royt93:AdmobApplovinWrapper:1.6.16")
 
     implementation("com.google.android.play:review:2.0.2")
     implementation("com.google.android.play:review-ktx:2.0.2")
@@ -219,6 +219,10 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:3.6.1"
     androidTestImplementation "androidx.room:room-testing:2.7.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0"
+
+    // detekt.yml's `formatting:` ruleset needs this on the classpath, or detekt hard-fails with
+    // "Property 'formatting' is misspelled or does not exist" before running any check.
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8"
 }
 
 tasks.named("build") {

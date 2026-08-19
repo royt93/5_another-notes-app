@@ -11,6 +11,7 @@ import com.mckimquyen.notes.di.DaggerAppComponent
 import com.mckimquyen.notes.model.NotesDb
 import com.mckimquyen.notes.model.PrefsManager
 import com.mckimquyen.notes.ui.AppTheme
+import com.mckimquyen.notes.ui.splash.SplashActivity
 import com.roy.sdkadbmob.AdManager
 import com.roy.sdkadbmob.AdSdkConfig
 import javax.inject.Inject
@@ -100,6 +101,11 @@ class RApp : Application() {
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
                 vipKeySecret           = decodeVipKey(BuildConfig.VIP_KEY_ENCODED),
+                // 1.6.16 turns this off by default; VipFrm relies on activateVipByKey (plain key)
+                // for both manual activation and the watch-ad reward — keep it on to avoid both
+                // paths silently returning false after the SDK bump.
+                allowLegacyPlaintextVipKey = true,
+                appOpenExcludedActivities = listOf(SplashActivity::class.java),
                 safety                 = if (BuildConfig.DEBUG) {
                     com.roy.sdkadbmob.AdSafetyLimits.TEST
                 } else {

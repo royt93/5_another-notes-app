@@ -38,6 +38,28 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
+private const val ONE_DAY_MS_TOP_LEVEL = 24L * 60L * 60L * 1000L
+
+/**
+ * Days to pass into `AdManager.activateVipByKey` for the watch-ad reward: remaining time on the
+ * current VIP grant (rounded up to whole days) plus [rewardDays], clamped to [maxDays].
+ *
+ * The clamp exists because `activateVipByKey` (SDK 1.6.x) rejects `days > maxDays` outright and
+ * returns `false` instead of extending — without it, a long-time user who keeps watching reward ads
+ * would eventually push the computed total past the cap and every further reward would silently fail.
+ * Pulled out as a top-level pure function so the boundary can be unit-tested without Robolectric.
+ */
+internal fun computeVipRewardTotalDays(
+    currentExpiryMs: Long,
+    nowMs: Long,
+    rewardDays: Int,
+    maxDays: Int,
+): Int {
+    val effectiveExpiry = currentExpiryMs.coerceAtLeast(nowMs)
+    val remainingDays = ((effectiveExpiry - nowMs + ONE_DAY_MS_TOP_LEVEL - 1) / ONE_DAY_MS_TOP_LEVEL).toInt()
+    return (remainingDays + rewardDays).coerceAtMost(maxDays)
+}
+
 class VipFrm : Fragment() {
 
     private var _binding: FVipBinding? = null
@@ -304,14 +326,18 @@ class VipFrm : Fragment() {
      * Add 3 days of VIP. ACCUMULATE on top of any remaining time — `activateVipByKey` overwrites
      * the expiry, so we must compute `remainingDays + 3` before calling it. Otherwise a user
      * with 25 days left would shrink down to 3.
+     *
+     * Clamped to [VIP_KEY_MAX_DAYS_CAP]: `AdManager.activateVipByKey` (SDK 1.6.x) rejects any
+     * `days > 365` outright (undocumented, private `MAX_VIP_DAYS` in the SDK — verified by reading
+     * source at the pinned version). Without the clamp, a long-time user who keeps watching reward
+     * ads would eventually push `totalDays` past 365 and every further call would silently fail.
      */
     private fun grantVip3Days(context: Context) {
         val now = System.currentTimeMillis()
         val currentExpiry = AdManager.getVipByKeyExpiry().coerceAtLeast(now)
-        val remainingDays = ((currentExpiry - now + ONE_DAY_MS - 1) / ONE_DAY_MS).toInt()
-        val totalDays = remainingDays + REWARD_DAYS
+        val totalDays = computeVipRewardTotalDays(currentExpiry, now, REWARD_DAYS, VIP_KEY_MAX_DAYS_CAP)
         val validKey = decodedVipKey()
-        SafeLogger.d(TAG, "grantVip3Days: remaining=$remainingDays + reward=$REWARD_DAYS = $totalDays")
+        SafeLogger.d(TAG, "grantVip3Days: totalDays(clamped)=$totalDays")
         if (AdManager.activateVipByKey(context, validKey, days = totalDays)) {
             // Show "earned 3 days" — user-facing message reflects what was earned, not total.
             onActivationSuccess(days = REWARD_DAYS)
@@ -439,8 +465,12 @@ class VipFrm : Fragment() {
         private const val TAG = "roy93~VipFrm"
         private const val ACTIVATION_DAYS = 30
         private const val REWARD_DAYS = 3
+
+        // Mirrors the SDK's internal (undocumented, private) activateVipByKey days cap — see
+        // grantVip3Days() KDoc. Not derived from a public SDK constant; re-verify against source
+        // if the SDK version changes.
+        private const val VIP_KEY_MAX_DAYS_CAP = 365
         private const val CONFETTI_COUNT = 22
-        private const val ONE_DAY_MS = 24L * 60L * 60L * 1000L
 
         // Top-level non-capturing listener — replaces the per-click anonymous emptyListener that
         // captured the fragment instance and pinned it inside the AdManager singleton.
