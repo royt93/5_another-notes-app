@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.roy.sdkadbmob.AdManager
 import com.roy.sdkadbmob.AdSdkConfig
 import com.roy.sdkadbmob.InternalAdApi
+import com.roy.sdkadbmob.clearAppPreferencesForTest
 import com.roy.sdkadbmob.configureTestHooks
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -16,6 +17,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowSystemClock
+import java.time.Duration
 
 @OptIn(InternalAdApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -26,9 +29,22 @@ class AdManagerUnitTest {
 
     @Before
     fun setup() {
+        // `AdManager`'s VIP-activation backoff (internal, not resettable from this module) throttles
+        // for up to 5 min after just one failed attempt and lives on the `object AdManager` singleton,
+        // which Robolectric does NOT reset between @Test methods in this class — a failure in one test
+        // (e.g. testInvalidVipKeyFails) would otherwise throttle activateVipByKey in whichever test
+        // happens to run next. Fast-forward the fake clock past the cap so every test starts cooled down.
+        ShadowSystemClock.advanceBy(Duration.ofMinutes(20))
         app = ApplicationProvider.getApplicationContext()
+        // Redeem codes (vipRedeemCodes) are marked "already used" in SharedPreferences, which
+        // Robolectric backs with a real file — that can survive across separate `./gradlew test`
+        // invocations sharing a Gradle test-worker daemon, making a redeem-code test pass once and
+        // then fail as "already used" on a later run. Clear before every test for a clean slate.
+        AdManager.clearAppPreferencesForTest(app)
         val encodedKey = BuildConfig.VIP_KEY_ENCODED
         val decodedKey = String(Base64.decode(encodedKey, Base64.NO_WRAP))
+
+        val decoded3DaysKey = String(Base64.decode(BuildConfig.VIP_KEY_3DAYS_ENCODED, Base64.NO_WRAP))
 
         // Initialize AdManager with test config matching the production keys
         val config = AdSdkConfig(
@@ -45,8 +61,11 @@ class AdManagerUnitTest {
             applovinSdkKey = "test_lovin_key",
             vipKeySecret = decodedKey,
             // SDK 1.6.x defaults this off; production RApp.kt sets it too (same reason —
-            // VipFrm relies on the legacy activateVipByKey path for both VIP flows).
+            // VipFrm's manual key dialog falls back to this path for backward compat).
             allowLegacyPlaintextVipKey = true,
+            // Mirrors RApp.setupAds() — verifies the redeem-code map itself (Round-7 wiring), not
+            // just the legacy fallback.
+            vipRedeemCodes = mapOf(decodedKey to 30, decoded3DaysKey to 3),
             safety = com.roy.sdkadbmob.AdSafetyLimits.TEST
         )
         AdManager.setConfig(config)
@@ -54,6 +73,12 @@ class AdManagerUnitTest {
         // network, so activation would fail regardless of allowLegacyPlaintextVipKey without this.
         AdManager.configureTestHooks(network = { true })
         AdManager.initialize(app) { _, _ -> }
+        // The provider stays parked WAITING_FOR_CONSENT until consent resolves — reproducibly so
+        // once a prior @Test method in this class has already run an initialize() cycle (the SDK's
+        // consent watchdog/state carries over on the shared `object AdManager` singleton between
+        // @Test methods, unlike a truly fresh process). Not what these tests are about — force it
+        // resolved so every test starts from the same known-good state regardless of run order.
+        AdManager.confirmGdprConsent(app, hasConsent = true)
     }
 
     @Test
@@ -85,12 +110,47 @@ class AdManagerUnitTest {
     }
 
     @Test
-    fun testInvalidVipKeyFails() {
-        // Attempt to activate VIP with an invalid key
-        val success = AdManager.activateVipByKey(app, "INVALID_SECRET_KEY", days = 10)
-        assertFalse("VIP activation should fail with an invalid key", success)
-        assertFalse("VIP state should remain inactive", AdManager.isVipByKeyActive())
+    fun testRedeemCode3DaysActivatesThreeDaysNotThirty() {
+        // The 3-day code is a distinct entry from the 30-day one in vipRedeemCodes — regression
+        // test for the Round-7 wiring (RApp.setupAds()): before this, entering it into the manual
+        // key dialog just failed (it never equaled the single legacy vipKeySecret).
+        val decoded3DaysKey = String(Base64.decode(BuildConfig.VIP_KEY_3DAYS_ENCODED, Base64.NO_WRAP))
+        val before = System.currentTimeMillis()
+
+        val success = AdManager.activateVipByKey(app, decoded3DaysKey, days = 30)
+        assertTrue("3-day redeem code should activate", success)
+
+        val expiry = AdManager.getVipByKeyExpiry()
+        val grantedDays = (expiry - before) / (24L * 60L * 60L * 1000L)
+        // Redeem-code lookup ignores the `days` argument passed to activateVipByKey (30 above) —
+        // it always grants exactly what vipRedeemCodes maps the code to (3), which is the whole
+        // point of the regression test: passing 30 here must NOT result in 30 days.
+        assertEquals("Should grant exactly 3 days, not the `days` argument passed in", 3L, grantedDays)
+
+        AdManager.clearVipByKey()
     }
+
+    @Test
+    fun testGrantVipDaysUsedByWatchAdRewardDoesNotCollideWithRedeemCodes() {
+        // VipFrm.grantVip3Days() calls AdManager.grantVipDays() (not activateVipByKey) specifically
+        // to avoid colliding with the 30-day code now living in vipRedeemCodes — verify that path
+        // grants exactly 3 days and accumulates on repeat calls, independent of vipKeySecret/vipRedeemCodes.
+        val before = System.currentTimeMillis()
+
+        assertTrue(AdManager.grantVipDays(app, 3))
+        val firstExpiry = AdManager.getVipByKeyExpiry()
+        val firstGrantedDays = (firstExpiry - before) / (24L * 60L * 60L * 1000L)
+        assertEquals(3L, firstGrantedDays)
+
+        assertTrue(AdManager.grantVipDays(app, 3))
+        val secondExpiry = AdManager.getVipByKeyExpiry()
+        val secondGrantedDays = (secondExpiry - before) / (24L * 60L * 60L * 1000L)
+        assertEquals("Second reward should accumulate on top of the first", 6L, secondGrantedDays)
+
+        AdManager.clearVipByKey()
+    }
+
+    // testInvalidVipKeyFails moved to AdManagerInvalidKeyTest.kt — see that file's KDoc for why.
 
     @Test
     fun testAdSafetyLimitsConfiguration() {

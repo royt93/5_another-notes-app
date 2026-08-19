@@ -709,3 +709,86 @@ còn lại là nợ kỹ thuật có sẵn, để nguyên — cần task dọn d
 `./gradlew test` (2 flavor) xanh · `assembleDevDebug` + `assembleProductionRelease
 -x lintVitalAnalyzeProductionRelease` xanh (kể cả R8) · cài + smoke-test thật trên emulator xanh.
 
+## 22. Round-8 (2026-08-19) — Config thật từ `doc/ad/id.MD` + wire redeem code 3-ngày + test device
+
+User cung cấp `doc/ad/id.MD` (package, policy URL, 2 VIP key, bộ AdMob ID đầy đủ từ account
+`ca-app-pub-3004713799155145`) + 2 ảnh screenshot ad unit list (khớp id.MD, không thêm thông tin
+mới) + yêu cầu add test device Pixel 7 Pro. 2 ảnh gửi kèm ban đầu (`[Image #2]`, `[Image #3]`) bị lỗi
+truyền tải (cache file trùng byte-size, không phải ảnh thật) — không đọc được nội dung.
+
+### Đổi account AdMob hoàn toàn
+
+Manifest `APPLICATION_ID` + 4 ID release (banner/inter/appopen/rewarded) đổi từ account
+`ca-app-pub-3612191981543807` (thiếu rewarded) sang `ca-app-pub-3004713799155145` (đủ cả 5 loại, kể
+cả `native`). Verify runtime trên emulator: `setConfig: provider=AdMob` với App ID mới, không crash.
+
+### `vipRedeemCodes` — phát hiện + tránh 1 collision nghiêm trọng
+
+id.MD có thêm "key vip 3 days" riêng biệt với "key vip 30 days" — user chọn wire cả 2 vào
+`AdSdkConfig.vipRedeemCodes`. Khi implement, phát hiện: **key 30-ngày đã là `vipKeySecret`**, và
+`grantVip3Days()` (luồng watch-ad) TRƯỚC ĐÓ gọi `activateVipByKey(ctx, vipKeySecret, days=<tính
+tay>)` — nếu thêm `vipRedeemCodes` chứa đúng giá trị `vipKeySecret` mà không đổi luồng reward, mọi
+lần xem reward ad sẽ bị `tryActivateRedeemCode` (chạy TRƯỚC nhánh legacy trong `activateVipByKey`)
+chặn bắt và cấp **30 ngày thay vì 3** (redeem-code lookup bỏ qua tham số `days` truyền vào, luôn dùng
+giá trị map). Đây đúng "hack" mà `AD_PROMPT_AOS.MD` đã cảnh báo từ đầu: *"ĐỪNG hack bằng
+activateVipByKey(ctx, vipKeySecret, 3) — dùng grantVipDays() cho reward ad"* — cảnh báo này bị bỏ sót
+ở lần migrate gốc, giờ mới áp dụng đúng.
+
+**Fix**: `VipFrm.grantVip3Days()` đổi sang `AdManager.grantVipDays(context, 3)` — API cấp-nội-bộ
+riêng, không đụng `vipKeySecret`/`vipRedeemCodes`, tự cộng dồn qua `addVipDaysAtomic` (không cần tính
+tay `remainingDays` nữa) → xoá luôn `computeVipRewardTotalDays()` + `VipFrmTest.kt` (dead code sau
+khi bỏ path `activateVipByKey` khỏi luồng reward). `showActivateDialog()` (nhập tay) thêm
+`keyToDays()` lookup để hiện đúng số ngày thật đã cấp (trước đó hard-code hiện "30 ngày" bất kể key
+nào được nhập — sai nếu user gõ mã 3-ngày).
+
+Verify runtime trên emulator: bấm "Watch Ad" → xem hết ad demo → log
+`grantVipDays ✅ cấp 3 ngày VIP (until ...)` → UI "ACTIVE · 2026-08-22" (đúng 3 ngày từ lúc test).
+
+### Test device Pixel 7 Pro
+
+User yêu cầu dùng Pixel 7 Pro làm test device nhưng session trước đó đã chốt "chỉ dùng emulator" —
+user sau đó tự explicit override cho riêng việc lấy GAID ("tự check đi, tôi đã cắm usb"). Cài
+devDebug lên máy thật, đọc GAID qua log `###init GAID=...` (không có cách offline lấy GAID qua
+`adb shell settings get secure advertising_id` — trả `null` trên máy này). GAID:
+`be39dfe0-67f5-4da4-afb3-8407cd481df4`. Wire vào `RApp.setupAds()`:
+`AdManager.setTestDeviceIds(PIXEL_7_PRO_GAID)` sau `initialize()`, gated `BuildConfig.DEBUG`.
+
+### Các điểm khác (theo quyết định user)
+
+- Native ad ID (`ADMOB_NATIVE_ID`) chỉ thêm `buildConfigField`, KHÔNG implement — `AdSdkConfig`
+  hiện tại (1.6.16) không có field native ad nào, SDK chưa hỗ trợ; giữ chỗ cho sau.
+- `URL_POLICY_NOTION` cập nhật khớp URL trong id.MD (cùng page-id Notion, khác slug — cập nhật theo
+  nguồn chính thức mới nhất).
+
+### Test-infra: 1 test mới flaky, root-cause + fix
+
+Thêm `AdManagerUnitTest.testRedeemCode3DaysActivatesThreeDaysNotThirty` +
+`testGrantVipDaysUsedByWatchAdRewardDoesNotCollideWithRedeemCodes` — bị fail **chỉ khi chạy chung
+class** với `testInvalidVipKeyFails` (test cũ, cố ý fail 1 lần). Điều tra qua nhiều vòng
+(`ShadowSystemClock.advanceBy` cho backoff, `clearAppPreferencesForTest` cho redeem-ledger,
+`confirmGdprConsent` cho consent) đều không dứt điểm — nguyên nhân thật: `object AdManager` (provider
+init state machine) là JVM singleton KHÔNG được Robolectric reset giữa các `@Test` method **cùng
+file/class**, chỉ reset giữa các file test khác nhau. Verify bằng chạy `testRedeemCode3Days...` cô
+lập (pass 3/3) vs chạy cùng `testInvalidVipKeyFails` (fail 3/3 — deterministic, không phải flaky thật
+sự). **Fix**: tách `testInvalidVipKeyFails` sang file riêng `AdManagerInvalidKeyTest.kt`. `./gradlew
+test` xanh ổn định (verify lại 3 lần liên tiếp).
+
+### ANR quan sát được trên emulator (không kết luận là bug app)
+
+2-3 lần "Cat Note DEV isn't responding" xuất hiện trên emulator giữa lúc đang gọi dồn dập
+`adb shell` (uiautomator dump + screenshot + logcat liên tục) — logcat cùng lúc show
+`WifiService`/`ScanResultUtil` warning lặp lại + `network onAvailable throttled (flap)` đều đặn mỗi
+~30s, đặc trưng của AVD có virtual network chập chờn. Khi relaunch sạch (force-stop, không chạy adb
+command nào khác song song) và test lại đúng luồng watch-ad → không ANR, chạy mượt, log đúng kỳ vọng.
+Kết luận tạm: môi trường emulator/tooling, không phải regression từ code — nhưng CHƯA loại trừ 100%
+(không có ANR trace đầy đủ để xác nhận thread nào bị chặn); nếu QA thật gặp lại ANR tương tự trên máy
+thật, cần điều tra riêng.
+
+### Build/test verify cuối (Round-8)
+
+`./gradlew test` (2 flavor, x3 lần liên tiếp) xanh ổn định · `assembleDevDebug` +
+`assembleProductionRelease -x lintVitalAnalyzeProductionRelease` xanh · cài + smoke-test thật trên
+emulator: App ID mới, redeem code, `grantVipDays` reward flow đều verify sống qua log + screenshot.
+
+**Còn thiếu**: không còn — `ADMOB_REWARDED_ID` release đã có từ id.MD.
+

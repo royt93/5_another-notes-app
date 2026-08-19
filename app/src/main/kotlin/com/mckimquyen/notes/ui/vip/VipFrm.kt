@@ -38,28 +38,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-private const val ONE_DAY_MS_TOP_LEVEL = 24L * 60L * 60L * 1000L
-
-/**
- * Days to pass into `AdManager.activateVipByKey` for the watch-ad reward: remaining time on the
- * current VIP grant (rounded up to whole days) plus [rewardDays], clamped to [maxDays].
- *
- * The clamp exists because `activateVipByKey` (SDK 1.6.x) rejects `days > maxDays` outright and
- * returns `false` instead of extending — without it, a long-time user who keeps watching reward ads
- * would eventually push the computed total past the cap and every further reward would silently fail.
- * Pulled out as a top-level pure function so the boundary can be unit-tested without Robolectric.
- */
-internal fun computeVipRewardTotalDays(
-    currentExpiryMs: Long,
-    nowMs: Long,
-    rewardDays: Int,
-    maxDays: Int,
-): Int {
-    val effectiveExpiry = currentExpiryMs.coerceAtLeast(nowMs)
-    val remainingDays = ((effectiveExpiry - nowMs + ONE_DAY_MS_TOP_LEVEL - 1) / ONE_DAY_MS_TOP_LEVEL).toInt()
-    return (remainingDays + rewardDays).coerceAtMost(maxDays)
-}
-
 class VipFrm : Fragment() {
 
     private var _binding: FVipBinding? = null
@@ -308,10 +286,16 @@ class VipFrm : Fragment() {
             val positive = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
             positive.setOnClickListener {
                 val key = dialogBinding.keyInput.text?.toString().orEmpty().trim()
-                val ok = AdManager.activateVipByKey(requireContext(), key, days = ACTIVATION_DAYS)
+                // Days granted depend on WHICH code was entered — activateVipByKey() routes key
+                // matches through AdSdkConfig.vipRedeemCodes (see RApp.setupAds()) before falling
+                // back to the single-day-count legacy path, so the actual grant can be either
+                // KEY_TO_DAYS entry. Mirror that same map here purely to show the right success
+                // message — this lookup has no effect on what actually gets activated.
+                val grantedDays = keyToDays()[key] ?: ACTIVATION_DAYS
+                val ok = AdManager.activateVipByKey(requireContext(), key, days = grantedDays)
                 if (ok) {
                     dialog.dismiss()
-                    onActivationSuccess(days = ACTIVATION_DAYS)
+                    onActivationSuccess(days = grantedDays)
                 } else {
                     dialogBinding.keyInputLayout.error = getString(R.string.vip_msg_invalid)
                 }
@@ -322,32 +306,30 @@ class VipFrm : Fragment() {
         dialog.show()
     }
 
+    private fun keyToDays(): Map<String, Int> = mapOf(
+        decodedKey(BuildConfig.VIP_KEY_ENCODED) to ACTIVATION_DAYS,
+        decodedKey(BuildConfig.VIP_KEY_3DAYS_ENCODED) to REWARD_DAYS,
+    )
+
     /**
-     * Add 3 days of VIP. ACCUMULATE on top of any remaining time — `activateVipByKey` overwrites
-     * the expiry, so we must compute `remainingDays + 3` before calling it. Otherwise a user
-     * with 25 days left would shrink down to 3.
-     *
-     * Clamped to [VIP_KEY_MAX_DAYS_CAP]: `AdManager.activateVipByKey` (SDK 1.6.x) rejects any
-     * `days > 365` outright (undocumented, private `MAX_VIP_DAYS` in the SDK — verified by reading
-     * source at the pinned version). Without the clamp, a long-time user who keeps watching reward
-     * ads would eventually push `totalDays` past 365 and every further call would silently fail.
+     * Grant [REWARD_DAYS] of VIP for watching a rewarded ad. Uses `AdManager.grantVipDays()` — the
+     * SDK's trusted-internal-grant API for "reward already earned / IAP already verified" sources —
+     * rather than `activateVipByKey()`: the latter would collide with `vipRedeemCodes` (this reward
+     * flow used to pass the 30-day key's own value here with a computed day count, which as of the
+     * redeem-codes wiring would now match the 30-day map entry and grant 30 days instead of 3).
+     * `grantVipDays()` also accumulates on top of any remaining time internally, so no manual
+     * remaining-days math is needed here.
      */
     private fun grantVip3Days(context: Context) {
-        val now = System.currentTimeMillis()
-        val currentExpiry = AdManager.getVipByKeyExpiry().coerceAtLeast(now)
-        val totalDays = computeVipRewardTotalDays(currentExpiry, now, REWARD_DAYS, VIP_KEY_MAX_DAYS_CAP)
-        val validKey = decodedVipKey()
-        SafeLogger.d(TAG, "grantVip3Days: totalDays(clamped)=$totalDays")
-        if (AdManager.activateVipByKey(context, validKey, days = totalDays)) {
-            // Show "earned 3 days" — user-facing message reflects what was earned, not total.
+        if (AdManager.grantVipDays(context, REWARD_DAYS)) {
             onActivationSuccess(days = REWARD_DAYS)
         } else {
             Toast.makeText(context, R.string.vip_msg_invalid, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun decodedVipKey(): String =
-        String(Base64.decode(BuildConfig.VIP_KEY_ENCODED, Base64.NO_WRAP))
+    private fun decodedKey(encoded: String): String =
+        String(Base64.decode(encoded, Base64.NO_WRAP))
 
     private fun onActivationSuccess(days: Int) {
         animateStatusPillToActive()
@@ -465,11 +447,6 @@ class VipFrm : Fragment() {
         private const val TAG = "roy93~VipFrm"
         private const val ACTIVATION_DAYS = 30
         private const val REWARD_DAYS = 3
-
-        // Mirrors the SDK's internal (undocumented, private) activateVipByKey days cap — see
-        // grantVip3Days() KDoc. Not derived from a public SDK constant; re-verify against source
-        // if the SDK version changes.
-        private const val VIP_KEY_MAX_DAYS_CAP = 365
         private const val CONFETTI_COUNT = 22
 
         // Top-level non-capturing listener — replaces the per-click anonymous emptyListener that

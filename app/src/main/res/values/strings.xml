@@ -299,7 +299,7 @@
     <string name="vip_footer_info">Premium uses an offline activation key — no payment processed in-app.</string>
 
     <string name="vip_dialog_title">Enter your premium key</string>
-    <string name="vip_dialog_subtitle">Each key activates Premium for 30 days.</string>
+    <string name="vip_dialog_subtitle">Enter your activation code to unlock Premium.</string>
     <string name="vip_dialog_input_hint">Activation key</string>
     <string name="vip_dialog_btn_activate">Activate</string>
     <string name="vip_dialog_btn_cancel">Cancel</string>

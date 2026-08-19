@@ -101,10 +101,20 @@ class RApp : Application() {
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
                 vipKeySecret           = decodeVipKey(BuildConfig.VIP_KEY_ENCODED),
-                // 1.6.16 turns this off by default; VipFrm relies on activateVipByKey (plain key)
-                // for both manual activation and the watch-ad reward — keep it on to avoid both
-                // paths silently returning false after the SDK bump.
+                // 1.6.16 turns this off by default; VipFrm's manual "Enter premium key" dialog
+                // still falls back to this path when the typed code isn't in vipRedeemCodes below
+                // (kept for backward compat) — keep it on to avoid silently returning false.
                 allowLegacyPlaintextVipKey = true,
+                // Two user-facing redeem codes (doc/ad/id.MD) — checked before the legacy plaintext
+                // fallback above, and independently of it: showActivateDialog() passes whatever the
+                // user typed straight to activateVipByKey(), so either code activates for its own
+                // mapped duration. The watch-ad reward flow does NOT go through this map — it calls
+                // AdManager.grantVipDays() instead (see VipFrm.grantVip3Days), which is why reusing
+                // the 30-day code's value here doesn't affect reward-ad day counts.
+                vipRedeemCodes = mapOf(
+                    decodeVipKey(BuildConfig.VIP_KEY_ENCODED) to VIP_KEY_30DAYS_DAYS,
+                    decodeVipKey(BuildConfig.VIP_KEY_3DAYS_ENCODED) to VIP_KEY_3DAYS_DAYS,
+                ),
                 appOpenExcludedActivities = listOf(SplashActivity::class.java),
                 safety                 = if (BuildConfig.DEBUG) {
                     com.roy.sdkadbmob.AdSafetyLimits.TEST
@@ -126,6 +136,12 @@ class RApp : Application() {
                 AdManager.activateVipByKey(this, key, days = 365)
                 Log.d("roy93~", "Bypassed ads for UI tests by activating VIP")
             }
+            if (BuildConfig.DEBUG) {
+                // Registered QA device GAIDs so clicking ads during manual testing counts as test
+                // traffic, not invalid traffic (see AD_PROMPT_AOS.MD Bước 3b — protects the AdMob
+                // account from an invalid-traffic ban).
+                AdManager.setTestDeviceIds(PIXEL_7_PRO_GAID)
+            }
         }
     }
 
@@ -136,5 +152,11 @@ class RApp : Application() {
 
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "reminders"
+
+        private const val VIP_KEY_30DAYS_DAYS = 30
+        private const val VIP_KEY_3DAYS_DAYS = 3
+
+        // QA device — see setTestDeviceIds() call in setupAds().
+        private const val PIXEL_7_PRO_GAID = "be39dfe0-67f5-4da4-afb3-8407cd481df4"
     }
 }

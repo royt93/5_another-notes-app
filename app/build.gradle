@@ -44,6 +44,12 @@ android {
         // VIP secret — Base64-obfuscated, decoded at runtime in RApp.setupAds().
         // Plain text NOT stored; raises bar for `strings` scans on APK (still reversible by determined attackers — adequate for low-stakes notes app).
         buildConfigField "String", "VIP_KEY_ENCODED", "\"OWZBMHE3ZU4hMjdjTHgwNEAyMTk5M1kydTBJNyNRMA==\""
+        // Second redeem code (3-day grant), same obfuscation as VIP_KEY_ENCODED — see doc/ad/id.MD.
+        buildConfigField "String", "VIP_KEY_3DAYS_ENCODED", "\"ZVE3QDkzTDBmITJZMjcwN3hOMDQwMjE5OTN1MEkjMmFL\""
+
+        // AdMob native — no admobNativeId field exists in AdSdkConfig (SDK doesn't support native ads
+        // yet); stored here for whenever native ad support / a bespoke NativeAd integration is added.
+        buildConfigField "String", "ADMOB_NATIVE_ID", "\"ca-app-pub-3004713799155145/3952263388\""
     }
 
     buildFeatures {
@@ -92,11 +98,11 @@ android {
                     takingScreenshots == null ? "true" : (!takingScreenshots.toBoolean()).toString()
         }
         release {
-            // nhớ check APPLICATION_ID trong manifest
-            buildConfigField "String", "ADMOB_BANNER_ID", "\"ca-app-pub-3612191981543807/1231237872\""
-            buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3612191981543807/4741213833\""
-            buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3612191981543807/3703705586\""
-            buildConfigField "String", "ADMOB_REWARDED_ID", "\"\""
+            // nhớ check APPLICATION_ID trong manifest — account theo doc/ad/id.MD (2026-08-19)
+            buildConfigField "String", "ADMOB_BANNER_ID", "\"ca-app-pub-3004713799155145/2553169771\""
+            buildConfigField "String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3004713799155145/1240088100\""
+            buildConfigField "String", "ADMOB_APP_OPEN_ID", "\"ca-app-pub-3004713799155145/4790702334\""
+            buildConfigField "String", "ADMOB_REWARDED_ID", "\"ca-app-pub-3004713799155145/3202288498\""
             buildConfigField "Boolean", "IS_ENABLE_ADMOB", "true"
 
 //            applicationIdSuffix ".sync"
