@@ -3,4 +3,9 @@ policy: https://loitp.notion.site/Term-Privacy-Policy-Disclaimer-319b1cd8783942f
 key vip 30 days: 9fA0q7eN!27cLx04@21993Y2u0I7#Q0
 key vip 3 days: eQ7@93L0f!2Y2707xN04021993u0I#2aK
 ========
-admob 
+admob app id: ca-app-pub-3004713799155145~1431659799
+banner: ca-app-pub-3004713799155145/2553169771
+inter: ca-app-pub-3004713799155145/1240088100
+app open: ca-app-pub-3004713799155145/4790702334
+native: ca-app-pub-3004713799155145/3952263388
+rewarded: ca-app-pub-3004713799155145/3202288498
