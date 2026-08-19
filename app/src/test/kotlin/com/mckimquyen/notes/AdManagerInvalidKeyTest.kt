@@ -15,12 +15,16 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 /**
- * Split out of [AdManagerUnitTest]: this test deliberately fails an `activateVipByKey` call, which
- * leaves `object AdManager`'s internal provider/consent state machine in a way that the other tests
- * in that class observed as a stuck `WAITING_FOR_CONSENT` when run in the same JVM afterward —
- * Robolectric does NOT reset that singleton between @Test methods within one class, only between
- * separate test classes/files. Keeping this alone in its own file sidesteps the contamination
- * instead of fighting the shared-singleton state from outside the SDK module.
+ * Split out of [AdManagerUnitTest] for readability: this test deliberately fails an
+ * `activateVipByKey` call, which leaves `object AdManager`'s internal provider/consent state
+ * machine in a way other tests observed as a stuck `WAITING_FOR_CONSENT`/throttled backoff.
+ *
+ * Splitting into a separate file does NOT by itself isolate this from other tests — `object
+ * AdManager` is a JVM singleton that Gradle's test worker keeps alive across every Robolectric test
+ * class it runs in the same process, this file included. [AdManagerUnitTest.setup] has its own
+ * defensive clock-advance + forced consent for exactly that reason. Verified via `./gradlew test
+ * --rerun-tasks` (the full module, not just this file) after removing those defenses reintroduced
+ * flaky failures in [AdManagerUnitTest] — don't remove them assuming this split is sufficient.
  */
 @OptIn(InternalAdApi::class)
 @RunWith(AndroidJUnit4::class)

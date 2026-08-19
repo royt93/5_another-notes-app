@@ -760,18 +760,30 @@ devDebug lên máy thật, đọc GAID qua log `###init GAID=...` (không có c�
 - `URL_POLICY_NOTION` cập nhật khớp URL trong id.MD (cùng page-id Notion, khác slug — cập nhật theo
   nguồn chính thức mới nhất).
 
-### Test-infra: 1 test mới flaky, root-cause + fix
+### Test-infra: 1 test mới flaky, root-cause + fix (đã tự sửa sai 1 lần, ghi lại cả 2 vòng)
 
 Thêm `AdManagerUnitTest.testRedeemCode3DaysActivatesThreeDaysNotThirty` +
-`testGrantVipDaysUsedByWatchAdRewardDoesNotCollideWithRedeemCodes` — bị fail **chỉ khi chạy chung
-class** với `testInvalidVipKeyFails` (test cũ, cố ý fail 1 lần). Điều tra qua nhiều vòng
-(`ShadowSystemClock.advanceBy` cho backoff, `clearAppPreferencesForTest` cho redeem-ledger,
-`confirmGdprConsent` cho consent) đều không dứt điểm — nguyên nhân thật: `object AdManager` (provider
-init state machine) là JVM singleton KHÔNG được Robolectric reset giữa các `@Test` method **cùng
-file/class**, chỉ reset giữa các file test khác nhau. Verify bằng chạy `testRedeemCode3Days...` cô
-lập (pass 3/3) vs chạy cùng `testInvalidVipKeyFails` (fail 3/3 — deterministic, không phải flaky thật
-sự). **Fix**: tách `testInvalidVipKeyFails` sang file riêng `AdManagerInvalidKeyTest.kt`. `./gradlew
-test` xanh ổn định (verify lại 3 lần liên tiếp).
+`testGrantVipDaysUsedByWatchAdRewardDoesNotCollideWithRedeemCodes` — bị fail khi chạy chung với
+`testInvalidVipKeyFails` (test cũ, cố ý fail 1 lần).
+
+**Vòng 1 (SAI — đã tự phát hiện khi audit lại theo yêu cầu user)**: kết luận nhầm là "Robolectric chỉ
+share `object AdManager` giữa các `@Test` method **cùng file**, reset được giữa các file khác nhau"
+— verify bằng `./gradlew testDevDebugUnitTest --tests "...AdManagerUnitTest"` (chỉ chạy 1 class qua
+filter `--tests`) thấy xanh 5/5 lần nên tưởng đã xong, tách `testInvalidVipKeyFails` sang file riêng
+`AdManagerInvalidKeyTest.kt` rồi dừng ở đó.
+
+**Vòng 2 (audit lại, phát hiện vòng 1 sai)**: chạy **full module** thật (`./gradlew test
+--rerun-tasks`, không lọc `--tests`) thay vì chỉ 1 class → fail lại 2/3 lần dù đã tách file riêng.
+Nguyên nhân thật: `object AdManager` là JVM singleton sống xuyên suốt **worker JVM của Gradle**, mà
+1 worker JVM chạy NHIỀU class test Robolectric liên tiếp không restart giữa các class — tách file
+không đủ, `AdManagerInvalidKeyTest` vẫn đầu độc `AdManagerUnitTest` nếu cả 2 chạy cùng worker.
+`--tests` filter (dùng ở vòng 1) vô tình giới hạn scope worker nên che mất tương tác thật.
+
+**Fix đúng**: giữ nguyên `ShadowSystemClock.advanceBy` (bypass backoff cooldown) +
+`confirmGdprConsent` (bypass consent-state dính từ test khác) trong `AdManagerUnitTest.setup()` —
+đây mới là fix thật, KHÔNG phải việc tách file (tách file chỉ giúp code gọn, không giải quyết gốc).
+Verify bằng `./gradlew test --rerun-tasks` (full module, ép chạy lại thật không cache) 5 lần liên
+tiếp xanh. Comment trong cả 2 file test đã sửa lại cho khớp — bản cũ ghi sai nguyên nhân.
 
 ### ANR quan sát được trên emulator (không kết luận là bug app)
 
@@ -791,4 +803,40 @@ thật, cần điều tra riêng.
 emulator: App ID mới, redeem code, `grantVipDays` reward flow đều verify sống qua log + screenshot.
 
 **Còn thiếu**: không còn — `ADMOB_REWARDED_ID` release đã có từ id.MD.
+
+## 23. Round-9 (2026-08-19) — Audit line-by-line theo yêu cầu user, tìm 1 bug thật bị bỏ sót
+
+User nghi ngờ code ẩu, yêu cầu audit lại toàn bộ diff Round-6→8 từng dòng. Kết quả:
+
+**Bug thật tìm được**: `RApp.onCreate()` nhánh `isTesting` (bypass ads cho UI test — phát hiện qua
+`Class.forName("androidx.test.espresso.Espresso")`) gọi
+`AdManager.activateVipByKey(this, key30Days, days=365)` — ĐÚNG collision pattern vừa fix ở
+`grantVip3Days()` (Round-8) nhưng bỏ sót chỗ này: `key30Days` giờ đã nằm trong `vipRedeemCodes` map
+với giá trị `30`, nên `tryActivateRedeemCode` (chạy trước, đọc map trước khi xét tham số `days`) sẽ
+chặn bắt và cấp **30 ngày thay vì 365** — không crash, không lỗi rõ, chỉ âm thầm cấp ngắn hơn dự
+định. Impact thực tế thấp (UI test suite không chạy 30+ ngày) nhưng đúng loại lỗi im lặng đã cảnh báo
+trước đó, bỏ sót vì chỉ audit `VipFrm.kt` mà không grep toàn bộ `activateVipByKey` call site trong
+`RApp.kt`. Fix: đổi sang `AdManager.grantVipDays(this, 365)`, thêm const `VIP_TEST_BYPASS_DAYS`. Grep
+lại toàn bộ `activateVipByKey`/`grantVipDays` trong `app/src/main/kotlin` xác nhận không còn chỗ nào
+khác dính pattern này.
+
+**Comment sai bị tự phát hiện + sửa** (không phải bug runtime, nhưng gây hiểu nhầm cho người đọc
+sau): comment trong `AdManagerUnitTest.kt`/`AdManagerInvalidKeyTest.kt` từ Round-8 khẳng định
+"Robolectric chỉ share `object AdManager` giữa các `@Test` method cùng file, reset được giữa file
+khác" — SAI, xem mục 22 "Round-9" ở trên (đã hợp nhất lại vào phần Round-8) — verify lại bằng
+`./gradlew test --rerun-tasks` (full module) mới lộ ra tách file không đủ, cần giữ nguyên
+`ShadowSystemClock.advanceBy` + `confirmGdprConsent`. Đã sửa comment khớp sự thật đã verify.
+
+**Đã audit, xác nhận đúng** (không phải bug, review kỹ mà không đổi):
+- `keyToDays()` (VipFrm.kt) và `vipRedeemCodes` (RApp.kt) là 2 map độc lập cùng giá trị — trùng lặp
+  logic (DRY violation nhẹ) nhưng không phải bug, chỉ là rủi ro drift nếu sau này đổi 1 bên quên đổi
+  bên kia. Chấp nhận được ở quy mô hiện tại (2 entry, ít thay đổi).
+- `testGrantVipDaysUsedByWatchAdRewardDoesNotCollideWithRedeemCodes` và
+  `testRedeemCode3DaysActivatesThreeDaysNotThirty`: verify lại toán học ngày-tính-từ-timestamp (chia
+  nguyên `Long/Long`, hướng làm tròn) đúng theo mọi trường hợp biên đã xét.
+- `app/build.gradle`, manifest, `strings.xml`, `Context.kt`: diff lại từng dòng, không phát hiện gì
+  thêm ngoài các mục đã ghi ở Round-6/7/8.
+
+Build/test cuối (sau fix Round-9): `./gradlew test --rerun-tasks` xanh · `assembleDevDebug` +
+`assembleProductionRelease -x lintVitalAnalyzeProductionRelease` xanh.
 

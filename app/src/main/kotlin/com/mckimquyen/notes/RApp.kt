@@ -87,6 +87,7 @@ class RApp : Application() {
     // SDK orchestrates: earlyInit → MobileAds.initialize OR AppLovinSdk.initialize → init (GAID/VIP) → registerAppOpenAdLifecycle.
     // App Open from background is auto-wired via ProcessLifecycle inside initialize().
     private fun setupAds() {
+        val vip30DaysKey = decodeVipKey(BuildConfig.VIP_KEY_ENCODED)
         AdManager.setConfig(
             AdSdkConfig(
                 isEnableAdmob          = BuildConfig.IS_ENABLE_ADMOB,
@@ -100,7 +101,7 @@ class RApp : Application() {
                 applovinBannerId       = BuildConfig.APPLOVIN_BANNER_ID,
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
-                vipKeySecret           = decodeVipKey(BuildConfig.VIP_KEY_ENCODED),
+                vipKeySecret           = vip30DaysKey,
                 // 1.6.16 turns this off by default; VipFrm's manual "Enter premium key" dialog
                 // still falls back to this path when the typed code isn't in vipRedeemCodes below
                 // (kept for backward compat) — keep it on to avoid silently returning false.
@@ -112,7 +113,7 @@ class RApp : Application() {
                 // AdManager.grantVipDays() instead (see VipFrm.grantVip3Days), which is why reusing
                 // the 30-day code's value here doesn't affect reward-ad day counts.
                 vipRedeemCodes = mapOf(
-                    decodeVipKey(BuildConfig.VIP_KEY_ENCODED) to VIP_KEY_30DAYS_DAYS,
+                    vip30DaysKey to VIP_KEY_30DAYS_DAYS,
                     decodeVipKey(BuildConfig.VIP_KEY_3DAYS_ENCODED) to VIP_KEY_3DAYS_DAYS,
                 ),
                 appOpenExcludedActivities = listOf(SplashActivity::class.java),
@@ -132,8 +133,10 @@ class RApp : Application() {
         AdManager.initialize(this) { success, gaid ->
             Log.d("roy93~", "AdManager init success=$success, gaid=$gaid")
             if (isTesting) {
-                val key = decodeVipKey(BuildConfig.VIP_KEY_ENCODED)
-                AdManager.activateVipByKey(this, key, days = 365)
+                // grantVipDays(), not activateVipByKey(): the 30-day key is now also a vipRedeemCodes
+                // entry (see setupAds() above), and activateVipByKey() checks that map BEFORE the
+                // `days` argument is honored — passing 365 here would silently grant only 30.
+                AdManager.grantVipDays(this, VIP_TEST_BYPASS_DAYS)
                 Log.d("roy93~", "Bypassed ads for UI tests by activating VIP")
             }
             if (BuildConfig.DEBUG) {
@@ -155,6 +158,7 @@ class RApp : Application() {
 
         private const val VIP_KEY_30DAYS_DAYS = 30
         private const val VIP_KEY_3DAYS_DAYS = 3
+        private const val VIP_TEST_BYPASS_DAYS = 365
 
         // QA device — see setTestDeviceIds() call in setupAds().
         private const val PIXEL_7_PRO_GAID = "be39dfe0-67f5-4da4-afb3-8407cd481df4"

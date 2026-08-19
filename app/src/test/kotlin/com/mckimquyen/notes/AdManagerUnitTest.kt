@@ -30,10 +30,13 @@ class AdManagerUnitTest {
     @Before
     fun setup() {
         // `AdManager`'s VIP-activation backoff (internal, not resettable from this module) throttles
-        // for up to 5 min after just one failed attempt and lives on the `object AdManager` singleton,
-        // which Robolectric does NOT reset between @Test methods in this class — a failure in one test
-        // (e.g. testInvalidVipKeyFails) would otherwise throttle activateVipByKey in whichever test
-        // happens to run next. Fast-forward the fake clock past the cap so every test starts cooled down.
+        // for up to 5 min after just one failed attempt and lives on the `object AdManager` singleton.
+        // Verified this survives across *separate test classes*, not just @Test methods in this one —
+        // Gradle's test worker JVM runs many Robolectric test classes back to back without restarting,
+        // so e.g. AdManagerInvalidKeyTest's deliberate failure can throttle activateVipByKey here too,
+        // depending on class execution order within the worker. Confirmed by running the full `test`
+        // task with `--rerun-tasks` (not just this class in isolation, which hides the interaction).
+        // Fast-forward the fake clock past the cap so every test starts cooled down regardless.
         ShadowSystemClock.advanceBy(Duration.ofMinutes(20))
         app = ApplicationProvider.getApplicationContext()
         // Redeem codes (vipRedeemCodes) are marked "already used" in SharedPreferences, which
@@ -73,11 +76,10 @@ class AdManagerUnitTest {
         // network, so activation would fail regardless of allowLegacyPlaintextVipKey without this.
         AdManager.configureTestHooks(network = { true })
         AdManager.initialize(app) { _, _ -> }
-        // The provider stays parked WAITING_FOR_CONSENT until consent resolves — reproducibly so
-        // once a prior @Test method in this class has already run an initialize() cycle (the SDK's
-        // consent watchdog/state carries over on the shared `object AdManager` singleton between
-        // @Test methods, unlike a truly fresh process). Not what these tests are about — force it
-        // resolved so every test starts from the same known-good state regardless of run order.
+        // The provider stays parked WAITING_FOR_CONSENT until consent resolves — reproducibly so once
+        // any prior Robolectric test in the same worker JVM (this class or another) has already run an
+        // initialize() cycle, for the same shared-singleton reason as the backoff above. Not what these
+        // tests are about — force it resolved so every test starts from the same known-good state.
         AdManager.confirmGdprConsent(app, hasConsent = true)
     }
 
