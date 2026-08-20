@@ -186,7 +186,7 @@ class RApp : Application() {
         // exact mistake shipped: GAID was passed here for weeks with zero effect. GAID IS the right
         // value for AppLovin's setTestDeviceAdvertisingIds (SDK does that automatically when
         // isDebug=true) and for this SDK's own vipDeviceGaids/addVIPMember whitelist — just not here.
-        AdManager.setTestDeviceIds(SAMSUNG_A50S_TEST_DEVICE_HASH)
+        AdManager.setTestDeviceIds(SAMSUNG_A50S_TEST_DEVICE_HASH, OPPO_CPH1989_TEST_DEVICE_HASH)
     }
 
     // Light obfuscation — Base64 hides the plain key from a casual `strings` dump on the APK.
@@ -208,6 +208,9 @@ class RApp : Application() {
         // Samsung SM-A507FN (A50s), collected live from logcat while connected via USB (ENH audit
         // round, 2026-08-20) — confirmed stable across multiple app launches on the same device.
         private const val SAMSUNG_A50S_TEST_DEVICE_HASH = "813DCF48B3E486F15A60676D49A2AB09"
+        // OPPO CPH1989 (Reno2 series), collected live from logcat while connected via USB
+        // (ENH audit round, 2026-08-20).
+        private const val OPPO_CPH1989_TEST_DEVICE_HASH = "E165942547A491D06E43E24870B990B2"
         // Pixel 7 Pro entry removed 2026-08-20: the old value here was a GAID
         // (be39dfe0-67f5-4da4-afb3-8407cd481df4), which never worked for this API (see call-site
         // comment). Device isn't connected in this session to re-collect the real hash from logcat —
