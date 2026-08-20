@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pre-API-31 equivalent of data_extraction_rules.xml — same file list, same reason. Keep both in
+  sync if the ad SDK's SharedPreferences filenames ever change.
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="loitp_admob.xml" />
+    <exclude domain="sharedpref" path="admob.xml" />
+    <exclude domain="sharedpref" path="app_preferences.xml" />
+    <exclude domain="sharedpref" path="paid_storage_sp.xml" />
+</full-backup-content>

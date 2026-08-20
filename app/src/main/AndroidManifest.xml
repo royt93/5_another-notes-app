@@ -16,7 +16,7 @@
 
     <attribution android:tag="ads" android:label="@string/ad_attribution_label" />
 
-    <application android:name=".RApp" android:allowBackup="@bool/allow_backup" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme.DayNight" android:localeConfig="@xml/locales_config" tools:ignore="DiscouragedApi,LockedOrientationActivity,AllowBackup">
+    <application android:name=".RApp" android:allowBackup="@bool/allow_backup" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme.DayNight" android:localeConfig="@xml/locales_config" tools:ignore="DiscouragedApi,LockedOrientationActivity,AllowBackup">
 
         <!-- Khai báo AdMob App ID — ca-app-pub-3004713799155145 account (doc/ad/id.MD) -->
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3004713799155145~1431659799" />

@@ -43,11 +43,21 @@ android {
         buildConfigField "String", "APPLOVIN_APP_OPEN_ID",     "\"7153ba6828a2f672\""
         buildConfigField "String", "APPLOVIN_REWARDED_ID",     "\"8eecf725822d50b7\""
 
-        // VIP secret — Base64-obfuscated, decoded at runtime in RApp.setupAds().
+        // VIP redeem codes — Base64-obfuscated, decoded at runtime in RApp.setupAds(). These are
+        // USER-FACING: handed out as activation codes, so they must never be reused as the SDK's
+        // internal anti-tamper secret below (see VIP_SECRET_KEY_ENCODED).
         // Plain text NOT stored; raises bar for `strings` scans on APK (still reversible by determined attackers — adequate for low-stakes notes app).
         buildConfigField "String", "VIP_KEY_ENCODED", "\"OWZBMHE3ZU4hMjdjTHgwNEAyMTk5M1kydTBJNyNRMA==\""
         // Second redeem code (3-day grant), same obfuscation as VIP_KEY_ENCODED — see doc/ad/id.MD.
         buildConfigField "String", "VIP_KEY_3DAYS_ENCODED", "\"ZVE3QDkzTDBmITJZMjcwN3hOMDQwMjE5OTN1MEkjMmFL\""
+
+        // AdSdkConfig.vipKeySecret — app-internal secret for the SDK's HMAC anti-tamper layer on the
+        // VIP SharedPreferences entry, and the (now-disabled) legacy-plaintext-key path. Deliberately
+        // a SEPARATE random value from the two redeem codes above: those are handed to end users as
+        // activation codes, so reusing one here as the "secret" would let anyone who knows the public
+        // code also forge the anti-tamper signature — defeats the whole point of the field. Random
+        // 28-char value with mixed case/digit/special (ENH audit round, 2026-08-20).
+        buildConfigField "String", "VIP_SECRET_KEY_ENCODED", "\"aFdEK3N4NHAyUVhidipyYyN3aXlBT3JPYklJSg==\""
 
         // AdMob native — no admobNativeId field exists in AdSdkConfig (SDK doesn't support native ads
         // yet); stored here for whenever native ad support / a bespoke NativeAd integration is added.

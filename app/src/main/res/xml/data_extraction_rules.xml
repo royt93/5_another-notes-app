@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12+ (API 31) backup config. Excludes the ad SDK's SharedPreferences files from cloud
+  backup and device-transfer — without this, restoring a backup (or transferring to a new phone)
+  can bring back an older "VIP redeem codes already used" ledger, letting the same code be
+  redeemed again without needing root (AD_PROMPT_AOS.MD Step 10.6 warning). See backup_rules.xml
+  for the pre-API-31 equivalent — both must list the same files.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="loitp_admob.xml" />
+        <exclude domain="sharedpref" path="admob.xml" />
+        <exclude domain="sharedpref" path="app_preferences.xml" />
+        <exclude domain="sharedpref" path="paid_storage_sp.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="loitp_admob.xml" />
+        <exclude domain="sharedpref" path="admob.xml" />
+        <exclude domain="sharedpref" path="app_preferences.xml" />
+        <exclude domain="sharedpref" path="paid_storage_sp.xml" />
+    </device-transfer>
+</data-extraction-rules>

@@ -14,6 +14,8 @@ import com.mckimquyen.notes.ui.AppTheme
 import com.mckimquyen.notes.ui.splash.SplashActivity
 import com.roy.sdkadbmob.AdManager
 import com.roy.sdkadbmob.AdSdkConfig
+import com.roy.sdkadbmob.ErrorReporter
+import com.roy.sdkadbmob.PaidEventListener
 import javax.inject.Inject
 
 //done
@@ -101,7 +103,11 @@ class RApp : Application() {
                 applovinBannerId       = BuildConfig.APPLOVIN_BANNER_ID,
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
-                vipKeySecret           = vip30DaysKey,
+                // App-internal anti-tamper secret — deliberately NOT vip30DaysKey (that value is
+                // handed to end users as the activation code; reusing it here would let anyone who
+                // knows the public code also forge the HMAC signature on VIP prefs). See
+                // VIP_SECRET_KEY_ENCODED comment in app/build.gradle for the audit finding this fixes.
+                vipKeySecret           = decodeVipKey(BuildConfig.VIP_SECRET_KEY_ENCODED),
                 // Deliberately left off (SDK 1.6.x default). Both real codes are covered by
                 // vipRedeemCodes below, which is checked FIRST inside activateVipByKey() — the
                 // legacy plaintext fallback this flag would unlock never actually gets reached for
@@ -128,6 +134,16 @@ class RApp : Application() {
                 }
             )
         )
+        // Set right after setConfig(), still in Application.onCreate() — the SDK ties a paidEventListener's
+        // lifetime to whichever Activity is foreground when it's set and auto-clears it on that Activity's
+        // destroy. Setting it here (no Activity exists yet) keeps it alive for the whole app process instead
+        // of silently losing revenue tracking after the first screen rotates/closes.
+        AdManager.paidEventListener = PaidEventListener { adType, valueMicros, currency, precision, adSource ->
+            Log.d("roy93~AdsRevenue", "$adType $valueMicros $currency $precision $adSource")
+        }
+        AdManager.errorReporter = ErrorReporter { throwable, context ->
+            Log.e("roy93~AdsError", "context=$context", throwable)
+        }
         val isTesting = try {
             Class.forName("androidx.test.espresso.Espresso")
             true

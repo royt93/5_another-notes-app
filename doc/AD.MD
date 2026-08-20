@@ -921,3 +921,76 @@ biết công thức, dẫn đến tap trượt khỏi nút nhiều lần không 
 im lặng không phản hồi) trước khi chuyển sang lấy `bounds=` trực tiếp từ dump — đáng tin cậy hơn hẳn
 so với áng chừng bằng mắt.
 
+## 25. Round-11 (2026-08-20) — Audit theo `AD_PROMPT_AOS.MD` (đọc full 2067 dòng), 6 finding + fix 3
+
+User yêu cầu check lại `doc/AD_PROMPT_AOS.MD` và audit code tích hợp ad tìm rủi ro. Đọc toàn bộ file
+gốc (không chỉ đoạn đã trích trước đây), đối chiếu từng field/API còn thiếu trong `RApp.setupAds()`
+với 2 agent grep song song quét toàn bộ call site (`loadBanner`/`showInterstitial`/`showRewarded`/
+`AdSdkConfig` fields/manifest/build.gradle) + tự verify trực tiếp trên thiết bị thật (file
+`shared_prefs/` thật, `allowBackup` resource value). Tìm được 6 finding, user chọn qua AskUserQuestion
+fix 5/6 (bỏ finding 6 — chỉ mang tính thông tin, không cần hành động):
+
+**Finding 1 (MEDIUM, đã fix) — `vipKeySecret` trùng giá trị với mã VIP 30 ngày công khai.**
+`RApp.kt:104` cũ: `vipKeySecret = vip30DaysKey` — cùng 1 biến vừa dùng làm secret chống-tamper
+SharedPreferences (mục đích duy nhất còn lại của field này từ khi tắt `allowLegacyPlaintextVipKey`),
+vừa là chuỗi "9fA0q7eN!27cLx04@21993Y2u0I7#Q0" phát công khai cho user nhập kích hoạt VIP (có trong
+`doc/ad/id.MD`, trong `vipRedeemCodes` map). Bất kỳ ai biết mã VIP công khai cũng biết luôn "secret"
+nội bộ — lớp chống-tamper mất hết ý nghĩa phòng thủ thêm ngoài rào cản root vốn đã tồn tại. Fix: sinh
+secret ngẫu nhiên 28 ký tự riêng (mixed case/digit/special, không trùng bất kỳ giá trị
+`vipRedeemCodes` nào), Base64-encode, thêm `buildConfigField "VIP_SECRET_KEY_ENCODED"`
+(`app/build.gradle`), `RApp.kt` decode field mới thay vì tái dùng `vip30DaysKey`.
+
+**Finding 2 (MEDIUM, đã fix) — lỗ hổng redeem-code qua Android Backup chưa được vá.**
+Verify trực tiếp: `bool.xml:3` `allow_backup=true`, và **không có** `backup_rules.xml`/
+`data_extraction_rules.xml` nào trong repo trước fix. `adb shell run-as ... ls shared_prefs/` trên
+máy thật liệt kê đúng 4 file SDK: `loitp_admob.xml`, `admob.xml`, `app_preferences.xml`,
+`paid_storage_sp.xml` — không file nào bị loại khỏi backup. Doc cảnh báo rõ: nếu `allowBackup=true`
+mà không loại trừ các file này, Auto Backup/Google Drive/chuyển máy có thể phục hồi ledger "mã đã
+dùng" về trạng thái cũ → redeem lại vô hạn cùng 1 mã, **không cần root** (khác accepted-risk gốc
+trong doc chỉ nói tới rooted device). Fix: tạo `res/xml/data_extraction_rules.xml` (API 31+, cả
+`cloud-backup` lẫn `device-transfer`) + `res/xml/backup_rules.xml` (legacy pre-31), loại trừ đúng 4
+file trên qua `domain="sharedpref"`; wire `android:fullBackupContent`/`android:dataExtractionRules`
+vào `<application>` trong `AndroidManifest.xml`.
+
+**Finding 3 (LOW-MEDIUM, đã fix) — `paidEventListener` chưa wire → không đo được doanh thu ads.**
+Doc đánh dấu 💰 là quan trọng, yêu cầu set **trong `Application.onCreate()`** (không phải Activity —
+SDK gắn "chủ sở hữu" listener theo Activity foreground lúc set và tự xoá khi Activity đó destroy,
+set nhầm chỗ sẽ mất tracking âm thầm). Grep xác nhận field này không xuất hiện ở bất kỳ đâu trong
+repo trước fix. Fix: thêm `AdManager.paidEventListener = PaidEventListener { adType, valueMicros,
+currency, precision, adSource -> Log.d(...) }` ngay sau `setConfig()` trong `RApp.setupAds()` — đúng
+vị trí Application.onCreate, log-only vì app chưa có Crashlytics/MMP để forward thật.
+
+**Finding 4 (LOW, đã fix) — `errorReporter` chưa wire.** Cùng lý do — thêm `AdManager.errorReporter =
+ErrorReporter { throwable, context -> Log.e(...) }`, log-only, sẵn sàng cắm Crashlytics sau này.
+
+**Finding 5 (LOW, cosmetic, đã fix) — `SettingsFrm.kt` gọi tay `bannerDestroy()` dù
+`autoManageLifecycle` mặc định `true`.** Doc nói rõ: `autoManageLifecycle=true` → SDK tự hook cả 3
+hàm resume/pause/destroy qua `ActivityLifecycleCallbacks`, gọi tay thêm không crash (idempotent-guard)
+nhưng "không phải lý do để làm cả hai". Fix: xoá dòng `AdManager.bannerDestroy(adView)` ở
+`onDestroyView()`, chỉ còn `adView = null`.
+
+**Finding 6 (info, KHÔNG fix — user chọn bỏ qua) — Interstitial hiện ở mọi lần tap nút "+" tạo note**
+(`HomeFrm.kt:129`). Hành vi có sẵn từ trước lần audit này, được `AdSafetyLimits` cap tần suất đúng
+(release: `minTimeBetweenFullscreenAds=60s`, `maxFullscreenAdsPerSession=6`,
+`maxFullscreenAdsPerHour=3`, `maxFullscreenAdsPerDay=10`) nên không vi phạm 6 policy rule của doc —
+chỉ là quan sát UX/aggressiveness, không phải bug.
+
+**Đã audit, xác nhận đúng (không cần fix)**: `appOpenExcludedActivities` đúng
+`listOf(SplashActivity::class.java)`; manifest có đủ `APPLICATION_ID` meta-data + `<attribution>` tag;
+`IS_ENABLE_ADMOB=true` cả debug/release; VIP fallback rewarded KHÔNG cấp reward (đã verify lại lần
+nữa, `VipFrm.kt:144-156`); zero leftover SDK cũ (`AdMobManager`/`MaxManager`/`AdsHelper`); zero dùng
+MREC/Leaderboard/RewardedInterstitial nên không cần field tương ứng; `applovinUseNativeCmp` không cần
+thiết vì app chỉ build variant `gms` qua JitPack AAR (không có flavor `nongms`); `tagForChildDirected`/
+`tagForUnderAgeOfConsent` để mặc định `null` đúng vì app không hướng trẻ em; dedup reward qua 2 kênh
+(`rewardedListener` + callback `showRewarded`) bằng cờ `hasEarnedReward` hoạt động đúng tương đương
+`rewardTransactionId` chính thức của SDK (không cần đổi, chỉ khác cơ chế).
+
+**Build/test verify sau cả 5 fix**: `./gradlew test --rerun-tasks` xanh (76 task) · `assembleDevDebug`
++ `assembleProductionRelease -x lintVitalAnalyzeProductionRelease` xanh. Verify sống trên Pixel 7 Pro
+(uninstall + install sạch để reset ledger redeem-code, tránh nhầm "mã đã dùng" từ session trước với
+lỗi do đổi `vipKeySecret`): code 30 ngày activate đúng
+(`activateVipByKey ✅ redeem code +30 ngày ... until Sat Sep 19 2026`, UI "ĐANG KÍCH HOẠT · 2026-09-19",
+snackbar "Đã kích hoạt Premium · 30 ngày") — xác nhận đổi `vipKeySecret` không ảnh hưởng path
+redeem-code (đúng như phân tích code: field này chỉ gắn với chống-tamper/legacy path, không tham gia
+`vipRedeemCodes` lookup). Reset lại (`clearVipByKey ✅`) trả app về trạng thái sạch sau khi audit.
+

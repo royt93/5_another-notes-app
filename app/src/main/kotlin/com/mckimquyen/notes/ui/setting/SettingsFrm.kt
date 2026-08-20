@@ -176,7 +176,9 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     }
 
     override fun onDestroyView() {
-        AdManager.bannerDestroy(adView)
+        // loadBanner() defaults to autoManageLifecycle=true — SDK hooks resume/pause/destroy itself
+        // via ActivityLifecycleCallbacks. Don't also forward bannerDestroy() manually (doc: harmless
+        // but not a reason to mix both patterns).
         adView = null
         super.onDestroyView()
         binding = null
