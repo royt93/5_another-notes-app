@@ -299,17 +299,26 @@ máy test; bạn phải khai:
 ```kotlin
 // Gọi SAU AdManager.initialize(...) — vd trong callback onComplete, hoặc trong Activity debug.
 if (BuildConfig.DEBUG) {
-    AdManager.setTestDeviceIds("GAID_MAY_DEV", "GAID_MAY_QA") // thay bằng GAID thật
+    AdManager.setTestDeviceIds("HASHED_DEVICE_ID_DEV", "HASHED_DEVICE_ID_QA") // KHÔNG PHẢI GAID — xem dưới
 }
 ```
 
-Lấy GAID bằng một trong hai cách:
-- Chạy app 1 lần rồi tìm trong logcat dòng của Google: `Use RequestConfiguration.Builder()
-  .setTestDeviceIds(Arrays.asList("ABCDEF0123..."))` — copy đúng chuỗi đó.
-- Hoặc gọi `AdManager.getCurrentDeviceGAID()` và in ra. Kiểm tra lại bằng `AdManager.getTestDeviceIds()`.
+> 🚨 **ĐÂY KHÔNG PHẢI GAID — nhầm chỗ này là lỗi phổ biến nhất, và fail-SILENT (không crash, không
+> log lỗi, quảng cáo vẫn hiện — chỉ là hiện quảng cáo THẬT thay vì test).** `AdManager.setTestDeviceIds()`
+> gọi thẳng xuống `RequestConfiguration.Builder().setTestDeviceIds()` của chính Google AdMob SDK
+> (wrapper không hash/convert gì cả) — API này chỉ nhận đúng **chuỗi hex 32 ký tự do chính Google SDK
+> tự in ra logcat**, không nhận GAID (UUID dạng `xxxxxxxx-xxxx-...`). `AdManager.getCurrentDeviceGAID()`
+> trả về GAID thật — **đừng dùng giá trị đó cho hàm này**, nó chỉ đúng cho whitelist VIP nội bộ
+> (`vipDeviceGaids`/`addVIPMember`) và cho AppLovin test-device (xem dưới), không đúng cho AdMob.
+>
+> **Cách duy nhất đúng để lấy giá trị này:** chạy app 1 lần trên máy thật (đã gọi `initialize()` xong,
+> có phát sinh 1 lần load ad thật), tìm trong logcat tag `Ads` dòng:
+> `Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("ABCDEF0123..."))` — copy
+> **chính xác** chuỗi hex đó (không phải GAID nào khác) dán vào code.
 
-> Với AppLovin, SDK tự truyền GAID máy hiện tại vào `initConfig` khi `isDebug = true` — nhưng
-> `setTestDeviceIds()` vẫn cần cho AdMob. Cứ khai cả hai cho chắc.
+> Với AppLovin, SDK tự truyền GAID máy hiện tại vào `initConfig` khi `isDebug = true` (AppLovin dùng
+> đúng GAID cho cơ chế test-device riêng của họ, khác AdMob) — nhưng `setTestDeviceIds()` vẫn cần cho
+> AdMob, với chuỗi hex lấy từ logcat như trên, không phải GAID. Cứ khai cả hai cho chắc.
 
 **Kiểm tra đã đúng chưa:** quảng cáo hiển thị phải có nhãn *"Test Ad"*. **Không thấy nhãn đó = bạn
 đang click ad thật = dừng ngay.**

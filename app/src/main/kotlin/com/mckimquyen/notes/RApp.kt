@@ -144,36 +144,49 @@ class RApp : Application() {
         AdManager.errorReporter = ErrorReporter { throwable, context ->
             Log.e("roy93~AdsError", "context=$context", throwable)
         }
+        AdManager.initialize(this, ::onAdManagerInitialized)
+    }
+
+    private fun onAdManagerInitialized(success: Boolean, gaid: String?) {
+        when {
+            success -> Log.d("roy93~", "AdManager init success, gaid=$gaid")
+            AdManager.isWaitingForConsent() -> Log.d(
+                "roy93~",
+                "AdManager init: waiting for consent (not an error) — provider will " +
+                    "auto-init once SplashActivity's requestConsentInfoUpdate() resolves."
+            )
+            else -> Log.w("roy93~", "AdManager init FAILED (not a consent wait) — see getDiagnostics()")
+        }
         val isTesting = try {
             Class.forName("androidx.test.espresso.Espresso")
             true
         } catch (e: Exception) {
             false
         }
-        AdManager.initialize(this) { success, gaid ->
-            when {
-                success -> Log.d("roy93~", "AdManager init success, gaid=$gaid")
-                AdManager.isWaitingForConsent() -> Log.d(
-                    "roy93~",
-                    "AdManager init: waiting for consent (not an error) — provider will " +
-                        "auto-init once SplashActivity's requestConsentInfoUpdate() resolves."
-                )
-                else -> Log.w("roy93~", "AdManager init FAILED (not a consent wait) — see getDiagnostics()")
-            }
-            if (isTesting) {
-                // grantVipDays(), not activateVipByKey(): the 30-day key is now also a vipRedeemCodes
-                // entry (see setupAds() above), and activateVipByKey() checks that map BEFORE the
-                // `days` argument is honored — passing 365 here would silently grant only 30.
-                AdManager.grantVipDays(this, VIP_TEST_BYPASS_DAYS)
-                Log.d("roy93~", "Bypassed ads for UI tests by activating VIP")
-            }
-            if (BuildConfig.DEBUG) {
-                // Registered QA device GAIDs so clicking ads during manual testing counts as test
-                // traffic, not invalid traffic (see AD_PROMPT_AOS.MD Bước 3b — protects the AdMob
-                // account from an invalid-traffic ban).
-                AdManager.setTestDeviceIds(PIXEL_7_PRO_GAID)
-            }
+        if (isTesting) {
+            // grantVipDays(), not activateVipByKey(): the 30-day key is now also a vipRedeemCodes
+            // entry (see setupAds() above), and activateVipByKey() checks that map BEFORE the
+            // `days` argument is honored — passing 365 here would silently grant only 30.
+            AdManager.grantVipDays(this, VIP_TEST_BYPASS_DAYS)
+            Log.d("roy93~", "Bypassed ads for UI tests by activating VIP")
         }
+        // Registered QA device test-device IDs so clicking ads during manual testing counts as test
+        // traffic, not invalid traffic (see AD_PROMPT_AOS.MD Bước 3b — protects the AdMob account
+        // from an invalid-traffic ban). Deliberately NOT gated behind BuildConfig.DEBUG: debug builds
+        // use Google's demo ad unit IDs (see app/build.gradle debug buildType), which never count as
+        // invalid traffic regardless of test-device registration — the real risk window is RELEASE
+        // builds, which use the live production ad unit IDs.
+        //
+        // IMPORTANT — this is NOT the GAID. AdMob's RequestConfiguration.setTestDeviceIds() expects
+        // the opaque hex device-fingerprint string that the Google Ads SDK itself prints to logcat
+        // (tag "Ads": "Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(\"<HEX>\"))
+        // to get test ads on this device."), NOT the raw GAID (UUID). Passing a GAID here is silently
+        // ignored by AdMob — the device is never recognized as a test device, so every ad it sees is
+        // live production inventory. Confirmed live 2026-08-20 (3-way independent audit) after this
+        // exact mistake shipped: GAID was passed here for weeks with zero effect. GAID IS the right
+        // value for AppLovin's setTestDeviceAdvertisingIds (SDK does that automatically when
+        // isDebug=true) and for this SDK's own vipDeviceGaids/addVIPMember whitelist — just not here.
+        AdManager.setTestDeviceIds(SAMSUNG_A50S_TEST_DEVICE_HASH)
     }
 
     // Light obfuscation — Base64 hides the plain key from a casual `strings` dump on the APK.
@@ -188,7 +201,16 @@ class RApp : Application() {
         private const val VIP_KEY_3DAYS_DAYS = 3
         private const val VIP_TEST_BYPASS_DAYS = 365
 
-        // QA device — see setTestDeviceIds() call in setupAds().
-        private const val PIXEL_7_PRO_GAID = "be39dfe0-67f5-4da4-afb3-8407cd481df4"
+        // QA devices — see setTestDeviceIds() call in setupAds(). These are AdMob's opaque
+        // hex test-device hash (from logcat tag "Ads"), NOT the GAID — see the comment at the
+        // call site for why that distinction matters.
+        //
+        // Samsung SM-A507FN (A50s), collected live from logcat while connected via USB (ENH audit
+        // round, 2026-08-20) — confirmed stable across multiple app launches on the same device.
+        private const val SAMSUNG_A50S_TEST_DEVICE_HASH = "813DCF48B3E486F15A60676D49A2AB09"
+        // Pixel 7 Pro entry removed 2026-08-20: the old value here was a GAID
+        // (be39dfe0-67f5-4da4-afb3-8407cd481df4), which never worked for this API (see call-site
+        // comment). Device isn't connected in this session to re-collect the real hash from logcat —
+        // re-add it as a TEST_DEVICE_HASH (not GAID) next time that device is available for QA.
     }
 }
