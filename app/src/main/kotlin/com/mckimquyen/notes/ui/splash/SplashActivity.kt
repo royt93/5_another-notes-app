@@ -103,8 +103,14 @@ class SplashActivity : BaseAct() {
     }
 
     private fun startAdFlow() {
-        // Start a 5-second safety timeout in case UMP Consent or AdManager gets stuck
-        handler.postDelayed(safetyTimeoutRunnable, 5000)
+        // Last-resort circuit breaker only — requestConsentInfoUpdate() already guarantees its own
+        // callback fires within AdSdkConfig.consentWatchdogMs (15s, network-fetch phase) or
+        // consentFormWatchdogMs (180s, form-reading phase — real EEA users need time to read the
+        // form) once it enters that phase, worst case ~195s. A short fixed timeout here would race
+        // ahead of a real user still reading the consent form and yank them to MainAct out from
+        // under it. Set comfortably past the SDK's own worst case so this only fires if the SDK's
+        // callback contract itself is somehow broken, never during a legitimate in-progress flow.
+        handler.postDelayed(safetyTimeoutRunnable, SAFETY_TIMEOUT_MS)
 
         // UMP Consent (Google Play 2024+ requirement for EEA / UK / CH).
         // Must run BEFORE loading any ad — initSplashScreen kicks off App Open load internally.
@@ -133,5 +139,11 @@ class SplashActivity : BaseAct() {
         handler.removeCallbacks(safetyTimeoutRunnable)
         handler.removeCallbacks(finishRunnable)
         onDoneRunnable?.let { handler.removeCallbacks(it) }
+    }
+
+    companion object {
+        // See startAdFlow() KDoc — must clear the SDK's own worst-case consent watchdog window
+        // (15s fetch + 180s form-reading, both AdSdkConfig defaults) with margin to spare.
+        private const val SAFETY_TIMEOUT_MS = 200_000L
     }
 }

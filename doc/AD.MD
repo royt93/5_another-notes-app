@@ -840,3 +840,84 @@ khác" — SAI, xem mục 22 "Round-9" ở trên (đã hợp nhất lại vào p
 Build/test cuối (sau fix Round-9): `./gradlew test --rerun-tasks` xanh · `assembleDevDebug` +
 `assembleProductionRelease -x lintVitalAnalyzeProductionRelease` xanh.
 
+## 24. Round-10 (2026-08-19) — Test thủ công đầy đủ mọi flow + audit độc lập, 2 issue tìm được
+
+User yêu cầu test thủ công thật (không chỉ unit test) toàn bộ: trial mode, consent, kích hoạt VIP
+bằng key, đủ loại ad (banner/interstitial/appopen/rewarded/native), online lẫn offline — build
+release thật + giả lập Install Referrer để test trial mode đúng đường sideload. Song song, user nghi
+ngờ config AdMob provider sai, yêu cầu check lại `doc/ad/id.MD` từng dòng, và thử tham khảo audit độc
+lập từ `codex`/`gemini`/`agy` (cả 3 đều không dùng được — codex hết hạn mức tài khoản ChatGPT, gemini
+lỗi tier tài khoản Google, agy đòi tương tác không chạy non-interactive được — không phải lỗi code,
+đã báo user trung thực thay vì giả kết quả). User yêu cầu tự audit lại không cần chờ.
+
+**Verify sống trên thiết bị (không chỉ đọc code)**: cả 4 loại ad hiện được (banner/interstitial/
+appopen/rewarded qua log + màn hình), cả 2 redeem code (30 ngày, 3 ngày) activate đúng qua UI nhập
+tay, offline→online recovery đúng, trial-mode mặc định fail-closed đúng khi sideload (Install
+Referrer hiện đại dùng bound-service, không giả lập được qua `adb broadcast` kiểu legacy — xác nhận
+qua manifest chỉ có `BIND_GET_INSTALL_REFERRER_SERVICE`, không có receiver cũ). Consent flow verify
+được 1 phần — AdMob Console báo "Publisher misconfiguration" (thiếu khai báo European regulations
+message cho App ID), đây là gap phía AdMob Console, không phải bug code.
+
+**Issue 1 — nghi ngờ config AdMob provider sai (yêu cầu trực tiếp của user)**: grep lại toàn bộ giá
+trị `doc/ad/id.MD` (package, App ID, banner/inter/appopen/native/rewarded) so với `app/build.gradle`
++ `AndroidManifest.xml` — khớp 100%, không lệch giá trị nào. Nguyên nhân khiến user nghi ngờ: comment
+cũ ở `app/build.gradle:37` ghi sai "AppLovin MAX (active provider — IS_ENABLE_ADMOB=false)" trong khi
+giá trị thật ở cả debug/release là `IS_ENABLE_ADMOB=true` (AdMob mới là provider active) — chỉ là
+comment lạc hậu, không phải bug chức năng. Đã sửa lại comment cho khớp giá trị thật. Đồng thời sửa
+comment `AndroidManifest.xml` còn ghi "Sample AdMob App ID" dù giờ là App ID thật.
+
+**Issue 2 — tự audit tìm được, đưa 2 lựa chọn qua AskUserQuestion, user chọn fix ngay cả 2**:
+1. `SplashActivity.startAdFlow()` dùng timeout cứng `5000ms` để ép chuyển `MainAct` nếu consent flow
+   không phản hồi — quá ngắn so với chính watchdog nội bộ của SDK (`consentWatchdogMs=15_000L` pha
+   fetch mạng, `consentFormWatchdogMs=180_000L` pha đọc form, cộng lại worst-case ~195s cho người
+   dùng EEA thật đang đọc form) → có thể kéo người dùng ra khỏi form đang đọc dở. User chọn "Fix ngay"
+   (không chọn phương án giữ nguyên vì "out of scope"). Fix: đổi thành hằng số
+   `SAFETY_TIMEOUT_MS = 200_000L` kèm comment giải thích rõ đây là circuit-breaker cuối cùng, không
+   phải timeout thường.
+2. `AdSdkConfig.allowLegacyPlaintextVipKey` đang bật `true` trong khi cả 2 code VIP thật (30 ngày, 3
+   ngày) đã nằm trong `vipRedeemCodes` — map này được `activateVipByKey()` xét TRƯỚC path plaintext
+   legacy, nên cờ `true` này thực chất là dead code không bao giờ được path nào chạy tới, chỉ mở thêm
+   1 bề mặt tấn công thừa (SDK doc ghi rõ path legacy này sẽ bị gỡ ở major version sau). User ban đầu
+   chọn phương án lớn hơn ("migrate sang token ECDSA") nhưng trước khi viết code migration, phát hiện
+   ra token ECDSA (single-use per-user) không hợp với thiết kế thật của app (2 code cố định dùng lại
+   nhiều lần — đúng pattern "thẻ cào" SDK doc khuyến nghị, không phải pattern token) — quay lại hỏi
+   user qua AskUserQuestion lần 2, user chọn phương án nhỏ đúng hơn: tắt
+   `allowLegacyPlaintextVipKey = false`. Đã sửa ở `RApp.kt` + `AdManagerUnitTest.kt` +
+   `AdManagerInvalidKeyTest.kt` (2 file test dùng để mirror cấu hình thật).
+
+**Bài học quy trình**: đừng lao vào scope lớn (ECDSA migration) chỉ vì đó là option user chọn đầu
+tiên — nếu trong lúc triển khai phát hiện scope đó không khớp thiết kế thật, dừng lại hỏi lại ngay
+(qua AskUserQuestion) thay vì âm thầm đổi hướng hoặc âm thầm làm tiếp theo hướng cũ.
+
+Build/test cuối (sau cả 2 fix Round-10): `./gradlew test --rerun-tasks` xanh (76 task) ·
+`assembleDevDebug` + `assembleProductionRelease -x lintVitalAnalyzeProductionRelease` xanh.
+
+### Verify sống trên thiết bị thật (Pixel 7 Pro, `2B051FDH3006MU`) sau fix `allowLegacyPlaintextVipKey=false`
+
+Cài `devDebug` qua `adb install -r`, mở app từ đầu (Splash → App Open Ad test thật hiện đúng nhãn
+"Test Ad" + tên app "Ghi chú về mèo" → MainAct), vào màn Premium (`fragment_vip`), nhập tay cả 2 code
+qua dialog `showActivateDialog()`:
+
+- Code 30 ngày (`9fA0q7eN!27cLx04@21993Y2u0I7#Q0`): log
+  `activateVipByKey ✅ redeem code +30 ngày (cộng dồn, until Sat Sep 19 2026)`, UI chuyển "ACTIVE",
+  "Active · 2026-09-19", snackbar "Premium activated · 30 days".
+- Reset (`btnReset` → confirm dialog "Reset Premium?"): log `clearVipByKey ✅`, UI về "NOT ACTIVE".
+- Code 3 ngày (`eQ7@93L0f!2Y2707xN04021993u0I#2aK`): log
+  `activateVipByKey ✅ redeem code +3 ngày (cộng dồn, until Sun Aug 23 2026)`, UI "Active ·
+  2026-08-23", snackbar "Premium activated · 3 days" — xác nhận đúng 3 ngày, không lẫn với code 30
+  ngày dù cùng dùng chung 1 hàm `activateVipByKey()`.
+
+Reset lại lần nữa để trả app về trạng thái sạch sau khi test xong.
+
+**Trở ngại khi tự động hoá trên thiết bị thật này (không phải bug app, ghi lại để lần sau đỡ mất
+thời gian)**: `uiautomator dump` liên tục lỗi "could not get idle state" trên màn `VipFrm` vì
+`startDecorativeAnimations()` chạy animation lặp vô hạn (pulse/glow/sparkle) — dump không bao giờ
+thấy UI "đứng yên". Fix: tắt tạm 3 setting hệ thống
+`window_animation_scale`/`transition_animation_scale`/`animator_duration_scale` về `0` trước khi
+dump, dump được ngay, xong việc bật lại về `1` (giá trị mặc định thiết bị). Trong lúc dump còn lỗi,
+suy đoán toạ độ tap từ ảnh chụp màn hình (quy đổi 923×2000 hiển thị → 1440×3120 gốc, hệ số ×1.56) bị
+sai nhiều lần liên tiếp — nhầm lẫn lặp lại giữa toạ độ "hiển thị" và toạ độ "gốc" ngay cả sau khi đã
+biết công thức, dẫn đến tap trượt khỏi nút nhiều lần không rõ nguyên nhân (không log, không crash, chỉ
+im lặng không phản hồi) trước khi chuyển sang lấy `bounds=` trực tiếp từ dump — đáng tin cậy hơn hẳn
+so với áng chừng bằng mắt.
+

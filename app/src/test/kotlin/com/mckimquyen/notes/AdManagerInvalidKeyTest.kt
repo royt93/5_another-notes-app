@@ -49,7 +49,7 @@ class AdManagerInvalidKeyTest {
                 applovinRewardedId = "test_lovin_rewarded",
                 applovinSdkKey = "test_lovin_key",
                 vipKeySecret = decodedKey,
-                allowLegacyPlaintextVipKey = true,
+                allowLegacyPlaintextVipKey = false, // mirrors RApp.setupAds()
                 safety = com.roy.sdkadbmob.AdSafetyLimits.TEST,
             )
         )

@@ -63,11 +63,9 @@ class AdManagerUnitTest {
             applovinRewardedId = "test_lovin_rewarded",
             applovinSdkKey = "test_lovin_key",
             vipKeySecret = decodedKey,
-            // SDK 1.6.x defaults this off; production RApp.kt sets it too (same reason —
-            // VipFrm's manual key dialog falls back to this path for backward compat).
-            allowLegacyPlaintextVipKey = true,
-            // Mirrors RApp.setupAds() — verifies the redeem-code map itself (Round-7 wiring), not
-            // just the legacy fallback.
+            // Off (SDK default) — mirrors RApp.setupAds(): vipRedeemCodes below covers both real
+            // codes and is checked first, so the legacy path is never actually reached.
+            allowLegacyPlaintextVipKey = false,
             vipRedeemCodes = mapOf(decodedKey to 30, decoded3DaysKey to 3),
             safety = com.roy.sdkadbmob.AdSafetyLimits.TEST
         )

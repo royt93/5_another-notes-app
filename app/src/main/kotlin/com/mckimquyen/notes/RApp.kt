@@ -102,14 +102,18 @@ class RApp : Application() {
                 applovinRewardedId     = BuildConfig.APPLOVIN_REWARDED_ID,
                 applovinSdkKey         = BuildConfig.APPLOVIN_SDK_KEY,
                 vipKeySecret           = vip30DaysKey,
-                // 1.6.16 turns this off by default; VipFrm's manual "Enter premium key" dialog
-                // still falls back to this path when the typed code isn't in vipRedeemCodes below
-                // (kept for backward compat) — keep it on to avoid silently returning false.
-                allowLegacyPlaintextVipKey = true,
+                // Deliberately left off (SDK 1.6.x default). Both real codes are covered by
+                // vipRedeemCodes below, which is checked FIRST inside activateVipByKey() — the
+                // legacy plaintext fallback this flag would unlock never actually gets reached for
+                // any input we care about, so there's no reason to opt back into a path the SDK
+                // docs say will be removed in a future major version. Verified live: both codes log
+                // "redeem code +N ngày", never the legacy-path log line.
+                allowLegacyPlaintextVipKey = false,
                 // Two user-facing redeem codes (doc/ad/id.MD) — checked before the legacy plaintext
-                // fallback above, and independently of it: showActivateDialog() passes whatever the
-                // user typed straight to activateVipByKey(), so either code activates for its own
-                // mapped duration. The watch-ad reward flow does NOT go through this map — it calls
+                // fallback above (which is off), so this is the only path either code activates
+                // through. showActivateDialog() passes whatever the user typed straight to
+                // activateVipByKey(), so either code activates for its own mapped duration. The
+                // watch-ad reward flow does NOT go through this map — it calls
                 // AdManager.grantVipDays() instead (see VipFrm.grantVip3Days), which is why reusing
                 // the 30-day code's value here doesn't affect reward-ad day counts.
                 vipRedeemCodes = mapOf(

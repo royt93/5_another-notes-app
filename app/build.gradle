@@ -34,7 +34,9 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
 
-        // AppLovin MAX (active provider — IS_ENABLE_ADMOB=false)
+        // AppLovin MAX IDs — kept configured but currently dormant. IS_ENABLE_ADMOB=true in both
+        // buildTypes below makes AdMob the active provider; flipping that flag back to false would
+        // make this set active again without needing to touch these values.
         buildConfigField "String", "APPLOVIN_SDK_KEY", "\"e75FnQfS9XTTqM1Kne69U7PW_MBgAnGQTFvtwVVui6kRPKs5L7ws9twr5IQWwVfzPKZ5pF2IfDa7lguMgGlCyt\""
         buildConfigField "String", "APPLOVIN_BANNER_ID",       "\"9f19f76fe682443f\""
         buildConfigField "String", "APPLOVIN_INTERSTITIAL_ID", "\"34eaf20efa37ac75\""
