@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Android 12+ (API 31) backup config. Excludes the ad SDK's SharedPreferences files from cloud
-  backup and device-transfer — without this, restoring a backup (or transferring to a new phone)
-  can bring back an older "VIP redeem codes already used" ledger, letting the same code be
-  redeemed again without needing root (AD_PROMPT_AOS.MD Step 10.6 warning). See backup_rules.xml
-  for the pre-API-31 equivalent — both must list the same files.
+  Android 12+ (API 31) backup config. See backup_rules.xml for the pre-API-31 equivalent — both
+  must list the same files.
+
+  loitp_admob.xml is the one that actually matters: it's the ad SDK's own prefs, holding the
+  HMAC-signed "VIP redeem codes already used" ledger (verified via `run-as ... cat shared_prefs/
+  loitp_admob.xml` — keyUsedRedeemCodesList, keyVipByKeyUntil, etc). Without excluding it, restoring
+  a backup (or transferring to a new phone) can bring back an older ledger, letting the same VIP
+  code be redeemed again without needing root (AD_PROMPT_AOS.MD Step 10.6 warning).
+
+  admob.xml / app_preferences.xml / paid_storage_sp.xml are NOT part of that ledger (verified their
+  content too: admob.xml is Google Mobile Ads' own config cache, app_preferences.xml only holds the
+  in-app-review cooldown timestamp, paid_storage_sp.xml holds Google's internal paid-attribution
+  IDs) — excluded anyway as general hygiene (avoid duplicate/stale ad-SDK identifiers surviving a
+  restore), not because they hold the redeem-code ledger.
 -->
 <data-extraction-rules>
     <cloud-backup>

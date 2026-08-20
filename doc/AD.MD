@@ -994,3 +994,98 @@ snackbar "Đã kích hoạt Premium · 30 ngày") — xác nhận đổi `vipKey
 redeem-code (đúng như phân tích code: field này chỉ gắn với chống-tamper/legacy path, không tham gia
 `vipRedeemCodes` lookup). Reset lại (`clearVipByKey ✅`) trả app về trạng thái sạch sau khi audit.
 
+## 26. Round-12 (2026-08-20) — Self-audit lại Round-11, tìm 1 bug thật bị bỏ sót + 1 lỗi tài liệu
+
+User không tin Round-11 đã sạch, yêu cầu audit kỹ lại chính những gì vừa fix. Kết quả: tìm được 1 bug
+thật (đã fix) trong chính fix Finding 5 của Round-11, và 1 lỗi mô tả không chính xác trong tài liệu
+Finding 2 (không phải bug runtime, chỉ sai claim).
+
+**Bug thật — Finding 5 Round-11 (xoá `bannerDestroy()` thủ công) là SAI, đã revert.**
+Lý do ban đầu (Round-11): doc SDK nói `autoManageLifecycle=true` (default) khiến SDK "tự hook lifecycle
+qua `ActivityLifecycleCallbacks`", nên gọi tay `bannerDestroy()` là dư thừa. Nhưng
+`ActivityLifecycleCallbacks` chỉ bắt sự kiện cấp **Activity** (`onActivityPaused`/`onActivityDestroyed`
+của `MainAct`) — app này là **single-Activity + Fragment nav** (CLAUDE.md), `SettingsFrm` (host banner
+duy nhất) là 1 Fragment sống bên trong `MainAct`. Khi user back khỏi màn Cài đặt, `MainAct` **không hề
+bị destroy** — chỉ Fragment view bị huỷ — nên callback cấp-Activity của SDK không có cơ hội chạy, và
+banner AdView bị mồ côi (leak) cho tới khi cả `MainAct` đóng.
+
+Verify thực nghiệm trên Pixel 7 Pro (không chỉ suy luận): cài bản đã xoá `bannerDestroy()`, vào Cài đặt
+(banner load + log `✅ Loaded`/`👁️ Impression`/`AdsRevenue` — xác nhận đồng thời `paidEventListener`
+Finding 3 hoạt động đúng), bấm mũi tên back trong toolbar (popBackStack, không phải system back — system
+back có lúc thoát hẳn app do quirk stack, tránh dùng để test) → **zero log** liên quan `banner`/
+`onActivity*` xuất hiện, xác nhận không có cleanup nào chạy. Revert lại `AdManager.bannerDestroy(adView)`
+trong `onDestroyView()` của `SettingsFrm.kt`, build lại, test lại đúng luồng → log
+`bannerDestroy 🗑️ destroying AdView` xuất hiện đúng lúc back. Bài học: guidance của SDK doc viết cho mô
+hình Activity-per-screen (đúng cho demo app của lib) không tự động đúng cho app single-Activity+Fragment
+— phải verify theo kiến trúc thật của project, không áp dụng máy móc.
+
+**Lỗi tài liệu — Finding 2 Round-11 (backup exclusion) mô tả không chính xác nguyên nhân, đã sửa lại
+comment (không đổi hành vi).** Viết lại rằng cả 4 file (`loitp_admob.xml`, `admob.xml`,
+`app_preferences.xml`, `paid_storage_sp.xml`) đều là "ledger mã đã dùng" — SAI. Dump nội dung thật qua
+`adb shell run-as ... cat shared_prefs/*.xml`: chỉ **`loitp_admob.xml`** chứa dữ liệu VIP/redeem/
+safety-counter thật (`keyUsedRedeemCodesList`, `keyVipByKeyUntil`, các `*_sig` HMAC...). 3 file còn lại
+là cache/định danh nội bộ của chính Google Mobile Ads SDK, không phải wrapper: `admob.xml` (
+`app_settings_json`, `inspector_info`, ad limits — cache cấu hình AdMob), `app_preferences.xml` (chỉ có
+`last_review_time` — cooldown Play In-App Review, không liên quan ads), `paid_storage_sp.xml` (
+`paidv1_id`/`paidv2_id` — định danh nội bộ Google cho paid-app attribution). Giữ nguyên loại trừ cả 4
+file (không hại gì, hygiene hợp lý cho cache/định danh Google) nhưng đã sửa comment trong
+`data_extraction_rules.xml`/`backup_rules.xml` cho đúng: chỉ `loitp_admob.xml` mới là file thực sự vá
+lỗ hổng doc cảnh báo, 3 file kia loại trừ vì lý do khác (tránh trùng định danh khi restore/device-transfer).
+
+**Đã re-verify không phải lỗi (chủ động test lại dù nghi ngờ) — đổi `vipKeySecret` có làm mất VIP của
+user đang active không?** Đây là lo ngại lớn nhất tự đặt ra khi bắt đầu audit lại: `vipKeySecret` ký
+HMAC toàn bộ `loitp_admob.xml` (xác nhận qua dump, mọi key đều có `_sig` tương ứng) — đổi secret giữa 2
+bản build tưởng như sẽ làm mọi chữ ký cũ sai lệch khi app update. Test thực nghiệm nghiêm ngặt: build
+bản secret CŨ (`git checkout` tạm 2 file về commit trước), cài sạch, activate VIP 30 ngày, dump prefs
+lấy baseline chữ ký. Khôi phục code secret MỚI, build lại, `adb install -r` (giữ data, mô phỏng đúng
+kịch bản app update thật trên Play Store) → log `vipByKey=true → isVIPMember=true`, VIP **sống sót**
+nguyên vẹn, dump lại prefs thấy chữ ký `_sig` giữ nguyên y hệt (không bị ghi đè) và không có log
+tamper/signature-mismatch nào. Kết luận: đổi `vipKeySecret` **an toàn** với user đã có VIP active từ
+trước — SDK không invalidate state cũ khi secret đổi (có thể do thiết kế fail-open nhất quán với
+"root-tamper" accepted-risk đã ghi ở đầu file, hoặc do việc verify chữ ký không chạy trên mọi lần đọc).
+Lo ngại ban đầu là overthinking — nhưng verify thực nghiệm là đúng quy trình, không nên chỉ tin suy luận.
+
+**Build/test verify cuối (sau revert Finding 5 + sửa comment Finding 2)**:
+`./gradlew test --rerun-tasks` xanh (76 task) · `assembleDevDebug` + `assembleProductionRelease -x
+lintVitalAnalyzeProductionRelease` xanh · verify sống: banner load + destroy đúng lúc back từ Settings,
+VIP redeem-code không bị ảnh hưởng bởi thay đổi secret. Device để lại trạng thái sạch (`keyVipByKeyUntil
+= 0`).
+
+## 27. Round-13 (2026-08-20) — Audit lại Round-12, tập trung verify phần chưa test được (backup thật)
+
+User hỏi "kiểm tra sạch chưa" — không tìm thêm bug code mới, nhưng đóng nốt 1 lỗ hổng verify còn để ngỏ
+từ Round-11/12: `data_extraction_rules.xml`/`backup_rules.xml` mới chỉ verify đúng cú pháp XML + build
+xanh, **chưa từng chạy backup thật** để xác nhận exclude rule có tác dụng runtime.
+
+**Thử nghiệm**: `adb shell bmgr backupnow com.mckimquyen.notes` trên bản `devDebug` đang cài →
+**"Backup is not allowed"** — hoá ra debug build (`android:debuggable=true`, mặc định của mọi build
+type `debug`) bị `BackupManagerService` chặn backup vô điều kiện, không liên quan gì tới
+`allowBackup`/exclude rules của app. Thử `settings put secure backup_enable_debug 1` không có tác
+dụng (không phải đúng cờ). Chuyển sang cài bản `productionRelease` đã build sẵn (ký bằng keystore
+thật, `debuggable=false`) → `bmgr backupnow` chạy **"Success"** — xác nhận `dataExtractionRules`/
+`fullBackupContent` không có lỗi cú pháp/schema nào chặn backup chạy (nếu path/domain sai định dạng,
+kỳ vọng sẽ thấy lỗi hoặc backup fail, không thấy).
+
+**Giới hạn chưa verify được (nêu rõ, không giả vờ đã xong)**: không xác nhận được **từng file cụ thể**
+có thực sự bị loại khỏi blob backup hay không, vì:
+- `adb backup` (cách trực tiếp nhất để lấy archive `.ab` rồi giải nén xem) đã deprecated, cần xác nhận
+  tương tác trên màn hình thiết bị (dialog hệ thống) — thử tự động hoá bằng `input keyevent 4` (back)
+  vô tình **huỷ** dialog thay vì confirm, backup không chạy được qua đường này.
+- Dữ liệu blob thật của `LocalTransport` nằm ở thư mục hệ thống (`/data/misc/backup/...`), không đọc
+  được qua `adb shell` thường (không root) và cũng không đọc được qua `run-as` vì bản release
+  không-debuggable.
+
+Kết luận: exclude rule **chạy được, không lỗi**, nhưng "loại đúng file" chỉ được suy ra từ cú pháp
+đúng chuẩn Android docs (`domain="sharedpref" path="<name>.xml"`, đối chiếu ví dụ chính thức) + nội
+dung file đã verify đúng ở Round-12, không phải bằng cách mở blob ra đếm tay. Nếu cần bằng chứng ở
+mức "đã mở blob ra xem", phải test trên thiết bị có root hoặc dùng Google Drive backup thật (cần tài
+khoản Google + chờ chu kỳ backup tự nhiên, ngoài phạm vi 1 phiên audit).
+
+Đã cài lại `devDebug` trả máy về trạng thái phát triển bình thường sau khi test xong.
+
+**Rà lại toàn bộ diff từ trước Round-11 tới giờ (không tìm thêm bug mới)**: `git diff 1178deb` cho
+`RApp.kt`/`SettingsFrm.kt`/`AndroidManifest.xml`/`app/build.gradle`/2 file XML mới — khớp đúng ý định,
+không còn đoạn nào tương tự lỗi "Activity-vs-Fragment" đã tìm ở Round-12 (đã grep lại toàn bộ call
+site `AdManager.*` trong `app/src/main/kotlin` — chỉ banner có vòng đời View cần cleanup thủ công;
+interstitial/rewarded là show một lần, không có View tồn tại lâu nên không dính lớp bug này).
+

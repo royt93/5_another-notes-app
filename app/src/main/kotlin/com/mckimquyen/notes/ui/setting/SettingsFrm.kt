@@ -176,9 +176,17 @@ class SettingsFrm : PreferenceFragmentCompat(), ConfirmDlg.Callback, ExportPassw
     }
 
     override fun onDestroyView() {
-        // loadBanner() defaults to autoManageLifecycle=true — SDK hooks resume/pause/destroy itself
-        // via ActivityLifecycleCallbacks. Don't also forward bannerDestroy() manually (doc: harmless
-        // but not a reason to mix both patterns).
+        // REVERTED (ENH audit round-12): a prior pass removed this call reasoning that
+        // autoManageLifecycle=true's ActivityLifecycleCallbacks hook makes it redundant — true for an
+        // Activity-per-screen host, but this app is single-Activity + Fragment nav (CLAUDE.md).
+        // ActivityLifecycleCallbacks fires on MainAct's onPause/onDestroy, NOT on this fragment's
+        // onDestroyView() — navigating Settings -> back leaves MainAct fully alive, so the SDK's
+        // Activity-scoped auto-cleanup never runs and the AdView leaks (still attached, still able to
+        // fetch/refresh) until MainAct itself is destroyed. Verified live: back-navigating out of this
+        // fragment produced zero banner-lifecycle log lines from the SDK. Keep this explicit call —
+        // the doc confirms bannerDestroy() has an idempotent guard, so it's safe even on the rare path
+        // where MainAct itself is also tearing down at the same time.
+        AdManager.bannerDestroy(adView)
         adView = null
         super.onDestroyView()
         binding = null
