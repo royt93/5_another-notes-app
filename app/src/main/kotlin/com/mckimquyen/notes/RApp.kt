@@ -151,7 +151,15 @@ class RApp : Application() {
             false
         }
         AdManager.initialize(this) { success, gaid ->
-            Log.d("roy93~", "AdManager init success=$success, gaid=$gaid")
+            when {
+                success -> Log.d("roy93~", "AdManager init success, gaid=$gaid")
+                AdManager.isWaitingForConsent() -> Log.d(
+                    "roy93~",
+                    "AdManager init: waiting for consent (not an error) — provider will " +
+                        "auto-init once SplashActivity's requestConsentInfoUpdate() resolves."
+                )
+                else -> Log.w("roy93~", "AdManager init FAILED (not a consent wait) — see getDiagnostics()")
+            }
             if (isTesting) {
                 // grantVipDays(), not activateVipByKey(): the 30-day key is now also a vipRedeemCodes
                 // entry (see setupAds() above), and activateVipByKey() checks that map BEFORE the
