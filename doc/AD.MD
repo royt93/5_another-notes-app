@@ -1089,3 +1089,28 @@ không còn đoạn nào tương tự lỗi "Activity-vs-Fragment" đã tìm ở
 site `AdManager.*` trong `app/src/main/kotlin` — chỉ banner có vòng đời View cần cleanup thủ công;
 interstitial/rewarded là show một lần, không có View tồn tại lâu nên không dính lớp bug này).
 
+**Full regression sống trên Pixel 7 Pro sau khi user yêu cầu "audit lại 1 round nữa, kiểm tra sạch
+chưa"** — trước tiên audit riêng code test-device-id (`PIXEL_7_PRO_GAID` trong `RApp.kt`): khớp đúng
+GAID thật của máy (verify qua log `getGAID result id=...` nhiều lần trong session), gọi đúng sau
+`initialize()`, gate đúng `BuildConfig.DEBUG`, callback `initialize()` chỉ fire 1 lần nên không có rủi
+ro double-register — sạch, không sửa gì. Sau đó chạy full regression từ đầu trên bản `devDebug` cài
+sạch (fresh install qua Splash, không launch tắt qua MainAct để tránh bỏ qua bước consent):
+
+| Test | Kết quả | Bằng chứng |
+|---|---|---|
+| Cold start / consent / Splash | PASS | Log init sạch, 0 exception |
+| App Open (first-launch skip + resume sau background) | PASS | `skipAppOpenOnFirstEverLaunch` đúng lần đầu; `✅ Loaded gen=2` khi resume |
+| Interstitial (FAB tạo note) | PASS | `showInterstitial called` → `AdsRevenue: interstitial ...` |
+| Banner (Settings) load + `bannerDestroy` khi back | PASS | Xác nhận lại fix Round-12 vẫn ổn định qua lần cài mới |
+| Rewarded ad → VIP +3 ngày | PASS | `showRewarded`/`SHOWED` → UI "2026-08-23", `AdsRevenue: rewarded ...` |
+| VIP redeem code 30 ngày | PASS | `activateVipByKey ✅ redeem code +30 ngày ... 2026-09-19` |
+| VIP redeem code 3 ngày | PASS | `activateVipByKey ✅ redeem code +3 ngày ... 2026-08-23` |
+| Offline cold start (`svc wifi disable` + airplane mode, xác nhận 0 `NetworkAgentInfo`) | PASS | Mọi `load*` log `⏭️ no internet`, splash navigate nhanh, 0 crash |
+| Offline tạo note (interstitial) | PASS | `showInterstitial ⏭️ ad not ready`, màn tạo note vẫn mở bình thường |
+| Recovery khi bật mạng lại | PASS | App Open tự load lại (`✅ Loaded gen=2`) và show khi resume, không cần restart app |
+
+Không phát hiện thêm bug nào trong vòng regression này — cả 3 fix của Round-11/12 (vipKeySecret,
+backup rules, paidEventListener/errorReporter, revert bannerDestroy) đều sống sót qua 1 chu trình
+uninstall/install/offline/online/VIP đầy đủ. Device để lại trạng thái sạch
+(`keyVipByKeyUntil = 0`).
+
