@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.view.Display
 import android.view.WindowManager
@@ -18,6 +19,14 @@ open class BaseAct : AppCompatActivity() {
         override.fontScale = 1.0f
         applyOverrideConfiguration(override)
         super.attachBaseContext(context)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Keep the screen from auto-locking while any screen of the app is in the foreground —
+        // this is a notes app, users read/write notes for a while without touching the screen.
+        // Every screen extends BaseAct, so this covers the whole app in every build type.
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onResume() {
