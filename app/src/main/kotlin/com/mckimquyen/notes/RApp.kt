@@ -186,7 +186,18 @@ class RApp : Application() {
         // exact mistake shipped: GAID was passed here for weeks with zero effect. GAID IS the right
         // value for AppLovin's setTestDeviceAdvertisingIds (SDK does that automatically when
         // isDebug=true) and for this SDK's own vipDeviceGaids/addVIPMember whitelist — just not here.
-        AdManager.setTestDeviceIds(SAMSUNG_A50S_TEST_DEVICE_HASH, OPPO_CPH1989_TEST_DEVICE_HASH)
+        //
+        // ALSO IMPORTANT — the hash is NOT stable across build variants on the same physical device.
+        // Confirmed live 2026-08-20: Samsung A50s produced a DIFFERENT hash for the signed release
+        // build (35F8696D52502118270BCE2A66946380) than for the debug build
+        // (813DCF48B3E486F15A60676D49A2AB09) — same device, same install, different APK signature.
+        // Collect and register a separate hash per build variant you QA on a given device; don't
+        // assume the debug-collected value carries over to release testing.
+        AdManager.setTestDeviceIds(
+            SAMSUNG_A50S_TEST_DEVICE_HASH,
+            SAMSUNG_A50S_RELEASE_TEST_DEVICE_HASH,
+            OPPO_CPH1989_TEST_DEVICE_HASH,
+        )
     }
 
     // Light obfuscation — Base64 hides the plain key from a casual `strings` dump on the APK.
@@ -206,8 +217,14 @@ class RApp : Application() {
         // call site for why that distinction matters.
         //
         // Samsung SM-A507FN (A50s), collected live from logcat while connected via USB (ENH audit
-        // round, 2026-08-20) — confirmed stable across multiple app launches on the same device.
+        // round, 2026-08-20) — confirmed stable across multiple app launches of the DEBUG build on
+        // this device. The signed RELEASE build produces a different hash (see below) — the hash is
+        // keyed to the APK signature, not just the physical device.
         private const val SAMSUNG_A50S_TEST_DEVICE_HASH = "813DCF48B3E486F15A60676D49A2AB09"
+        // Same physical device (Samsung A50s), but collected from the signed PRODUCTION RELEASE
+        // build (assembleProductionRelease), 2026-08-20 — confirmed different from the debug hash
+        // above. Register both if you QA both build types on this device.
+        private const val SAMSUNG_A50S_RELEASE_TEST_DEVICE_HASH = "35F8696D52502118270BCE2A66946380"
         // OPPO CPH1989 (Reno2 series), collected live from logcat while connected via USB
         // (ENH audit round, 2026-08-20).
         private const val OPPO_CPH1989_TEST_DEVICE_HASH = "E165942547A491D06E43E24870B990B2"
