@@ -1141,3 +1141,23 @@ thêm 1 hằng số vào danh sách whitelist, không đổi luồng logic nào 
 kế tiếp có máy đó trong tay (Pixel 7 Pro hiện có không nằm trong whitelist nên không dùng để verify
 nhãn "Test Ad" cho thay đổi này được).
 
+## 29. Round-15 (2026-08-21) — `vipTokenPublicKey` sample-keypair warning: accepted risk, không phải bug
+
+Smoke test bản release 20260821 trên Pixel 7 Pro thấy log `W roy93~AdManager` lúc `RApp.onCreate()`:
+`vipTokenPublicKey đang để cặp khoá MẪU công khai — nếu có dùng VIP token
+(activateVipByToken/generateVipToken), token có thể bị giả mạo`. Audit ngay để xác nhận có ảnh hưởng
+đường redeem-code thật app đang dùng hay không.
+
+**Kết luận: không phải bug, không cần fix.** Grep toàn bộ `app/src/main/kotlin` —
+`vipTokenPublicKey`/`activateVipByToken`/`generateVipToken`/`VipSecurity` **0 kết quả**. `RApp.kt`
+(`setupAds()`, dòng ~93-134) chỉ set `vipKeySecret` (HMAC anti-tamper cho `loitp_admob.xml`, xem Round
+gốc) và `vipRedeemCodes` (map mã redeem → số ngày) — đây là đường VIP **duy nhất** app dùng
+(`activateVipByKey`, xác nhận lại ở Round-11/13). `vipTokenPublicKey` là field khác, thuộc cơ chế
+token ký-số riêng của SDK mà app chưa từng gọi tới; SDK chỉ cảnh báo vì field đó vẫn giữ giá trị mặc
+định (cặp khoá mẫu công khai trong doc SDK) — cảnh báo đúng về mặt SDK, nhưng vô hại với app này vì
+đường đó chết (dead path). Không sửa gì trong code.
+
+**Nếu sau này thêm tính năng dùng `activateVipByToken`/`generateVipToken`:** bắt buộc phải tự sinh cặp
+khoá riêng bằng `VipSecurity.generateKeyPair()` và set `vipTokenPublicKey` trước khi release — nếu
+không, cảnh báo này chuyển từ "vô hại" thành lỗ hổng thật (ai đọc doc SDK cũng forge được token).
+
