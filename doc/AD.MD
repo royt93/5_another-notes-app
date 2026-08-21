@@ -1114,3 +1114,30 @@ backup rules, paidEventListener/errorReporter, revert bannerDestroy) đều số
 uninstall/install/offline/online/VIP đầy đủ. Device để lại trạng thái sạch
 (`keyVipByKeyUntil = 0`).
 
+## 28. Round-14 (2026-08-21) — Test-device hash không ổn định giữa build type, versionCode 20260821
+
+Tiếp tục audit `RApp.kt` sau Round-13, tập trung riêng vào phần test-device hash vừa được xác nhận
+"sạch, không sửa gì" ở cuối Round-13 — audit lại kỹ hơn phát hiện góc chưa test: hash có ổn định
+giữa **build type** (debug vs release) trên cùng 1 máy hay không, chỉ mới verify ổn định giữa nhiều
+lần mở app của *cùng 1 build*.
+
+**Bug thật: hash test-device gắn theo chữ ký APK, không chỉ theo thiết bị vật lý.** Thu thập hash
+Samsung A50s (SM-A507FN) từ log của bản `assembleProductionRelease` (ký bằng keystore thật) — ra
+`35F8696D52502118270BCE2A66946380`, khác hẳn hash `813DCF48B3E486F15A60676D49A2AB09` đã thu từ bản
+debug ở Round-13 trên cùng máy đó. Hệ quả: nếu chỉ đăng ký hash debug (như code trước fix), máy QA
+cài bản release sẽ **không được AdMob nhận diện là test device** → quay lại đúng rủi ro invalid
+traffic của lỗi gốc Round-11, nhưng chỉ xảy ra khi test bản release chứ không phải debug (lý do
+Round-11/12/13 không bắt được — mọi lần verify trước đó đều làm trên bản debug).
+
+**Fix:** thêm hằng `SAMSUNG_A50S_RELEASE_TEST_DEVICE_HASH = "35F8696D52502118270BCE2A66946380"` vào
+`RApp.kt`, đăng ký song song với hash debug qua `AdManager.setTestDeviceIds(...)`. Ghi rõ trong
+comment: hash không mang được giữa build type, phải thu thập riêng cho từng variant QA trên cùng máy.
+
+**Verify:** `./gradlew compileDevDebugKotlin compileProductionReleaseKotlin` + `./gradlew test` PASS.
+Bump `versionCode 20260820 → 20260821` / `versionName "2026.08.20" → "2026.08.21"`, cập nhật
+`CHANGELOG.md`. Chưa re-run full regression device thật cho fix này riêng (bản thân thay đổi chỉ là
+thêm 1 hằng số vào danh sách whitelist, không đổi luồng logic nào khác đã regression-test ở Round-13)
+— chỉ cần cài lại bản release mới và xác nhận nhãn "Test Ad" hiện đúng trên Samsung A50s ở lần audit
+kế tiếp có máy đó trong tay (Pixel 7 Pro hiện có không nằm trong whitelist nên không dùng để verify
+nhãn "Test Ad" cho thay đổi này được).
+

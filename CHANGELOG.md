@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.08.21 (versionCode 20260821)
+
+Audit tiếp Round-14: phát hiện hash test-device AdMob **không ổn định giữa build type** trên cùng 1 máy vật lý.
+
+### Đáng chú ý nhất
+- **Sửa lỗi**: Samsung A50s cho ra 2 hash test-device khác nhau giữa bản debug (`813DCF48...`) và bản production release (`35F8696D...`) dù cùng 1 máy — hash gắn theo chữ ký APK, không chỉ theo thiết bị. Nếu chỉ đăng ký hash thu được từ debug build, máy QA sẽ **không được nhận diện là test device khi cài bản release** → lại rơi vào rủi ro invalid traffic y hệt lỗi Round-11. Đã thêm `SAMSUNG_A50S_RELEASE_TEST_DEVICE_HASH` vào `RApp.kt`, đăng ký cả 2 hash song song.
+- Bài học ghi lại trong code comment: thu thập và đăng ký hash riêng cho từng build variant QA trên cùng 1 máy, không giả định hash debug dùng lại được cho release.
+
 ## 2026.08.20 (versionCode 20260820)
 
 Audit toàn bộ tích hợp quảng cáo (AdMob/AppLovin) so với tài liệu `AD_PROMPT_AOS.MD` — phát hiện và sửa 1 lỗi nghiêm trọng ảnh hưởng an toàn tài khoản AdMob, cộng thêm loạt sửa bảo mật/vận hành nhỏ hơn.
