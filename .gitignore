@@ -22,3 +22,6 @@ Thumbs.db
 
 # Claude Code local settings (YOLO/bypassPermissions — không commit)
 .claude/settings.local.json
+
+# Kotlin/Gradle daemon cache — session lock files churn every build, never track
+.kotlin/
