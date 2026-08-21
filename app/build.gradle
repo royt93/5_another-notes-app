@@ -198,6 +198,17 @@ android {
             includeAndroidResources = true
         }
     }
+
+    lint {
+        // lintVitalAnalyze*Release crashes with NoSuchMethodError: List.removeLast() on this
+        // project's pinned JDK 17 (AGP-lint-vs-JDK mismatch, not a code bug — see CLAUDE.md).
+        // AGP wires lintVital directly into assemble*Release/bundle*Release for any release
+        // build type with minifyEnabled, independent of the `build` task's "check" dependency
+        // already skipped above — so it crashed both from the terminal and from Android
+        // Studio's "Generate Signed Bundle" button. Disabling it here is the documented AGP
+        // way to turn that off; it never produced usable output on this JDK anyway.
+        checkReleaseBuilds = false
+    }
 }
 
 dependencies {

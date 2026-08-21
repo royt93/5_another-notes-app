@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Run
 
-The project is a single-module Android app (`:app`) using the Gradle wrapper. The Gradle daemon expects Java 17 (`toolchain.languageVersion = 17`); `gradle.properties` pins `org.gradle.java.home` to a local JDK 17 install (JetBrains Runtime) — adjust that line if your machine has a different JDK path. Note: `assembleProductionRelease`'s `lintVitalAnalyzeProductionRelease` task currently crashes (`NoSuchMethodError: List.removeLast()`) on this JDK 17 setup — a known AGP-lint-vs-JDK mismatch, not a code bug. Use `-x lintVitalAnalyzeProductionRelease` to build a release APK/AAB anyway.
+The project is a single-module Android app (`:app`) using the Gradle wrapper. The Gradle daemon expects Java 17 (`toolchain.languageVersion = 17`); `gradle.properties` pins `org.gradle.java.home` to a local JDK 17 install (JetBrains Runtime) — adjust that line if your machine has a different JDK path. Note: `lintVitalAnalyze*Release` used to crash (`NoSuchMethodError: List.removeLast()`) on this JDK 17 setup — a known AGP-lint-vs-JDK mismatch, not a code bug. Fixed 2026-08-21 via `android { lint { checkReleaseBuilds = false } }` in `app/build.gradle` (see comment there), so `assembleProductionRelease`/`bundleProductionRelease` build clean from both the terminal and Android Studio's "Generate Signed Bundle" — no `-x` flag needed anymore.
 
 Common Gradle tasks (run from repo root):
 
