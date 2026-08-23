@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 2,
+  "appName": "Cat Note",
+  "themeId": "clean-light",
+  "connectedCanvas": false,
+  "locales": [
+    "en"
+  ],
+  "locale": "en",
+  "device": "ipad",
+  "orientation": "portrait",
+  "appIcon": "/app-icon.png",
+  "slidesByDevice": {
+    "iphone": [
+      {
+        "id": "iphone_01",
+        "layout": "device-bottom",
+        "label": {
+          "en": "FAST & INTUITIVE"
+        },
+        "headline": {
+          "en": "Capture thoughts\nin an instant."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/01.png"
+      },
+      {
+        "id": "iphone_02",
+        "layout": "device-bottom",
+        "label": {
+          "en": "STAY ORGANIZED"
+        },
+        "headline": {
+          "en": "Check off goals,\none day at a time."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/02.png"
+      },
+      {
+        "id": "iphone_03",
+        "layout": "device-bottom",
+        "label": {
+          "en": "CUSTOM TAGS"
+        },
+        "headline": {
+          "en": "Your ideas,\nbeautifully structured."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/03.png"
+      },
+      {
+        "id": "iphone_04",
+        "layout": "device-bottom",
+        "label": {
+          "en": "DESKTOP WIDGETS"
+        },
+        "headline": {
+          "en": "Quick access right\nfrom your screen."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/04.png"
+      },
+      {
+        "id": "iphone_05",
+        "layout": "device-bottom",
+        "label": {
+          "en": "VIP EXPERIENCE"
+        },
+        "headline": {
+          "en": "Distraction-free.\nPure focus."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/05.png",
+        "inverted": true
+      },
+      {
+        "id": "iphone_06",
+        "layout": "device-bottom",
+        "label": {
+          "en": "SMART SEARCH"
+        },
+        "headline": {
+          "en": "Find any note\nin milliseconds."
+        },
+        "screenshot": "/screenshots/apple/iphone/en/06.png"
+      }
+    ],
+    "android": [
+      {
+        "id": "android_01",
+        "layout": "hero",
+        "label": {
+          "en": "FAST & INTUITIVE"
+        },
+        "headline": {
+          "en": "Capture thoughts\nin an instant."
+        },
+        "screenshot": "/screenshots/android/phone/en/01.png"
+      },
+      {
+        "id": "android_02",
+        "layout": "device-bottom",
+        "label": {
+          "en": "STAY ORGANIZED"
+        },
+        "headline": {
+          "en": "Check off goals,\none day at a time."
+        },
+        "screenshot": "/screenshots/android/phone/en/02.png"
+      },
+      {
+        "id": "android_03",
+        "layout": "device-bottom",
+        "label": {
+          "en": "CUSTOM TAGS"
+        },
+        "headline": {
+          "en": "Your ideas,\nbeautifully structured."
+        },
+        "screenshot": "/screenshots/android/phone/en/03.png"
+      },
+      {
+        "id": "android_04",
+        "layout": "device-bottom",
+        "label": {
+          "en": "DESKTOP WIDGETS"
+        },
+        "headline": {
+          "en": "Quick access right\nfrom your screen."
+        },
+        "screenshot": "/screenshots/android/phone/en/04.png"
+      },
+      {
+        "id": "android_05",
+        "layout": "hero",
+        "label": {
+          "en": "VIP EXPERIENCE"
+        },
+        "headline": {
+          "en": "Distraction-free.\nPure focus."
+        },
+        "screenshot": "/screenshots/android/phone/en/05.png",
+        "inverted": true
+      },
+      {
+        "id": "android_06",
+        "layout": "device-bottom",
+        "label": {
+          "en": "SMART SEARCH"
+        },
+        "headline": {
+          "en": "Find any note\nin milliseconds."
+        },
+        "screenshot": "/screenshots/android/phone/en/06.png"
+      }
+    ],
+    "ipad": [
+      {
+        "id": "ipad_01",
+        "layout": "device-bottom",
+        "label": {
+          "en": "FAST & INTUITIVE"
+        },
+        "headline": {
+          "en": "Capture thoughts\nin an instant."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/01.png",
+        "transforms": {
+          "device": {
+            "x": 269.14560000000006,
+            "y": 740.1228097062581,
+            "width": 1525.7087999999999,
+            "height": 1981.4399999999998,
+            "rotation": 0,
+            "zIndex": 3
+          }
+        }
+      },
+      {
+        "id": "ipad_02",
+        "layout": "device-bottom",
+        "label": {
+          "en": "STAY ORGANIZED"
+        },
+        "headline": {
+          "en": "Check off goals,\none day at a time."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/02.png",
+        "transforms": {
+          "device": {
+            "x": 269.14560000000006,
+            "y": 750.66687100894,
+            "width": 1525.7087999999999,
+            "height": 1981.4399999999998,
+            "rotation": 0,
+            "zIndex": 3
+          }
+        }
+      },
+      {
+        "id": "ipad_03",
+        "layout": "device-top",
+        "label": {
+          "en": "CUSTOM TAGS"
+        },
+        "headline": {
+          "en": "Your ideas,\nbeautifully structured."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/03.png"
+      },
+      {
+        "id": "ipad_04",
+        "layout": "two-devices",
+        "label": {
+          "en": "DESKTOP WIDGETS"
+        },
+        "headline": {
+          "en": "Quick access right\nfrom your screen."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/04.png",
+        "screenshotSecondary": "/screenshots/apple/ipad/en/04.png"
+      },
+      {
+        "id": "ipad_05",
+        "layout": "device-bottom",
+        "label": {
+          "en": "VIP EXPERIENCE"
+        },
+        "headline": {
+          "en": "Distraction-free.\nPure focus."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/05.png",
+        "inverted": true,
+        "transforms": {
+          "device": {
+            "x": 269.14560000000006,
+            "y": 743.637496807152,
+            "width": 1525.7087999999999,
+            "height": 1981.4399999999998,
+            "rotation": 0,
+            "zIndex": 3
+          }
+        }
+      },
+      {
+        "id": "ipad_06",
+        "layout": "device-top",
+        "label": {
+          "en": "SMART SEARCH"
+        },
+        "headline": {
+          "en": "Find any note\nin milliseconds."
+        },
+        "screenshot": "/screenshots/apple/ipad/en/06.png"
+      }
+    ],
+    "android-7": [],
+    "android-10": [],
+    "feature-graphic": [
+      {
+        "id": "fg_01",
+        "layout": "feature-graphic",
+        "label": {
+          "en": "MINIMAL & POWERFUL"
+        },
+        "headline": {
+          "en": "Cat Note — Capture thoughts effortlessly."
+        },
+        "screenshot": "/screenshots/android/phone/en/01.png"
+      }
+    ]
+  },
+  "crossScreenMockupsByDevice": {
+    "iphone": [],
+    "ipad": [],
+    "android": [],
+    "android-7": [],
+    "android-10": [],
+    "feature-graphic": []
+  }
+}
